@@ -35,7 +35,33 @@
             if(elUtc) elUtc.innerText = `${jamUtc} : ${menitUtc} : ${detikUtc}`;
         }
 
-        // 2. FUNGSI INTERAKTIF PINDAH HALAMAN
+        // 2. INTEGRASI API GEMPA BUMI OTOMATIS DARI BMKG PUSAT
+        async function ambilDataGempaBMKG() {
+            try {
+                // Mengambil data JSON infogempa dari BMKG gratis
+                const respon = await fetch("https://data.bmkg.go.id/DataMKG/TEWS/autogempa.json");
+                const data = await respon.json();
+                const gempa = data.Infogempa.gempa;
+
+                // Mengisi data ke elemen HTML secara otomatis
+                document.getElementById("gempa-waktu").innerText = gempa.Tanggal + " - " + gempa.Jam;
+                document.getElementById("gempa-mag").innerText = "M " + gempa.Magnitude;
+                document.getElementById("gempa-dalam").innerText = gempa.Kedalaman;
+                document.getElementById("gempa-lokasi").innerText = gempa.Wilayah;
+                document.getElementById("gempa-potensi").innerText = gempa.Potensi;
+                
+                // Menampilkan peta episenter gempa dari server BMKG
+                const elPeta = document.getElementById("gempa-peta");
+                elPeta.src = "https://data.bmkg.go.id/DataMKG/TEWS/" + gempa.Shakemap;
+                elPeta.style.display = "block";
+
+            } catch (error) {
+                console.error("Gagal memuat data gempa BMKG:", error);
+                document.getElementById("gempa-waktu").innerText = "Gagal memuat data terbaru.";
+            }
+        }
+
+        // 3. FUNGSI INTERAKTIF PINDAH HALAMAN
         function bukaHalaman(idHalaman) {
             const semuaHalaman = document.querySelectorAll('.section-block');
             semuaHalaman.forEach(halaman => {
@@ -60,10 +86,13 @@
             window.scrollTo({top: 0, behavior: 'smooth'});
         }
 
-        // 3. MENJALANKAN SISTEM SAAT HALAMAN SELESAI DIMUAT
+        // 4. RUN SYSTEM
         document.addEventListener("DOMContentLoaded", function() {
             perbaruiWaktuBMKG();
             setInterval(perbaruiWaktuBMKG, 1000);
+            
+            // Jalankan fungsi pengambil data gempa bumi asli
+            ambilDataGempaBMKG();
 
             const menuLinks = document.querySelectorAll('nav a');
             menuLinks.forEach(link => {
@@ -86,7 +115,7 @@
             font-family: 'Segoe UI', Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f8fafc;
+            background-color: #f4f7f6;
             color: #333333;
         }
         
@@ -131,7 +160,7 @@
             position: sticky;
             top: 0;
             z-index: 1000;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
         }
         .logo-section {
             display: flex;
@@ -162,12 +191,12 @@
         }
         nav a {
             text-decoration: none;
-            color: #444444;
+            color: #555555;
             font-size: 13px;
             font-weight: 600;
             padding: 5px 0;
             border-bottom: 2px solid transparent;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
         }
         nav a:hover, nav a.menu-aktif {
             color: #0c3c60;
@@ -179,7 +208,7 @@
             max-width: 1200px;
             margin: 30px auto;
             padding: 0 20px;
-            min-height: 55vh;
+            min-height: 58vh;
         }
         
         .section-block {
@@ -189,10 +218,11 @@
         }
 
         @keyframes efekMuncul {
-            from { opacity: 0; transform: translateY(8px); }
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
         
+        /* GAYA CARD MODERN DENGAN HOVER EFFECT EFFECT */
         .geo-card {
             background-color: #ffffff;
             border-radius: 12px;
@@ -200,6 +230,11 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.02);
             border: 1px solid #e2e8f0;
             margin-bottom: 25px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .geo-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(12, 60, 96, 0.08);
         }
         .geo-card-header {
             display: flex;
@@ -217,6 +252,23 @@
             font-size: 22px;
             color: #0c3c60;
         }
+        
+        /* LAYOUT GEMPA DENGAN PETA */
+        .gempa-flex-layout {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 30px;
+        }
+        .peta-shakemap {
+            width: 100%;
+            max-width: 450px;
+            height: auto;
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            display: none;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+
         .data-list {
             margin: 0;
             padding: 0;
@@ -225,7 +277,7 @@
         .data-list li {
             display: flex;
             justify-content: space-between;
-            padding: 12px 0;
+            padding: 14px 0;
             border-bottom: 1px dashed #e2e8f0;
             font-size: 15px;
         }
@@ -233,26 +285,31 @@
             border-bottom: none;
         }
         .data-label {
-            color: #555555;
+            color: #666666;
             font-weight: 500;
         }
         .data-value {
             color: #111111;
             font-weight: 700;
+            text-align: right;
+            max-width: 60%;
         }
         .badge-danger {
             background-color: #ef4444;
             color: white;
-            padding: 3px 10px;
+            padding: 4px 12px;
             border-radius: 4px;
             font-size: 13px;
         }
+        
+        /* BANNER DAN GRID BERANDA */
         .banner-beranda {
             background: linear-gradient(135deg, #0c3c60 0%, #176da8 100%);
             color: white;
             padding: 40px;
             border-radius: 12px;
             margin-bottom: 30px;
+            box-shadow: 0 4px 10px rgba(12, 60, 96, 0.15);
         }
         .banner-beranda h2 {
             margin: 0 0 10px 0;
@@ -282,38 +339,77 @@
             border-radius: 4px;
             margin-top: 15px;
         }
+        
+        /* WHATSAPP WIDGET */
         .whatsapp-widget {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
+            bottom: 25px;
+            right: 25px;
             display: flex;
             align-items: center;
             background-color: #ffffff;
-            padding: 8px 16px;
+            padding: 10px 20px;
             border-radius: 30px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.12);
             gap: 10px;
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
             border: 1px solid #eeeeee;
             text-decoration: none;
             color: #333;
             z-index: 999;
+            transition: all 0.3s ease;
+        }
+        .whatsapp-widget:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(37, 211, 102, 0.25);
         }
         .whatsapp-icon-svg {
-            width: 20px;
-            height: 20px;
+            width: 22px;
+            height: 22px;
             fill: #25D366;
         }
         footer {
             text-align: center;
-            padding: 20px;
-            margin-top: 50px;
+            padding: 25px;
+            margin-top: 65px;
             border-top: 1px solid #e2e8f0;
             font-size: 13px;
             color: #666;
             background-color: #fff;
+        }
+
+        /* RESPONSIVE LAYOUT UNTUK LAYAR HP */
+        @media (max-width: 768px) {
+            .top-time-bar {
+                flex-direction: column;
+                align-items: center;
+                gap: 5px;
+                text-align: center;
+                padding: 10px;
+            }
+            header {
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px;
+                text-align: center;
+            }
+            .logo-section {
+                flex-direction: column;
+                gap: 8px;
+            }
+            nav {
+                gap: 12px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .grid-beranda, .gempa-flex-layout {
+                grid-template-columns: 1fr;
+            }
+            .peta-shakemap {
+                margin: 0 auto;
+            }
         }
     </style>
 </head>
@@ -324,15 +420,15 @@
             MEMUAT TANGGAL...
         </div>
         <div class="time-right-side">
-            <div>STANDAR WAKTU INDONESIA: <span id="jam-wib">00 : 00 : 00</span> <span class="label-waktu">WIB</span></div>
+            <div>WIB: <span id="jam-wib">00 : 00 : 00</span></div>
             <div>|</div>
-            <div><span id="jam-utc">00 : 00 : 00</span> <span class="label-waktu" style="color:#4a5568;">UTC</span></div>
+            <div>UTC: <span id="jam-utc">00 : 00 : 00</span></div>
         </div>
     </div>
 
     <header>
         <div class="logo-section">
-            <img src="https://data.bmkg.go.id/include/assets/img/logo-bmkg.png" alt="Logo BMKG" onerror="this.src='https://laluzaidfadhila.github.io/stageof-deliserdang/logo-bmkg.png'">
+            <img src="logo-bmkg.png" alt="Logo BMKG" onerror="this.src='https://data.bmkg.go.id/include/assets/img/logo-bmkg.png'">
             <div class="logo-text">
                 <h1>BADAN METEOROLOGI, KLIMATOLOGI, DAN GEOFISIKA</h1>
                 <p>Stasiun Geofisika Kelas I Deli Serdang</p>
@@ -366,9 +462,9 @@
                 </div>
                 <div>
                     <h3 style="color: #0c3c60; margin-top: 0;">Kontak Informasi</h3>
-                    <p style="font-size: 14px; margin: 5px 0;">📍 Jl. besar Tuntungan, Deli Serdang</p>
-                    <p style="font-size: 14px; margin: 5px 0;">📞 (061) XXXXXXX</p>
-                    <p style="font-size: 14px; margin: 5px 0;">✉️ stageof.deliserdang@bmkg.go.id</p>
+                    <p style="font-size: 14px; margin: 8px 0;">📍 Jl. besar Tuntungan, Deli Serdang</p>
+                    <p style="font-size: 14px; margin: 8px 0;">📞 (061) XXXXXXX</p>
+                    <p style="font-size: 14px; margin: 8px 0;">✉️ stageof.deliserdang@bmkg.go.id</p>
                 </div>
             </div>
         </div>
@@ -377,15 +473,23 @@
             <div class="geo-card">
                 <div class="geo-card-header">
                     <span class="geo-icon">🌋</span>
-                    <h3>Informasi Gempabumi Terkini</h3>
+                    <h3>Informasi Gempabumi Terkini (M 5.0+)</h3>
                 </div>
-                <ul class="data-list">
-                    <li><span class="data-label">Waktu Kejadian</span><span class="data-value">Sesaat Lalu (Real-time Sync)</span></li>
-                    <li><span class="data-label">Magnitudo</span><span class="data-value"><span class="badge-danger">M 5.2</span></span></li>
-                    <li><span class="data-label">Kedalaman</span><span class="data-value">10 Km</span></li>
-                    <li><span class="data-label">Lokasi</span><span class="data-value">Pantai Barat Sumatra Utara</span></li>
-                    <li><span class="data-label">Potensi Tsunami</span><span class="data-value">Tidak Berpotensi Tsunami</span></li>
-                </ul>
+                
+                <div class="gempa-flex-layout">
+                    <div>
+                        <ul class="data-list">
+                            <li><span class="data-label">Waktu Kejadian</span><span class="data-value" id="gempa-waktu">Menghubungkan ke API BMKG...</span></li>
+                            <li><span class="data-label">Magnitudo</span><span class="data-value"><span class="badge-danger" id="gempa-mag">-</span></span></li>
+                            <li><span class="data-label">Kedalaman</span><span class="data-value" id="gempa-dalam">-</span></li>
+                            <li><span class="data-label">Lokasi Koordinat</span><span class="data-value" id="gempa-lokasi">-</span></li>
+                            <li><span class="data-label">Potensi Dampak</span><span class="data-value" id="gempa-potensi">-</span></li>
+                        </ul>
+                    </div>
+                    <div style="text-align: center;">
+                        <img id="gempa-peta" src="" alt="Peta Pencitraan Gempa BMKG" class="peta-shakemap">
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -409,7 +513,7 @@
                     <span class="geo-icon">📅</span>
                     <h3>Sistem Tanda Waktu & Hilal</h3>
                 </div>
-                <p>Pelayanan data astronomis berupa konversi waktu, peta lintasan gerhana, serta data hisab/rukyat hilal untuk penentuan awal bulan hijriah.</p>
+                <p>Pelayanan data astronomis berupa konversi waktu, peta lintasan gerhana, serta data hisab/rukyat hilal untuk penentuan awal bulan hijriah di wilayah Sumatra Utara.</p>
             </div>
         </div>
 
