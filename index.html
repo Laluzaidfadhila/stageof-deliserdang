@@ -15,7 +15,7 @@
             const namaHari = daftarHari[sekarang.getDay()];
             const tanggal = sekarang.getDate();
             const namaBulan = daftarBulan[sekarang.getMonth()];
-            const tahun = Bird = sekarang.getFullYear();
+            const tahun = sekarang.getFullYear();
 
             const elTanggal = document.getElementById("tanggal-hari-pusat");
             if(elTanggal) elTanggal.innerText = `${namaHari}, ${tanggal} ${namaBulan} ${tahun}`;
@@ -38,7 +38,6 @@
         // 2. INTEGRASI API GEMPA BUMI OTOMATIS DENGAN BYPASS CORS PROXY
         async function ambilDataGempaBMKG() {
             try {
-                // Menggunakan proxy allorigins agar tidak diblokir keamanan CORS BMKG
                 const urlAsli = "https://data.bmkg.go.id/DataMKG/TEWS/autogempa.json";
                 const urlProxy = `https://api.allorigins.win/get?url=${encodeURIComponent(urlAsli)}`;
                 
@@ -46,19 +45,15 @@
                 if (!respon.ok) throw new Error("Respon jaringan bermasalah");
                 
                 const dataProxy = await respon.json();
-                
-                // Mengubah string teks kembali menjadi objek JSON resmi
                 const data = JSON.parse(dataProxy.contents);
                 const gempa = data.Infogempa.gempa;
 
-                // Mengisi data ke elemen HTML secara otomatis
                 document.getElementById("gempa-waktu").innerText = gempa.Tanggal + " - " + gempa.Jam;
                 document.getElementById("gempa-mag").innerText = "M " + gempa.Magnitude;
                 document.getElementById("gempa-dalam").innerText = gempa.Kedalaman;
                 document.getElementById("gempa-lokasi").innerText = gempa.Wilayah;
                 document.getElementById("gempa-potensi").innerText = gempa.Potensi;
                 
-                // Menampilkan peta episenter gempa dari server BMKG
                 const elPeta = document.getElementById("gempa-peta");
                 elPeta.src = "https://data.bmkg.go.id/DataMKG/TEWS/" + gempa.Shakemap;
                 elPeta.style.display = "block";
@@ -98,8 +93,6 @@
         document.addEventListener("DOMContentLoaded", function() {
             perbaruiWaktuBMKG();
             setInterval(perbaruiWaktuBMKG, 1000);
-            
-            // Jalankan fungsi pengambil data gempa bumi realtime
             ambilDataGempaBMKG();
 
             const menuLinks = document.querySelectorAll('nav a');
@@ -150,10 +143,6 @@
         }
         .time-right-side span {
             color: #1a202c;
-            font-weight: 700;
-        }
-        .time-right-side .label-waktu {
-            color: #e53e3e;
             font-weight: 700;
         }
 
@@ -230,7 +219,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
         
-        /* GAYA CARD MODERN DENGAN HOVER EFFECT */
         .geo-card {
             background-color: #ffffff;
             border-radius: 12px;
@@ -238,11 +226,6 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.02);
             border: 1px solid #e2e8f0;
             margin-bottom: 25px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .geo-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 10px 20px rgba(12, 60, 96, 0.08);
         }
         .geo-card-header {
             display: flex;
@@ -252,16 +235,142 @@
             border-bottom: 2px solid #0c3c60;
             padding-bottom: 12px;
         }
-        .geo-icon {
-            font-size: 28px;
-        }
         .geo-card-header h3 {
             margin: 0;
             font-size: 22px;
             color: #0c3c60;
         }
         
-        /* LAYOUT GEMPA DENGAN PETA */
+        /* BANNER DAN GRID BERANDA */
+        .banner-beranda {
+            background: linear-gradient(135deg, #0c3c60 0%, #176da8 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+        .grid-beranda {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            background-color: #ffffff;
+            color: #333333;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 30px;
+        }
+        .info-box-beranda {
+            background-color: #f8fafc;
+            border-left: 5px solid #0c3c60;
+            padding: 20px;
+            border-radius: 4px;
+            margin-top: 15px;
+        }
+
+        /* --- DESAIN BAGAN STRUKTUR Sederhana & Sinkron Tema BMKG --- */
+        .chart-container {
+            background-color: #ffffff;
+            padding: 35px 20px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            text-align: center;
+        }
+        .chart-title {
+            color: #0c3c60;
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            letter-spacing: 0.5px;
+        }
+        .org-node {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            padding: 10px 15px;
+            display: inline-block;
+            min-width: 200px;
+            box-sizing: border-box;
+        }
+        .org-node .role {
+            font-size: 10px;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: #176da8;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+        }
+        .org-node .name {
+            font-size: 13px;
+            font-weight: 700;
+            color: #0c3c60;
+        }
+        .org-node .nip {
+            font-size: 10px;
+            color: #64748b;
+        }
+        
+        /* Garis Penghubung Simpel Vertikal */
+        .line-v {
+            width: 2px;
+            height: 20px;
+            background-color: #cbd5e1;
+            margin: 0 auto;
+        }
+
+        /* Kelompok Headers Sub-Struktur */
+        .fungsional-header {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #0c3c60;
+            background-color: #e2e8f0;
+            padding: 6px 12px;
+            margin: 20px auto 15px auto;
+            max-width: 300px;
+            border-radius: 4px;
+            letter-spacing: 0.5px;
+        }
+        .fungsional-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .fungsional-grid .staff-card {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 10px;
+            text-align: left;
+        }
+        .fungsional-grid .staff-num {
+            font-size: 9px;
+            font-weight: 700;
+            color: #94a3b8;
+            margin-bottom: 2px;
+        }
+        .fungsional-grid .staff-name {
+            font-size: 12px;
+            font-weight: 600;
+            color: #334155;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .fungsional-grid .staff-title {
+            font-size: 10px;
+            color: #64748b;
+        }
+        
+        /* Modifikasi Khusus Aksen Garis Kiri untuk PPNPN */
+        .ppnpn-card {
+            border-left: 3px solid #11caa0 !important;
+        }
+        
+        /* GEMPA LAYOUT */
         .gempa-flex-layout {
             display: grid;
             grid-template-columns: 1.2fr 1fr;
@@ -274,9 +383,7 @@
             border-radius: 8px;
             border: 1px solid #cbd5e1;
             display: none;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
         }
-
         .data-list {
             margin: 0;
             padding: 0;
@@ -292,61 +399,9 @@
         .data-list li:last-child {
             border-bottom: none;
         }
-        .data-label {
-            color: #666666;
-            font-weight: 500;
-        }
-        .data-value {
-            color: #111111;
-            font-weight: 700;
-            text-align: right;
-            max-width: 60%;
-        }
-        .badge-danger {
-            background-color: #ef4444;
-            color: white;
-            padding: 4px 12px;
-            border-radius: 4px;
-            font-size: 13px;
-        }
-        
-        /* BANNER DAN GRID BERANDA */
-        .banner-beranda {
-            background: linear-gradient(135deg, #0c3c60 0%, #176da8 100%);
-            color: white;
-            padding: 40px;
-            border-radius: 12px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 10px rgba(12, 60, 96, 0.15);
-        }
-        .banner-beranda h2 {
-            margin: 0 0 10px 0;
-            font-size: 28px;
-        }
-        .banner-beranda p {
-            margin: 0;
-            opacity: 0.9;
-            font-size: 15px;
-            line-height: 1.6;
-        }
-        .grid-beranda {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 30px;
-            background-color: #ffffff;
-            color: #333333;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
-            border: 1px solid #e2e8f0;
-        }
-        .info-box-beranda {
-            background-color: #f8fafc;
-            border-left: 5px solid #0c3c60;
-            padding: 20px;
-            border-radius: 4px;
-            margin-top: 15px;
-        }
+        .data-label { color: #666666; font-weight: 500; }
+        .data-value { color: #111111; font-weight: 700; text-align: right; }
+        .badge-danger { background-color: #ef4444; color: white; padding: 4px 12px; border-radius: 4px; font-size: 13px; }
         
         /* WHATSAPP WIDGET */
         .whatsapp-widget {
@@ -362,71 +417,36 @@
             gap: 10px;
             font-size: 13px;
             font-weight: 600;
-            cursor: pointer;
             border: 1px solid #eeeeee;
             text-decoration: none;
             color: #333;
             z-index: 999;
             transition: all 0.3s ease;
         }
-        .whatsapp-widget:hover {
-            transform: scale(1.05);
-            box-shadow: 0 8px 20px rgba(37, 211, 102, 0.25);
-        }
-        .whatsapp-icon-svg {
-            width: 22px;
-            height: 22px;
-            fill: #25D366;
-        }
-        footer {
-            text-align: center;
-            padding: 25px;
-            margin-top: 65px;
-            border-top: 1px solid #e2e8f0;
-            font-size: 13px;
-            color: #666;
-            background-color: #fff;
-        }
+        .whatsapp-icon-svg { width: 22px; height: 22px; fill: #25D366; }
+        footer { text-align: center; padding: 25px; margin-top: 65px; border-top: 1px solid #e2e8f0; font-size: 13px; color: #666; background-color: #fff; }
 
-        /* RESPONSIVE LAYOUT UNTUK LAYAR HP */
+        @media (max-width: 992px) {
+            .fungsional-grid { grid-template-columns: repeat(3, 1fr); }
+        }
         @media (max-width: 768px) {
-            .top-time-bar {
-                flex-direction: column;
-                align-items: center;
-                gap: 5px;
-                text-align: center;
-                padding: 10px;
-            }
-            header {
-                flex-direction: column;
-                gap: 15px;
-                padding: 15px;
-                text-align: center;
-            }
-            .logo-section {
-                flex-direction: column;
-                gap: 8px;
-            }
-            nav {
-                gap: 12px;
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-            .grid-beranda, .gempa-flex-layout {
-                grid-template-columns: 1fr;
-            }
-            .peta-shakemap {
-                margin: 0 auto;
-            }
+            .top-time-bar { flex-direction: column; align-items: center; gap: 5px; text-align: center; padding: 10px; }
+            header { flex-direction: column; gap: 15px; padding: 15px; text-align: center; }
+            .logo-section { flex-direction: column; gap: 8px; }
+            nav { gap: 12px; flex-wrap: wrap; justify-content: center; }
+            .grid-beranda, .gempa-flex-layout { grid-template-columns: 1fr; }
+            .peta-shakemap { margin: 0 auto; }
+            .fungsional-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 480px) {
+            .fungsional-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
     <div class="top-time-bar">
-        <div class="time-left-side" id="tanggal-hari-pusat">
-            MEMUAT TANGGAL...
-        </div>
+        <div class="time-left-side" id="tanggal-hari-pusat">MEMUAT TANGGAL...</div>
         <div class="time-right-side">
             <div>WIB: <span id="jam-wib">00 : 00 : 00</span></div>
             <div>|</div>
@@ -442,7 +462,6 @@
                 <p>Stasiun Geofisika Kelas I Deli Serdang</p>
             </div>
         </div>
-
         <nav>
             <a href="#beranda">Beranda</a>
             <a href="#gempabumi">Gempabumi</a>
@@ -475,6 +494,61 @@
                     <p style="font-size: 14px; margin: 8px 0;">✉️ stageof.deliserdang@bmkg.go.id</p>
                 </div>
             </div>
+
+            <div class="chart-container">
+                <div class="chart-title">STRUKTUR ORGANISASI</div>
+                
+                <div class="org-node" style="border-top: 3px solid #ef4444;">
+                    <div class="role">Kepala Stasiun</div>
+                    <div class="name">Nama Kepala Stasiun, S.Si</div>
+                    <div class="nip">NIP. 1985XXXXXXXXXXXXXX</div>
+                </div>
+
+                <div class="line-v"></div>
+
+                <div class="org-node" style="border-top: 3px solid #0c3c60;">
+                    <div class="role">Kasubag Tata Usaha</div>
+                    <div class="name">Nama Kasubag TU</div>
+                    <div class="nip">NIP. 1988XXXXXXXXXXXXXX</div>
+                </div>
+
+                <div class="line-v" style="height: 30px;"></div>
+
+                <div class="fungsional-header">Kelompok Jabatan Fungsional</div>
+                <div class="fungsional-grid">
+                    <div class="staff-card"><div class="staff-num">01</div><div class="staff-name">Pegawai Pertama, S.T</div><div class="staff-title">PMG Ahli Muda</div></div>
+                    <div class="staff-card"><div class="staff-num">02</div><div class="staff-name">Pegawai Kedua, S.Si</div><div class="staff-title">PMG Ahli Muda</div></div>
+                    <div class="staff-card"><div class="staff-num">03</div><div class="staff-name">Pegawai Ketiga</div><div class="staff-title">PMG Ahli Pertama</div></div>
+                    <div class="staff-card"><div class="staff-num">04</div><div class="staff-name">Pegawai Keempat</div><div class="staff-title">PMG Ahli Pertama</div></div>
+                    <div class="staff-card"><div class="staff-num">05</div><div class="staff-name">Pegawai Kelima</div><div class="staff-title">PMG Ahli Pertama</div></div>
+                    <div class="staff-card"><div class="staff-num">06</div><div class="staff-name">Pegawai Keenam</div><div class="staff-title">PMG Ahli Pertama</div></div>
+                    <div class="staff-card"><div class="staff-num">07</div><div class="staff-name">Pegawai Ketujuh</div><div class="staff-title">PMG Pelaksana</div></div>
+                    <div class="staff-card"><div class="staff-num">08</div><div class="staff-name">Pegawai Kedelapan</div><div class="staff-title">PMG Pelaksana</div></div>
+                    <div class="staff-card"><div class="staff-num">09</div><div class="staff-name">Pegawai Kesembilan</div><div class="staff-title">PMG Pelaksana</div></div>
+                    <div class="staff-card"><div class="staff-num">10</div><div class="staff-name">Pegawai Kesepuluh</div><div class="staff-title">PMG Pelaksana</div></div>
+                    <div class="staff-card"><div class="staff-num">11</div><div class="staff-name">Pegawai Sebelas</div><div class="staff-title">PMG Pelaksana</div></div>
+                    <div class="staff-card"><div class="staff-num">12</div><div class="staff-name">Pegawai Dua Belas</div><div class="staff-title">PMG Pelaksana</div></div>
+                    <div class="staff-card"><div class="staff-num">13</div><div class="staff-name">Pegawai Tiga Belas</div><div class="staff-title">Staff Operasional</div></div>
+                    <div class="staff-card"><div class="staff-num">14</div><div class="staff-name">Pegawai Empat Belas</div><div class="staff-title">Staff Operasional</div></div>
+                    <div class="staff-card"><div class="staff-num">15</div><div class="staff-name">Pegawai Lima Belas</div><div class="staff-title">Staff Operasional</div></div>
+                    <div class="staff-card"><div class="staff-num">16</div><div class="staff-name">Pegawai Enam Belas</div><div class="staff-title">Staff Operasional</div></div>
+                    <div class="staff-card"><div class="staff-num">17</div><div class="staff-name">Pegawai Tujuh Belas</div><div class="staff-title">Staff Operasional</div></div>
+                </div>
+
+                <div class="line-v" style="height: 30px;"></div>
+
+                <div class="fungsional-header" style="background-color: #d1fae5; color: #065f46;">PPNPN</div>
+                <div class="fungsional-grid">
+                    <div class="staff-card ppnpn-card"><div class="staff-num">01</div><div class="staff-name">Nama PPNPN 1</div><div class="staff-title">PPNPN Kantor</div></div>
+                    <div class="staff-card ppnpn-card"><div class="staff-num">02</div><div class="staff-name">Nama PPNPN 2</div><div class="staff-title">PPNPN Kantor</div></div>
+                    <div class="staff-card ppnpn-card"><div class="staff-num">03</div><div class="staff-name">Nama PPNPN 3</div><div class="staff-title">PPNPN Kantor</div></div>
+                    <div class="staff-card ppnpn-card"><div class="staff-num">04</div><div class="staff-name">Nama PPNPN 4</div><div class="staff-title">PPNPN Kantor</div></div>
+                    <div class="staff-card ppnpn-card"><div class="staff-num">05</div><div class="staff-name">Nama PPNPN 5</div><div class="staff-title">PPNPN Kantor</div></div>
+                    <div class="staff-card ppnpn-card"><div class="staff-num">06</div><div class="staff-name">Nama PPNPN 6</div><div class="staff-title">PPNPN Kantor</div></div>
+                    <div class="staff-card ppnpn-card"><div class="staff-num">07</div><div class="staff-name">Nama PPNPN 7</div><div class="staff-title">PPNPN Kantor</div></div>
+                </div>
+
+            </div>
         </div>
 
         <div id="gempabumi" class="section-block">
@@ -483,7 +557,6 @@
                     <span class="geo-icon">🌋</span>
                     <h3>Informasi Gempabumi Terkini (M 5.0+)</h3>
                 </div>
-                
                 <div class="gempa-flex-layout">
                     <div>
                         <ul class="data-list">
