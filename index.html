@@ -133,18 +133,9 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
-        .time-left-side {
-            color: #2b6cb0;
-        }
-        .time-right-side {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        .time-right-side span {
-            color: #1a202c;
-            font-weight: 700;
-        }
+        .time-left-side { color: #2b6cb0; }
+        .time-right-side { display: flex; align-items: center; gap: 15px; }
+        .time-right-side span { color: #1a202c; font-weight: 700; }
 
         /* HEADER UTAMA WEBSITE */
         header {
@@ -159,53 +150,24 @@
             z-index: 1000;
             box-shadow: 0 2px 8px rgba(0,0,0,0.04);
         }
-        .logo-section {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        .logo-section img {
-            width: 50px;
-            height: auto;
-            display: block;
-        }
-        .logo-text h1 {
-            font-size: 14px;
-            margin: 0;
-            color: #0c3c60;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-        }
-        .logo-text p {
-            font-size: 11px;
-            margin: 2px 0 0 0;
-            color: #666666;
-            font-weight: 500;
-        }
-        nav {
-            display: flex;
-            gap: 25px;
-        }
+        .logo-section { display: flex; align-items: center; gap: 15px; }
+        .logo-section img { width: 50px; height: auto; display: block; }
+        .logo-text h1 { font-size: 14px; margin: 0; color: #0c3c60; font-weight: 700; letter-spacing: 0.5px; }
+        .logo-text p { font-size: 11px; margin: 2px 0 0 0; color: #666666; font-weight: 500; }
+        
+        nav { display: flex; gap: 25px; }
         nav a {
-            text-decoration: none;
-            color: #555555;
-            font-size: 13px;
-            font-weight: 600;
-            padding: 5px 0;
-            border-bottom: 2px solid transparent;
-            transition: all 0.3s ease;
+            text-decoration: none; color: #555555; font-size: 13px; font-weight: 600;
+            padding: 5px 0; border-bottom: 2px solid transparent; transition: all 0.3s ease;
         }
-        nav a:hover, nav a.menu-aktif {
-            color: #0c3c60;
-            border-bottom: 2px solid #0c3c60;
-        }
+        nav a:hover, nav a.menu-aktif { color: #0c3c60; border-bottom: 2px solid #0c3c60; }
 
         /* CONTAINER KONTEN UTAMA */
         .dashboard-container {
             max-width: 1200px;
             margin: 30px auto;
             padding: 0 20px;
-            min-height: 58vh;
+            min-height: 50vh;
         }
         
         .section-block {
@@ -220,213 +182,240 @@
         }
         
         .geo-card {
-            background-color: #ffffff;
-            border-radius: 12px;
-            padding: 30px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
-            border: 1px solid #e2e8f0;
-            margin-bottom: 25px;
+            background-color: #ffffff; border-radius: 12px; padding: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02); border: 1px solid #e2e8f0; margin-bottom: 25px;
         }
         .geo-card-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #0c3c60;
-            padding-bottom: 12px;
+            display: flex; align-items: center; gap: 12px; margin-bottom: 20px;
+            border-bottom: 2px solid #0c3c60; padding-bottom: 12px;
         }
-        .geo-card-header h3 {
-            margin: 0;
-            font-size: 22px;
-            color: #0c3c60;
-        }
+        .geo-card-header h3 { margin: 0; font-size: 22px; color: #0c3c60; }
         
-        /* BANNER DAN GRID BERANDA */
+        /* BANNER DAN GRID */
         .banner-beranda {
             background: linear-gradient(135deg, #0c3c60 0%, #176da8 100%);
-            color: white;
-            padding: 40px;
-            border-radius: 12px;
-            margin-bottom: 30px;
+            color: white; padding: 40px; border-radius: 12px; margin-bottom: 30px;
         }
         .grid-beranda {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 30px;
-            background-color: #ffffff;
-            color: #333333;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
-            border: 1px solid #e2e8f0;
-            margin-bottom: 30px;
+            display: grid; grid-template-columns: 2fr 1fr; gap: 30px;
+            background-color: #ffffff; color: #333333; padding: 30px; border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02); border: 1px solid #e2e8f0; margin-bottom: 30px;
         }
         .info-box-beranda {
-            background-color: #f8fafc;
-            border-left: 5px solid #0c3c60;
-            padding: 20px;
-            border-radius: 4px;
-            margin-top: 15px;
+            background-color: #f8fafc; border-left: 5px solid #0c3c60; padding: 20px; border-radius: 4px; margin-top: 15px;
         }
 
-        /* --- DESAIN BAGAN STRUKTUR Sederhana & Sinkron Tema BMKG --- */
+        /* DESAIN BAGAN STRUKTUR */
         .chart-container {
-            background-color: #ffffff;
-            padding: 35px 20px;
-            border-radius: 12px;
-            border: 1px solid #e2e8f0;
-            text-align: center;
+            background-color: #ffffff; padding: 35px 20px; border-radius: 12px;
+            border: 1px solid #e2e8f0; text-align: center;
         }
-        .chart-title {
-            color: #0c3c60;
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 30px;
-            letter-spacing: 0.5px;
-        }
-        .org-node {
-            background: #ffffff;
-            border: 1px solid #cbd5e1;
-            border-radius: 6px;
-            padding: 10px 15px;
-            display: inline-block;
-            min-width: 200px;
-            box-sizing: border-box;
-        }
-        .org-node .role {
-            font-size: 10px;
-            text-transform: uppercase;
-            font-weight: 700;
-            color: #176da8;
-            letter-spacing: 0.5px;
-            margin-bottom: 2px;
-        }
-        .org-node .name {
-            font-size: 13px;
-            font-weight: 700;
-            color: #0c3c60;
-        }
-        .org-node .nip {
-            font-size: 10px;
-            color: #64748b;
-        }
-        
-        /* Garis Penghubung Simpel Vertikal */
-        .line-v {
-            width: 2px;
-            height: 20px;
-            background-color: #cbd5e1;
-            margin: 0 auto;
-        }
+        .chart-title { color: #0c3c60; font-size: 20px; font-weight: 700; margin-bottom: 30px; letter-spacing: 0.5px; }
+        .org-node { background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; padding: 10px 15px; display: inline-block; min-width: 200px; }
+        .org-node .role { font-size: 10px; text-transform: uppercase; font-weight: 700; color: #176da8; margin-bottom: 2px; }
+        .org-node .name { font-size: 13px; font-weight: 700; color: #0c3c60; }
+        .org-node .nip { font-size: 10px; color: #64748b; }
+        .line-v { width: 2px; height: 20px; background-color: #cbd5e1; margin: 0 auto; }
 
-        /* Kelompok Headers Sub-Struktur */
         .fungsional-header {
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            color: #0c3c60;
-            background-color: #e2e8f0;
-            padding: 6px 12px;
-            margin: 20px auto 15px auto;
-            max-width: 300px;
-            border-radius: 4px;
-            letter-spacing: 0.5px;
+            font-size: 11px; font-weight: 700; text-transform: uppercase; color: #0c3c60;
+            background-color: #e2e8f0; padding: 6px 12px; margin: 20px auto 15px auto; max-width: 300px; border-radius: 4px;
         }
-        .fungsional-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-        .fungsional-grid .staff-card {
-            background-color: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 6px;
-            padding: 10px;
-            text-align: left;
-        }
-        .fungsional-grid .staff-num {
-            font-size: 9px;
-            font-weight: 700;
-            color: #94a3b8;
-            margin-bottom: 2px;
-        }
-        .fungsional-grid .staff-name {
-            font-size: 12px;
-            font-weight: 600;
-            color: #334155;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .fungsional-grid .staff-title {
-            font-size: 10px;
-            color: #64748b;
-        }
-        
-        /* Modifikasi Khusus Aksen Garis Kiri untuk PPNPN */
-        .ppnpn-card {
-            border-left: 3px solid #11caa0 !important;
-        }
+        .fungsional-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; max-width: 1000px; margin: 0 auto; }
+        .fungsional-grid .staff-card { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px; text-align: left; }
+        .fungsional-grid .staff-num { font-size: 9px; font-weight: 700; color: #94a3b8; margin-bottom: 2px; }
+        .fungsional-grid .staff-name { font-size: 12px; font-weight: 600; color: #334155; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .fungsional-grid .staff-title { font-size: 10px; color: #64748b; }
+        .ppnpn-card { border-left: 3px solid #11caa0 !important; }
         
         /* GEMPA LAYOUT */
-        .gempa-flex-layout {
-            display: grid;
-            grid-template-columns: 1.2fr 1fr;
-            gap: 30px;
-        }
-        .peta-shakemap {
-            width: 100%;
-            max-width: 450px;
-            height: auto;
-            border-radius: 8px;
-            border: 1px solid #cbd5e1;
-            display: none;
-        }
-        .data-list {
-            margin: 0;
-            padding: 0;
-            list-style: none;
-        }
-        .data-list li {
-            display: flex;
-            justify-content: space-between;
-            padding: 14px 0;
-            border-bottom: 1px dashed #e2e8f0;
-            font-size: 15px;
-        }
-        .data-list li:last-child {
-            border-bottom: none;
-        }
+        .gempa-flex-layout { display: grid; grid-template-columns: 1.2fr 1fr; gap: 30px; }
+        .peta-shakemap { width: 100%; max-width: 450px; height: auto; border-radius: 8px; border: 1px solid #cbd5e1; display: none; }
+        .data-list { margin: 0; padding: 0; list-style: none; }
+        .data-list li { display: flex; justify-content: space-between; padding: 14px 0; border-bottom: 1px dashed #e2e8f0; font-size: 15px; }
+        .data-list li:last-child { border-bottom: none; }
         .data-label { color: #666666; font-weight: 500; }
         .data-value { color: #111111; font-weight: 700; text-align: right; }
         .badge-danger { background-color: #ef4444; color: white; padding: 4px 12px; border-radius: 4px; font-size: 13px; }
-        
-        /* WHATSAPP WIDGET */
-        .whatsapp-widget {
+
+        /* ========================================================
+           STYLE FOOTER RESMI AKURAT TEMA OFFICIAL BMKG PUSAT 
+        ======================================================== */
+        .official-footer {
+            background-color: #0b1a30; /* Warna biru gelap resmi BMKG */
+            color: #ffffff;
+            padding: 50px 40px 20px 40px;
+            font-size: 13px;
+            line-height: 1.8;
+            border-top: 3px solid #176da8;
+        }
+        .footer-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1.2fr 1fr 1fr 1.2fr;
+            gap: 40px;
+        }
+        .footer-col h4 {
+            color: #ffffff;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin: 0 0 20px 0;
+            letter-spacing: 0.5px;
+            position: relative;
+        }
+        .footer-logo-area img {
+            width: 45px;
+            height: auto;
+            margin-bottom: 15px;
+        }
+        .footer-contact-info p {
+            margin: 8px 0;
+            color: #cbd5e1;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        .footer-links-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .footer-links-list li {
+            margin-bottom: 10px;
+        }
+        .footer-links-list a {
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: color 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .footer-links-list a:hover {
+            color: #38bdf8;
+        }
+        /* Simbol tanda panah miring khas web BMKG */
+        .footer-links-list a::after {
+            content: "↗";
+            font-size: 11px;
+            opacity: 0.7;
+        }
+        .store-badges {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .store-badges img {
+            height: 34px;
+            width: auto;
+        }
+        .social-icons-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+        .social-circle {
+            width: 32px;
+            height: 32px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 12px;
+            transition: background 0.2s;
+        }
+        .social-circle:hover {
+            background-color: #176da8;
+        }
+        .cert-badges {
+            display: flex;
+            gap: 10px;
+        }
+        .cert-badges img {
+            height: 40px;
+            width: auto;
+        }
+        .footer-bottom-bar {
+            max-width: 1200px;
+            margin: 40px auto 0 auto;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #94a3b8;
+            font-size: 12px;
+        }
+        .footer-bottom-links {
+            display: flex;
+            gap: 20px;
+        }
+        .footer-bottom-links a {
+            color: #94a3b8;
+            text-decoration: none;
+        }
+        .footer-bottom-links a:hover {
+            color: #ffffff;
+        }
+
+        /* WIDGET WHATSAPP PERBAIKAN POP-UP */
+        .whatsapp-widget-container {
             position: fixed;
             bottom: 25px;
             right: 25px;
             display: flex;
-            align-items: center;
-            background-color: #ffffff;
-            padding: 10px 20px;
-            border-radius: 30px;
-            box-shadow: 0 6px 16px rgba(0,0,0,0.12);
-            gap: 10px;
-            font-size: 13px;
-            font-weight: 600;
-            border: 1px solid #eeeeee;
-            text-decoration: none;
-            color: #333;
-            z-index: 999;
-            transition: all 0.3s ease;
+            flex-direction: column;
+            align-items: flex-end;
+            z-index: 9999;
+            font-family: sans-serif;
         }
-        .whatsapp-icon-svg { width: 22px; height: 22px; fill: #25D366; }
-        footer { text-align: center; padding: 25px; margin-top: 65px; border-top: 1px solid #e2e8f0; font-size: 13px; color: #666; background-color: #fff; }
+        .wa-pop-bubble {
+            background: #ffffff;
+            color: #333333;
+            padding: 7px 14px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            border: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .wa-close-x {
+            cursor: pointer;
+            color: #94a3b8;
+            font-weight: bold;
+        }
+        .whatsapp-circle-btn {
+            width: 50px;
+            height: 50px;
+            background-color: #25D366;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+        }
+        .whatsapp-circle-btn:hover {
+            transform: scale(1.08);
+        }
+        .whatsapp-circle-btn svg {
+            width: 26px;
+            height: 26px;
+            fill: #ffffff;
+        }
 
         @media (max-width: 992px) {
+            .footer-grid { grid-template-columns: repeat(2, 1fr); gap: 30px; }
             .fungsional-grid { grid-template-columns: repeat(3, 1fr); }
         }
         @media (max-width: 768px) {
@@ -437,10 +426,10 @@
             .grid-beranda, .gempa-flex-layout { grid-template-columns: 1fr; }
             .peta-shakemap { margin: 0 auto; }
             .fungsional-grid { grid-template-columns: repeat(2, 1fr); }
+            .footer-grid { grid-template-columns: 1fr; }
+            .footer-bottom-bar { flex-direction: column; gap: 15px; text-align: center; }
         }
-        @media (max-width: 480px) {
-            .fungsional-grid { grid-template-columns: 1fr; }
-        }
+        @media (max-width: 480px) { .fungsional-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -464,6 +453,7 @@
         </div>
         <nav>
             <a href="#beranda">Beranda</a>
+            <a href="#profil">Profil Kantor</a>
             <a href="#gempabumi">Gempabumi</a>
             <a href="#magnet">Magnet Bumi</a>
             <a href="#tandawaktu">Tanda Waktu</a>
@@ -474,11 +464,14 @@
     <div class="dashboard-container">
 
         <div id="beranda" class="section-block">
-            <div class="banner-beranda">
+            <div class="banner-beranda" style="text-align: center; padding: 60px 20px;">
                 <h2>Selamat Datang di Portal Resmi</h2>
-                <p>Stasiun Geofisika Kelas I Deli Serdang - Badan Meteorologi, Klimatologi, dan Geofisika (BMKG).</p>
+                <p style="font-size: 16px; margin-bottom: 20px;">Stasiun Geofisika Kelas I Deli Serdang - Badan Meteorologi, Klimatologi, dan Geofisika (BMKG).</p>
+                <p style="font-size: 14px; opacity: 0.8;">Gunakan menu navigasi di atas untuk mengakses monitoring realtime data Gempabumi, Magnet Bumi, Tanda Waktu, dan Sambaran Petir di wilayah Sumatra Utara.</p>
             </div>
-            
+        </div>
+
+        <div id="profil" class="section-block">
             <div class="grid-beranda">
                 <div>
                     <h3 style="color: #0c3c60; margin-top: 0;">Profil Instansi</h3>
@@ -496,7 +489,7 @@
             </div>
 
             <div class="chart-container">
-                <div class="chart-title">STRUKTUR ORGANISASI</div>
+                <div class="chart-title">STRUKTUR ORGANISASI KANTOR</div>
                 
                 <div class="org-node" style="border-top: 3px solid #ef4444;">
                     <div class="role">Kepala Stasiun</div>
@@ -537,7 +530,7 @@
 
                 <div class="line-v" style="height: 30px;"></div>
 
-                <div class="fungsional-header" style="background-color: #d1fae5; color: #065f46;">PPNPN</div>
+                <div class="fungsional-header" style="background-color: #d1fae5; color: #065f46;">Pegawai PPNPN</div>
                 <div class="fungsional-grid">
                     <div class="staff-card ppnpn-card"><div class="staff-num">01</div><div class="staff-name">Nama PPNPN 1</div><div class="staff-title">PPNPN Kantor</div></div>
                     <div class="staff-card ppnpn-card"><div class="staff-num">02</div><div class="staff-name">Nama PPNPN 2</div><div class="staff-title">PPNPN Kantor</div></div>
@@ -547,7 +540,6 @@
                     <div class="staff-card ppnpn-card"><div class="staff-num">06</div><div class="staff-name">Nama PPNPN 6</div><div class="staff-title">PPNPN Kantor</div></div>
                     <div class="staff-card ppnpn-card"><div class="staff-num">07</div><div class="staff-name">Nama PPNPN 7</div><div class="staff-title">PPNPN Kantor</div></div>
                 </div>
-
             </div>
         </div>
 
@@ -614,16 +606,88 @@
 
     </div> 
 
-    <footer>
-        &copy; 2026 Stasiun Geofisika Kelas I Deli Serdang - BMKG. All Rights Reserved.
+    <footer class="official-footer">
+        <div class="footer-grid">
+            <div class="footer-col footer-logo-area">
+                <img src="logo-bmkg.png" alt="Logo BMKG" onerror="this.src='https://data.bmkg.go.id/include/assets/img/logo-bmkg.png'">
+                <div class="footer-contact-info">
+                    <h4>Kontak Kami</h4>
+                    <p>📍 Jl. Geofisika No. 1 Desa Tuntungan I, Kec. Pancur Batu, Kab. Deli Serdang, Sumatera Utara.</p>
+                    <p>📞 Call Center: (061) 77814094</p>
+                    <p>✉️ stageof.deliserdang@bmkg.go.id</p>
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <h4>Dukungan</h4>
+                <ul class="footer-links-list">
+                    <li><a href="https://www.bmkg.go.id" target="_blank">Informasi Cuaca</a></li>
+                    <li><a href="https://maritim.bmkg.go.id" target="_blank">Cuaca Maritim</a></li>
+                    <li><a href="https://aviation.bmkg.go.id" target="_blank">Cuaca Penerbangan</a></li>
+                    <li><a href="https://www.bmkg.go.id/iklim/" target="_blank">Informasi Iklim</a></li>
+                    <li><a href="https://inatews.bmkg.go.id" target="_blank">InaTEWS (Tsunami System)</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Tautan</h4>
+                <ul class="footer-links-list">
+                    <li><a href="https://pusbang.bmkg.go.id" target="_blank">Pusat Pengembangan SDM</a></li>
+                    <li><a href="https://ptmk.stmkg.ac.id" target="_blank">STMKG</a></li>
+                    <li><a href="https://jdih.bmkg.go.id" target="_blank">Dokumentasi Hukum (JDIH)</a></li>
+                    <li><a href="https://data.bmkg.go.id" target="_blank">Data Online BMKG</a></li>
+                    <li><a href="https://sso.bmkg.go.id" target="_blank">Portal SSO BMKG</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Aplikasi Info BMKG</h4>
+                <div class="store-badges">
+                    <a href="https://play.google.com/store/apps/details?id=id.go.bmkg.infoBMKG" target="_blank">
+                        <img src="https://upload.wikimedia.org/images/f/f6/Google_Play_Store_badge_EN.svg" alt="Google Play" onerror="this.style.display='none'">
+                    </a>
+                    <a href="https://apps.apple.com/id/app/info-bmkg/id1114372539" target="_blank">
+                        <img src="https://upload.wikimedia.org/images/0/0f/Download_on_the_App_Store_Badge.svg" alt="App Store" onerror="this.style.display='none'">
+                    </a>
+                </div>
+
+                <h4>Media Sosial</h4>
+                <div class="social-icons-row">
+                    <a href="#" class="social-circle">YT</a>
+                    <a href="#" class="social-circle">FB</a>
+                    <a href="#" class="social-circle">X</a>
+                    <a href="#" class="social-circle">IG</a>
+                    <a href="#" class="social-circle">TIK</a>
+                </div>
+
+                <div class="cert-badges">
+                    <img src="https://www.bmkg.go.id/asset/img/tuv-1.png" onerror="this.src='https://cdn.go.id/img/cert-dummy.png'; this.style.opacity='0.3'" alt="ISO 9001">
+                    <img src="https://www.bmkg.go.id/asset/img/tuv-2.png" onerror="this.src='https://cdn.go.id/img/cert-dummy.png'; this.style.opacity='0.3'" alt="ISO 20000">
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom-bar">
+            <div>&copy; 2026 - Badan Meteorologi, Klimatologi, dan Geofisika</div>
+            <div class="footer-bottom-links">
+                <a href="#">Peta Situs</a>
+                <a href="#">Ketentuan Penggunaan</a>
+                <a href="#">Kebijakan Privasi</a>
+            </div>
+        </div>
     </footer>
 
-    <a class="whatsapp-widget" href="https://wa.me/628116041720" target="_blank">
-        <svg class="whatsapp-icon-svg" viewBox="0 0 24 24">
-            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.4 0 11.973 0c3.184.001 6.177 1.24 8.43 3.496 2.253 2.256 3.491 5.253 3.49 8.436-.005 6.623-5.346 11.971-11.92 11.971-2.001-.001-3.97-.502-5.717-1.458L0 24zm6.59-3.469c1.66.986 3.292 1.503 4.8 1.505 5.517 0 10.003-4.479 10.007-9.975.002-2.662-1.033-5.166-2.915-7.05C16.6 3.125 14.1 2.083 11.438 2.083c-5.522 0-10.01 4.482-10.015 9.98-.001 1.767.462 3.492 1.341 5.022l-.961 3.513 3.604-.945zm11.902-8.312c-.3-.15-1.773-.875-2.046-.975-.273-.1-.472-.15-.672.15-.2.3-.773.975-.947 1.175-.173.2-.347.225-.647.075-.3-.15-1.265-.467-2.41-1.488-.891-.795-1.492-1.777-1.667-2.076-.174-.3-.019-.462.13-.611.135-.134.3-.349.45-.524.149-.174.199-.299.299-.499.1-.2.05-.375-.025-.525-.075-.15-.672-1.62-.922-2.22-.243-.584-.488-.504-.672-.513-.173-.008-.372-.01-.572-.01-.2 0-.523.075-.797.375-.273.3-1.045 1.02-1.045 2.487 0 1.468 1.069 2.886 1.218 3.086.149.2 2.105 3.215 5.099 4.507.712.308 1.269.492 1.703.63.716.227 1.368.195 1.883.118.574-.085 1.773-.725 2.022-1.424.249-.699.249-1.299.174-1.424-.075-.125-.273-.2-.573-.35z"/>
-        </svg>
-        Hubungi Stageof Deli Serdang
-    </a>
+    <div class="whatsapp-widget-container">
+        <div class="wa-pop-bubble" id="wa-bubble">
+            <span>Hubungi via WhatsApp</span>
+            <span class="wa-close-x" onclick="document.getElementById('wa-bubble').style.display='none'">&times;</span>
+        </div>
+        <a class="whatsapp-circle-btn" href="https://wa.me/628116041720" target="_blank">
+            <svg viewBox="0 0 24 24">
+                <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.4 0 11.973 0c3.184.001 6.177 1.24 8.43 3.496 2.253 2.256 3.491 5.253 3.49 8.436-.005 6.623-5.346 11.971-11.92 11.971-2.001-.001-3.97-.502-5.717-1.458L0 24zm6.59-3.469c1.66.986 3.292 1.503 4.8 1.505 5.517 0 10.003-4.479 10.007-9.975.002-2.662-1.033-5.166-2.915-7.05C16.6 3.125 14.1 2.083 11.438 2.083c-5.522 0-10.01 4.482-10.015 9.98-.001 1.767.462 3.492 1.341 5.022l-.961 3.513 3.604-.945zm11.902-8.312c-.3-.15-1.773-.875-2.046-.975-.273-.1-.472-.15-.672.15-.2.3-.773.975-.947 1.175-.173.2-.347.225-.647.075-.3-.15-1.265-.467-2.41-1.488-.891-.795-1.492-1.777-1.667-2.076-.174-.3-.019-.462.13-.611.135-.134.3-.349.45-.524.149-.174.199-.299.299-.499.1-.2.05-.375-.025-.525-.075-.15-.672-1.62-.922-2.22-.243-.584-.488-.504-.672-.513-.173-.008-.372-.01-.572-.01-.2 0-.523.075-.797.375-.273.3-1.045 1.02-1.045 2.487 0 1.468 1.069 2.886 1.218 3.086.149.2 2.105 3.215 5.099 4.507.712.308 1.269.492 1.703.63.716.227 1.368.195 1.883.118.574-.085 1.773-.725 2.022-1.424.249-.699.249-1.299.174-1.424-.075-.125-.273-.2-.573-.35z"/>
+            </svg>
+        </a>
+    </div>
 
 </body>
 </html>
