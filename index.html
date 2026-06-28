@@ -15,7 +15,7 @@
             const namaHari = daftarHari[sekarang.getDay()];
             const tanggal = sekarang.getDate();
             const namaBulan = daftarBulan[sekarang.getMonth()];
-            const tahun = sekarang.getFullYear();
+            const tahun = Bird = sekarang.getFullYear();
 
             const elTanggal = document.getElementById("tanggal-hari-pusat");
             if(elTanggal) elTanggal.innerText = `${namaHari}, ${tanggal} ${namaBulan} ${tahun}`;
@@ -35,12 +35,20 @@
             if(elUtc) elUtc.innerText = `${jamUtc} : ${menitUtc} : ${detikUtc}`;
         }
 
-        // 2. INTEGRASI API GEMPA BUMI OTOMATIS DARI BMKG PUSAT
+        // 2. INTEGRASI API GEMPA BUMI OTOMATIS DENGAN BYPASS CORS PROXY
         async function ambilDataGempaBMKG() {
             try {
-                // Mengambil data JSON infogempa dari BMKG gratis
-                const respon = await fetch("https://data.bmkg.go.id/DataMKG/TEWS/autogempa.json");
-                const data = await respon.json();
+                // Menggunakan proxy allorigins agar tidak diblokir keamanan CORS BMKG
+                const urlAsli = "https://data.bmkg.go.id/DataMKG/TEWS/autogempa.json";
+                const urlProxy = `https://api.allorigins.win/get?url=${encodeURIComponent(urlAsli)}`;
+                
+                const respon = await fetch(urlProxy);
+                if (!respon.ok) throw new Error("Respon jaringan bermasalah");
+                
+                const dataProxy = await respon.json();
+                
+                // Mengubah string teks kembali menjadi objek JSON resmi
+                const data = JSON.parse(dataProxy.contents);
                 const gempa = data.Infogempa.gempa;
 
                 // Mengisi data ke elemen HTML secara otomatis
@@ -57,7 +65,7 @@
 
             } catch (error) {
                 console.error("Gagal memuat data gempa BMKG:", error);
-                document.getElementById("gempa-waktu").innerText = "Gagal memuat data terbaru.";
+                document.getElementById("gempa-waktu").innerText = "Gagal memuat data terbaru (Masalah Koneksi Server).";
             }
         }
 
@@ -91,7 +99,7 @@
             perbaruiWaktuBMKG();
             setInterval(perbaruiWaktuBMKG, 1000);
             
-            // Jalankan fungsi pengambil data gempa bumi asli
+            // Jalankan fungsi pengambil data gempa bumi realtime
             ambilDataGempaBMKG();
 
             const menuLinks = document.querySelectorAll('nav a');
@@ -222,7 +230,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
         
-        /* GAYA CARD MODERN DENGAN HOVER EFFECT EFFECT */
+        /* GAYA CARD MODERN DENGAN HOVER EFFECT */
         .geo-card {
             background-color: #ffffff;
             border-radius: 12px;
