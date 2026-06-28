@@ -13,9 +13,9 @@
             const daftarBulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
             
             const namaHari = daftarHari[sekarang.getDay()];
-            const tanggal = sekarang.getDate();
+            const tanggal = grandparents = sekarang.getDate();
             const namaBulan = daftarBulan[sekarang.getMonth()];
-            const tahun = sekarang.getFullYear(); // Perbaikan typo 'Bird ='
+            const tahun = sekarang.getFullYear();
 
             const elTanggal = document.getElementById("tanggal-hari-pusat");
             if(elTanggal) elTanggal.innerText = `${namaHari}, ${tanggal} ${namaBulan} ${tahun}`;
@@ -37,51 +37,43 @@
 
         // 2. FUNGSI INTERAKTIF PINDAH HALAMAN
         function bukaHalaman(idHalaman) {
-            // Sembunyikan semua halaman konten
             const semuaHalaman = document.querySelectorAll('.section-block');
             semuaHalaman.forEach(halaman => {
                 halaman.style.display = 'none';
             });
 
-            // Hilangkan status menu-aktif dari navigasi
             const semuaMenu = document.querySelectorAll('nav a');
             semuaMenu.forEach(menu => {
                 menu.classList.remove('menu-aktif');
             });
 
-            // Tampilkan halaman yang dituju
             const halamanTujuan = document.getElementById(idHalaman);
             if (halamanTujuan) {
                 halamanTujuan.style.display = 'block';
             }
 
-            // Beri tanda aktif pada menu yang diklik
             const menuAktif = document.querySelector(`nav a[href="#${idHalaman}"]`);
             if (menuAktif) {
                 menuAktif.classList.add('menu-aktif');
             }
 
-            // Otomatis scroll mulus ke atas halaman
             window.scrollTo({top: 0, behavior: 'smooth'});
         }
 
         // 3. MENJALANKAN SISTEM SAAT HALAMAN SELESAI DIMUAT
         document.addEventListener("DOMContentLoaded", function() {
-            // Jalankan jam realtime
             perbaruiWaktuBMKG();
             setInterval(perbaruiWaktuBMKG, 1000);
 
-            // Pasang fungsi klik ke semua link menu navigasi
             const menuLinks = document.querySelectorAll('nav a');
             menuLinks.forEach(link => {
                 link.addEventListener('click', function(e) {
-                    e.preventDefault(); // Mencegah melompat kasar ala jangkar HTML biasa
+                    e.preventDefault();
                     const idHalaman = this.getAttribute('href').replace('#', '');
                     bukaHalaman(idHalaman);
                 });
             });
 
-            // Tampilkan halaman BERANDA secara otomatis saat pertama kali web dibuka
             bukaHalaman('beranda');
         });
     </script>
@@ -190,14 +182,12 @@
             min-height: 55vh;
         }
         
-        /* GAYA AREA HALAMAN GEOFISIKA (SISTEM SEMBUNYI KONTEN) */
         .section-block {
-            display: none; /* Sembunyikan halaman agar tidak menumpuk jadi satu */
+            display: none;
             margin-bottom: 40px;
             animation: efekMuncul 0.4s ease-in-out;
         }
 
-        /* Animasi halus saat halaman ditukar */
         @keyframes efekMuncul {
             from { opacity: 0; transform: translateY(8px); }
             to { opacity: 1; transform: translateY(0); }
@@ -337,12 +327,12 @@
             <div>STANDAR WAKTU INDONESIA: <span id="jam-wib">00 : 00 : 00</span> <span class="label-waktu">WIB</span></div>
             <div>|</div>
             <div><span id="jam-utc">00 : 00 : 00</span> <span class="label-waktu" style="color:#4a5568;">UTC</span></div>
-        </div>
+        }
     </div>
 
     <header>
         <div class="logo-section">
-            <img src="logo-bmkg.png" alt="Logo BMKG" onerror="this.src='https://www.bmkg.go.id/asset/img/logo-bmkg.png'">
+            <img src="https://data.bmkg.go.id/include/assets/img/logo-bmkg.png" alt="Logo BMKG">
             <div class="logo-text">
                 <h1>BADAN METEOROLOGI, KLIMATOLOGI, DAN GEOFISIKA</h1>
                 <p>Stasiun Geofisika Kelas I Deli Serdang</p>
