@@ -251,6 +251,11 @@
         .grid-beranda { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; background-color: #ffffff; color: #333333; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); border: 1px solid #e2e8f0; margin-bottom: 30px; }
         .info-box-beranda { background-color: #f8fafc; border-left: 5px solid #0c3c60; padding: 20px; border-radius: 4px; margin-top: 15px; }
 
+        /* LIST TUPOKSI & DATA TEKNIS */
+        .list-tupoksi { padding-left: 20px; line-height: 1.8; }
+        .list-tupoksi li { margin-bottom: 8px; }
+        .sub-list { list-style-type: lower-alpha; padding-left: 20px; margin-top: 5px; }
+
         /* STRUKTUR ORGANISASI KANTOR */
         .chart-container { background-color: #ffffff; padding: 35px 20px; border-radius: 12px; border: 1px solid #e2e8f0; text-align: center; }
         .chart-title { color: #0c3c60; font-size: 20px; font-weight: 700; margin-bottom: 30px; letter-spacing: 0.5px; }
@@ -300,11 +305,6 @@
         .footer-links-list a { color: #cbd5e1; text-decoration: none; transition: color 0.2s; display: inline-flex; align-items: center; gap: 5px; }
         .footer-links-list a:hover { color: #38bdf8; }
         .footer-links-list a::after { content: "↗"; font-size: 11px; opacity: 0.7; }
-        .store-badges { display: flex; gap: 10px; margin-bottom: 20px; }
-        .store-badges img { height: 34px; width: auto; }
-        .social-icons-row { display: flex; gap: 12px; margin-bottom: 25px; }
-        .social-circle { width: 32px; height: 32px; background-color: rgba(255, 255, 255, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #ffffff; text-decoration: none; font-weight: bold; font-size: 12px; transition: background 0.2s; }
-        .social-circle:hover { background-color: #176da8; }
         .footer-bottom-bar { max-width: 1200px; margin: 40px auto 0 auto; padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.1); display: flex; justify-content: space-between; align-items: center; color: #94a3b8; font-size: 12px; }
         .footer-bottom-links { display: flex; gap: 20px; }
         .footer-bottom-links a { color: #94a3b8; text-decoration: none; }
@@ -406,17 +406,89 @@
         <div id="profil" class="section-block">
             <div class="grid-beranda">
                 <div>
-                    <h3 style="color: #0c3c60; margin-top: 0;">Profil Instansi</h3>
-                    <p style="line-height: 1.6;">Stasiun Geofisika Kelas I Deli Serdang bergerak sebagai unit pelaksana teknis di bawah BMKG yang berfokus pada pengamatan, perekaman, dan pengolahan data geofisika di wilayah Sumatra Utara dan sekitarnya.</p>
-                    <div class="info-box-beranda">
-                        <strong>Tugas Utama:</strong> Menyediakan informasi gempa bumi real-time, monitoring tingkat sambaran petir, analisa magnet bumi, serta penentuan tanda waktu fajar/magrib/hilal yang akurat.
-                    </div>
+                    <h3 style="color: #0c3c60; margin-top: 0;">Sejarah Instansi</h3>
+                    <p style="line-height: 1.6; text-align: justify;">
+                        Stasiun Geofisika Kelas I Deli Serdang didirikan oleh Pemerintah Belanda pada **tahun 1951**. Pada awal berdirinya, stasiun ini berstatus sebagai Stasiun Geofisika Kelas II yang bertempat di salah satu ruang Balai Penelitian Pertanian yang dikenal sebagai **"AVROS"** di Kampung Baru, Medan (kemudian berganti nama menjadi **"RISPA"**).
+                    </p>
+                    <p style="line-height: 1.6; text-align: justify;">
+                        Pada **tahun 1974**, operasional dipindahkan ke kawasan Tuntungan dengan nama **Stasiun Geofisika Kelas I Tuntungan**. Selanjutnya, berdasarkan Peraturan Kepala (Perka) BMKG Nomor 08 Tahun 2019 tentang Organisasi dan Tata Kerja, nama stasiun resmi bertransformasi menjadi **Stasiun Geofisika Kelas I Deli Serdang**.
+                    </p>
                 </div>
                 <div>
-                    <h3 style="color: #0c3c60; margin-top: 0;">Kontak Informasi</h3>
-                    <p style="font-size: 14px; margin: 8px 0;">📍 Jl. Geofisika No. 1, Desa Tuntungan I, Kec. Pancur Batu, Kab. Deli Serdang</p>
-                    <p style="font-size: 14px; margin: 8px 0;">📞 (061) 77814094</p>
-                    <p style="font-size: 14px; margin: 8px 0;">✉️ stageof.deliserdang@bmkg.go.id</p>
+                    <h3 style="color: #0c3c60; margin-top: 0;">Geografis & Operasional</h3>
+                    <ul class="data-list" style="font-size: 13.5px;">
+                        <li><span class="data-label">Bujur (Longitude)</span><span class="data-value">98° 33' 45" BT</span></li>
+                        <li><span class="data-label">Lintang (Latitude)</span><span class="data-value">03° 30' 04" LU</span></li>
+                        <li><span class="data-label">Elevasi</span><span class="data-value">±86 meter</span></li>
+                        <li><span class="data-label">Waktu Operasional</span><span class="data-value" style="color: #0c861b;">24 Jam Penuh (7 Hari)</span></li>
+                    </ul>
+                    <div class="info-box-beranda" style="margin-top: 15px; padding: 12px; font-size: 12px;">
+                        <strong>Sistem Kerja:</strong> Pengamatan, pengolahan, dan analisis data berjalan tiada henti secara kontinu demi keselamatan publik.
+                    </div>
+                </div>
+            </div>
+
+            <div class="geo-card">
+                <div class="geo-card-header">
+                    <h3>📋 Tugas Pokok dan Fungsi (Perka BMKG No. KEP.11 Tahun 2014)</h3>
+                </div>
+                <h4 style="color:#0c3c60; margin-bottom: 5px;">1. Tugas Pokok</h4>
+                <p style="margin-top: 0; margin-bottom: 20px; line-height: 1.6;">Melakukan pengamatan, pengumpulan dan penyebaran data, analisis dan pengolahan serta pelayanan jasa Geofisika di wilayah hukum koordinasi stasiun.</p>
+                
+                <h4 style="color:#0c3c60; margin-bottom: 5px;">2. Fungsi Operasional</h4>
+                <p style="margin-top: 0; margin-bottom: 5px;">Menyelenggarakan pengamatan beserta analisis/pengolahan parameter terapan berikut:</p>
+                <ul class="list-tupoksi">
+                    <li>Gempabumi dan peringatan dini tsunami</li>
+                    <li>Percepatan tanah (*Peak Ground Acceleration* - PGA)</li>
+                    <li>Monitoring Curah Hujan khusus fungsional geofisika</li>
+                    <li>Sistem deteksi Petir atau Listrik Udara (*Lightning Detector*)</li>
+                    <li>Monitoring parameter Kualitas Udara regional</li>
+                    <li>Analisis Variasi Magnet Bumi dan Sistem Tanda Waktu astronomis</li>
+                </ul>
+            </div>
+
+            <div class="geo-card">
+                <div class="geo-card-header">
+                    <h3>🗃️ Kronologi & Histori Observasi Alat Magnet Bumi (Sejak 1982)</h3>
+                </div>
+                <p style="line-height: 1.6; margin-bottom: 15px;">Sebagai salah satu Stasiun Magnet Bumi andalan BMKG, berikut perjalanan pembaharuan teknologi instrumen yang digunakan sejak awal pengoperasian:</p>
+                <div style="overflow-x: auto;">
+                    <table style="font-size: 13px;">
+                        <thead>
+                            <tr>
+                                <th style="width: 15%">Tahun Mulai</th>
+                                <th style="width: 45%">Peralatan yang Dioperasikan</th>
+                                <th style="width: 40%">Catatan Teknis / Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>1982</strong></td>
+                                <td>Analog Variograph La Cour, QHM (*Quartz Horizontal Magnetometer*), BMZ (*Balance Magnetometrique Zero*), PPM Geometrics 6820G, dan Theodolite DIM-100</td>
+                                <td>Variograph La Cour resmi dihentikan tahun 2013 karena kelangkaan global kertas pias foto.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>2003</strong></td>
+                                <td>Digital Variograph DMI Fluxgate Magnetometer (Sampling rate 1 menit dari British Geological Survey - BGS), PPM Elsec 770 (Littlemore Sci.), dan Theodolite Ruska dengan DIFlux FLM-2A Electronics.</td>
+                                <td>PPM Elsec 770 masih andal dan aktif dioperasikan hingga saat ini.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>2008</strong></td>
+                                <td>Digital Variograph LEMI-018 (Sampling rate 1 detik), PPM Geometrics G-856AX, serta Theodolite YOM-3 dengan DIFlux LEMI-204.</td>
+                                <td>Pada tahun 2010, Theodolite YOM-3 digantikan kembali oleh tipe Theodolite DIM-100 lama.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>2013 - 2016</strong></td>
+                                <td>Theodolite DIM-100 dan PPM Geometrics G-856AX mengalami kerusakan berat.</td>
+                                <td>Pengamatan absolut vakum sementara waktu, hingga normal kembali pada akhir 2016 setelah kedatangan Theodolite THEO-010A dan DIFlux Magnetometer Model G.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>2018 - Sekarang</strong></td>
+                                <td>Januari 2018 Variometer LEMI-018 rusak. Mulai **Juli 2019**, Digital Variograph **DMI-FGE** (Sampling rate 1 detik) resmi berjalan.</td>
+                                <td>Menjadi tulang punggung akuisisi data variasi magnet bumi realtime Sumatra Utara hingga saat ini.</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
@@ -553,7 +625,7 @@
                     <span class="geo-icon">📅</span>
                     <h3>Sistem Data Astronomi & Tanda Waktu Lokal</h3>
                 </div>
-                <p>Data ephemeris perhitungan posisi pergerakan matahari and bulan presisi berdasarkan titik koordinat geografis operasional Sumatra Utara.</p>
+                <p>Data ephemeris perhitungan posisi pergerakan matahari dan bulan presisi berdasarkan titik koordinat geografis operasional Sumatra Utara.</p>
                 
                 <div style="background-color: #e2e8f0; color: #0c3c60; padding: 12px 20px; border-radius: 6px; font-weight: 700; font-size: 14px; border-left: 4px solid #0c3c60;">
                     📅 Berdasarkan Posisi Hari Ini: <span id="astro-tanggal">-</span>
