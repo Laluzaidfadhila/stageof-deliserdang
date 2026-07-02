@@ -16,7 +16,7 @@
             const daftarBulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
             
             const namaHari = daftarHari[sekarang.getDay()];
-            const tanggal = sekarang.getDate();
+            const tanggal = Clinical = sekarang.getDate();
             const namaBulan = daftarBulan[sekarang.getMonth()];
             const tahun = sekarang.getFullYear();
 
@@ -157,14 +157,22 @@
             const semuaHalaman = document.querySelectorAll('.section-block');
             semuaHalaman.forEach(halaman => halaman.style.display = 'none');
 
-            const semuaMenu = document.querySelectorAll('nav a');
+            const semuaMenu = document.querySelectorAll('nav a, .dropdown-content a');
             semuaMenu.forEach(menu => menu.classList.remove('menu-aktif'));
 
             const halamanTujuan = document.getElementById(idHalaman);
             if (halamanTujuan) halamanTujuan.style.display = 'block';
 
-            const menuAktif = document.querySelector(`nav a[href="#${idHalaman}"]`);
-            if (menuAktif) menuAktif.classList.add('menu-aktif');
+            // Memberikan highlight aktif pada menu utama atau sub-menu yang diklik
+            const menuAktif = document.querySelector(`a[href="#${idHalaman}"]`);
+            if (menuAktif) {
+                menuAktif.classList.add('menu-aktif');
+                // Jika yang diklik adalah sub-menu, berikan tanda aktif juga pada tombol induk Dropdown-nya
+                if(menuAktif.closest('.dropdown-content')) {
+                    const indukDropdown = menuAktif.closest('.dropdown').querySelector('.dropbtn');
+                    if(indukDropdown) indukDropdown.classList.add('menu-aktif');
+                }
+            }
 
             if (idHalaman === 'petir') inisialisasiPeta();
             window.scrollTo({top: 0, behavior: 'smooth'});
@@ -189,10 +197,10 @@
 
             setInterval(ambilDataMagnetBumi, 30000);
 
-            const menuLinks = document.querySelectorAll('nav a');
+            const menuLinks = document.querySelectorAll('nav a, .dropdown-content a');
             menuLinks.forEach(link => {
                 link.addEventListener('click', function(e) {
-                    if (this.id === "dark-mode-btn") return;
+                    if (this.id === "dark-mode-btn" || this.classList.contains('dropbtn')) return;
                     e.preventDefault();
                     const idHalaman = this.getAttribute('href').replace('#', '');
                     bukaHalaman(idHalaman);
@@ -234,9 +242,37 @@
         .logo-text h1 { font-size: 14px; margin: 0; color: #0c3c60; font-weight: 700; letter-spacing: 0.5px; transition: color 0.3s; }
         .logo-text p { font-size: 11px; margin: 2px 0 0 0; color: #666666; font-weight: 500; }
         
+        /* NAVIGASI & DROPDOWN STYLE (Kustomisasi ala BMKG) */
         nav { display: flex; gap: 25px; align-items: center; }
         nav a { text-decoration: none; color: #555555; font-size: 13px; font-weight: 600; padding: 5px 0; border-bottom: 2px solid transparent; transition: all 0.3s ease; cursor: pointer; }
         nav a:hover, nav a.menu-aktif { color: #0c3c60; border-bottom: 2px solid #0c3c60; }
+        
+        /* Wadah Utama Dropdown */
+        .dropdown { position: relative; display: inline-block; }
+        .dropdown .dropbtn { display: flex; align-items: center; gap: 4px; }
+        
+        /* Isi Panel Kotak Sub-Menu */
+        .dropdown-content {
+            display: none; position: absolute; background-color: #ffffff; min-width: 240px; 
+            box-shadow: 0px 8px 24px rgba(0,0,0,0.12); border-radius: 8px; border: 1px solid #e2e8f0;
+            z-index: 1100; top: 100%; left: 50%; transform: translateX(-50%); margin-top: 10px; padding: 6px 0;
+        }
+        /* Segitiga Atas Dropdown */
+        .dropdown-content::before {
+            content: ""; position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%);
+            border-width: 7px; border-style: solid; border-color: transparent transparent #ffffff transparent;
+        }
+        /* Item Link di Dalam Dropdown */
+        .dropdown-content a {
+            color: #475569; padding: 10px 16px; text-decoration: none; display: block;
+            font-size: 12.5px; font-weight: 500; text-align: left; border-bottom: none; transition: background 0.2s;
+        }
+        .dropdown-content a:hover, .dropdown-content a.menu-aktif {
+            background-color: #f1f5f9; color: #0c3c60; border-bottom: none;
+        }
+        /* Memunculkan Dropdown saat di-Hover Cursor */
+        .dropdown:hover .dropdown-content { display: block; }
+
         .btn-dark-mode { background-color: #e2e8f0; padding: 6px 12px; border-radius: 20px; font-size: 11px !important; border: none; font-weight: 700; }
 
         .dashboard-container { max-width: 1200px; margin: 30px auto; padding: 0 20px; min-height: 50vh; }
@@ -254,7 +290,6 @@
         /* LIST TUPOKSI & DATA TEKNIS */
         .list-tupoksi { padding-left: 20px; line-height: 1.8; }
         .list-tupoksi li { margin-bottom: 8px; }
-        .sub-list { list-style-type: lower-alpha; padding-left: 20px; margin-top: 5px; }
 
         /* STRUKTUR ORGANISASI KANTOR */
         .chart-container { background-color: #ffffff; padding: 35px 20px; border-radius: 12px; border: 1px solid #e2e8f0; text-align: center; }
@@ -329,6 +364,10 @@
         body.dark-mode .card-waktu-sol { background-color: #1e293b; border-color: #334155; color: #e2e8f0; }
         body.dark-mode nav a { color: #94a3b8; }
         body.dark-mode nav a:hover, body.dark-mode nav a.menu-aktif { color: #38bdf8; border-color: #38bdf8; }
+        body.dark-mode .dropdown-content { background-color: #1e293b; border-color: #334155; box-shadow: 0px 8px 24px rgba(0,0,0,0.3); }
+        body.dark-mode .dropdown-content::before { border-bottom-color: #1e293b; }
+        body.dark-mode .dropdown-content a { color: #94a3b8; }
+        body.dark-mode .dropdown-content a:hover, body.dark-mode .dropdown-content a.menu-aktif { background-color: #334155; color: #38bdf8; }
         body.dark-mode .logo-text h1 { color: #38bdf8; }
         body.dark-mode .btn-dark-mode { background-color: #334155; color: #ffffff; }
         body.dark-mode .geo-card-header { border-bottom-color: #38bdf8; }
@@ -352,6 +391,9 @@
             header { flex-direction: column; gap: 15px; padding: 15px; text-align: center; }
             .brand-link { justify-content: center; }
             nav { gap: 12px; flex-wrap: wrap; justify-content: center; }
+            .dropdown-content { position: static; transform: none; left: 0; width: 100%; box-shadow: none; border: none; background: rgba(0,0,0,0.03); padding: 0; }
+            .dropdown-content::before { display: none; }
+            .dropdown:hover .dropdown-content { display: block; }
             .grid-beranda, .gempa-flex-layout, .magnet-flex-layout, .grid-tanda-waktu { grid-template-columns: 1fr; }
             .peta-shakemap { margin: 0 auto; }
             .fungsional-grid { grid-template-columns: repeat(2, 1fr); }
@@ -384,7 +426,17 @@
         </a>
         <nav>
             <a href="#beranda">Beranda</a>
-            <a href="#profil">Profil Kantor</a>
+            
+            <div class="dropdown">
+                <a class="dropbtn">Profil Kantor ▾</a>
+                <div class="dropdown-content">
+                    <a href="#profil-sejarah">Tentang BMKG & Sejarah</a>
+                    <a href="#profil-tupoksi">Tugas Pokok & Fungsi</a>
+                    <a href="#profil-kronologi">Kronologi Alat Observasi</a>
+                    <a href="#profil-struktur">Struktur Organisasi</a>
+                </div>
+            </div>
+
             <a href="#gempabumi">Gempabumi</a>
             <a href="#magnet">Magnet Bumi</a>
             <a href="#tandawaktu">Tanda Waktu</a>
@@ -403,15 +455,16 @@
             </div>
         </div>
 
-        <div id="profil" class="section-block">
+
+        <div id="profil-sejarah" class="section-block">
             <div class="grid-beranda">
                 <div>
                     <h3 style="color: #0c3c60; margin-top: 0;">Sejarah Instansi</h3>
                     <p style="line-height: 1.6; text-align: justify;">
-                        Stasiun Geofisika Kelas I Deli Serdang didirikan oleh Pemerintah Belanda pada **tahun 1951**. Pada awal berdirinya, stasiun ini berstatus sebagai Stasiun Geofisika Kelas II yang bertempat di salah satu ruang Balai Penelitian Pertanian yang dikenal sebagai **"AVROS"** di Kampung Baru, Medan (kemudian berganti nama menjadi **"RISPA"**).
+                        Stasiun Geofisika Kelas I Deli Serdang didirikan oleh Pemerintah Belanda pada <strong>tahun 1951</strong>. Pada awal berdirinya, stasiun ini berstatus sebagai Stasiun Geofisika Kelas II yang bertempat di salah satu ruang Balai Penelitian Pertanian yang dikenal sebagai <strong>"AVROS"</strong> di Kampung Baru, Medan (kemudian berganti nama menjadi <strong>"RISPA"</strong>).
                     </p>
                     <p style="line-height: 1.6; text-align: justify;">
-                        Pada **tahun 1974**, operasional dipindahkan ke kawasan Tuntungan dengan nama **Stasiun Geofisika Kelas I Tuntungan**. Selanjutnya, berdasarkan Peraturan Kepala (Perka) BMKG Nomor 08 Tahun 2019 tentang Organisasi dan Tata Kerja, nama stasiun resmi bertransformasi menjadi **Stasiun Geofisika Kelas I Deli Serdang**.
+                        Pada <strong>tahun 1974</strong>, operasional dipindahkan ke kawasan Tuntungan dengan nama <strong>Stasiun Geofisika Kelas I Tuntungan</strong>. Selanjutnya, berdasarkan Peraturan Kepala (Perka) BMKG Nomor 08 Tahun 2019 tentang Organisasi dan Tata Kerja, nama stasiun resmi bertransformasi menjadi <strong>Stasiun Geofisika Kelas I Deli Serdang</strong>.
                     </p>
                 </div>
                 <div>
@@ -427,26 +480,32 @@
                     </div>
                 </div>
             </div>
+        </div>
 
+
+        <div id="profil-tupoksi" class="section-block">
             <div class="geo-card">
                 <div class="geo-card-header">
                     <h3>📋 Tugas Pokok dan Fungsi (Perka BMKG No. KEP.11 Tahun 2014)</h3>
                 </div>
                 <h4 style="color:#0c3c60; margin-bottom: 5px;">1. Tugas Pokok</h4>
-                <p style="margin-top: 0; margin-bottom: 20px; line-height: 1.6;">Melakukan pengamatan, pengumpulan dan penyebaran data, analisis dan pengolahan serta pelayanan jasa Geofisika di wilayah hukum koordinasi stasiun.</p>
+                <p style="margin-top: 0; margin-bottom: 20px; line-height: 1.6;">Melakukan pengamatan, pengumpulan dan penyebaran data, analisis dan pengolahan serta pelayanan jasa Geofisika.</p>
                 
                 <h4 style="color:#0c3c60; margin-bottom: 5px;">2. Fungsi Operasional</h4>
                 <p style="margin-top: 0; margin-bottom: 5px;">Menyelenggarakan pengamatan beserta analisis/pengolahan parameter terapan berikut:</p>
                 <ul class="list-tupoksi">
-                    <li>Gempabumi dan peringatan dini tsunami</li>
-                    <li>Percepatan tanah (*Peak Ground Acceleration* - PGA)</li>
-                    <li>Monitoring Curah Hujan khusus fungsional geofisika</li>
-                    <li>Sistem deteksi Petir atau Listrik Udara (*Lightning Detector*)</li>
-                    <li>Monitoring parameter Kualitas Udara regional</li>
-                    <li>Analisis Variasi Magnet Bumi dan Sistem Tanda Waktu astronomis</li>
+                    <li>Gempabumi dan tsunami</li>
+                    <li>Percepatan tanah (PGA)</li>
+                    <li>Curah hujan</li>
+                    <li>Petir atau Listrik Udara</li>
+                    <li>Kualitas Udara</li>
+                    <li>Magnet Bumi dan Tanda Waktu</li>
                 </ul>
             </div>
+        </div>
 
+
+        <div id="profil-kronologi" class="section-block">
             <div class="geo-card">
                 <div class="geo-card-header">
                     <h3>🗃️ Kronologi & Histori Observasi Alat Magnet Bumi (Sejak 1982)</h3>
@@ -464,7 +523,7 @@
                         <tbody>
                             <tr>
                                 <td><strong>1982</strong></td>
-                                <td>Analog Variograph La Cour, QHM (*Quartz Horizontal Magnetometer*), BMZ (*Balance Magnetometrique Zero*), PPM Geometrics 6820G, dan Theodolite DIM-100</td>
+                                <td>Analog Variograph La Cour, QHM (Quartz Horizontal Magnetometer), BMZ (balance magnetometrique Zero), PPM Geometrics 6820G, dan Theodolite DIM-100</td>
                                 <td>Variograph La Cour resmi dihentikan tahun 2013 karena kelangkaan global kertas pias foto.</td>
                             </tr>
                             <tr>
@@ -479,19 +538,22 @@
                             </tr>
                             <tr>
                                 <td><strong>2013 - 2016</strong></td>
-                                <td>Theodolite DIM-100 dan PPM Geometrics G-856AX mengalami kerusakan berat.</td>
+                                <td>Theodolite DIM-100 and PPM Geometrics G-856AX mengalami kerusakan berat.</td>
                                 <td>Pengamatan absolut vakum sementara waktu, hingga normal kembali pada akhir 2016 setelah kedatangan Theodolite THEO-010A dan DIFlux Magnetometer Model G.</td>
                             </tr>
                             <tr>
                                 <td><strong>2018 - Sekarang</strong></td>
-                                <td>Januari 2018 Variometer LEMI-018 rusak. Mulai **Juli 2019**, Digital Variograph **DMI-FGE** (Sampling rate 1 detik) resmi berjalan.</td>
+                                <td>Januari 2018 Variometer LEMI-018 rusak. Mulai Juli 2019, Digital Variograph DMI-FGE (Sampling rate 1 detik) resmi berjalan.</td>
                                 <td>Menjadi tulang punggung akuisisi data variasi magnet bumi realtime Sumatra Utara hingga saat ini.</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
+        </div>
 
+
+        <div id="profil-struktur" class="section-block">
             <div class="chart-container">
                 <div class="chart-title">STRUKTUR ORGANISASI KANTOR</div>
                 <div class="org-node" style="border-top: 3px solid #ef4444;">
@@ -541,6 +603,7 @@
                 </div>
             </div>
         </div>
+
 
         <div id="gempabumi" class="section-block">
             <div class="geo-card">
@@ -625,7 +688,7 @@
                     <span class="geo-icon">📅</span>
                     <h3>Sistem Data Astronomi & Tanda Waktu Lokal</h3>
                 </div>
-                <p>Data ephemeris perhitungan posisi pergerakan matahari dan bulan presisi berdasarkan titik koordinat geografis operasional Sumatra Utara.</p>
+                <p>Data ephemeris perhitungan posisi pergerakan matahari and bulan presisi berdasarkan titik koordinat geografis operasional Sumatra Utara.</p>
                 
                 <div style="background-color: #e2e8f0; color: #0c3c60; padding: 12px 20px; border-radius: 6px; font-weight: 700; font-size: 14px; border-left: 4px solid #0c3c60;">
                     📅 Berdasarkan Posisi Hari Ini: <span id="astro-tanggal">-</span>
