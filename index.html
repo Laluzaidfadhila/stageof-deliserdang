@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stageof Deli Serdang - BMKG</title>
     
+    <!-- ADDED: Logo BMKG pada Tab Browser (Favicon) -->
+    <link rel="icon" type="image/png" href="https://data.bmkg.go.id/include/assets/img/logo-bmkg.png">
+    
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
@@ -191,7 +194,7 @@
             document.getElementById("sholat-maghrib").innerText = formatMenitDesimal(tTerbenam, 2);
             document.getElementById("sholat-isya").innerText = formatMenitDesimal(tIsya, 2);
             
-            const penanggalanHari = Clinical = sekarang.getDate();
+            const penanggalanHari = sekarang.getDate();
             let prediksiHilal = "Bulan Tua / Istima' (Suluk Wuku)";
             let visibilitasKriteria = "Tinggi Hilal < 0° (Belum Wujud)";
 
@@ -269,7 +272,7 @@
             }
         }
 
-        // 6. FUNGSI INTERAKTIF PINDAH HALAMAN
+        // 6. FUNGSI INTERAKTIF PINDAH HALAMAN (DENGAN MEMORI URL HASH)
         function bukaHalaman(idHalaman) {
             const semuaHalaman = document.querySelectorAll('.section-block');
             semuaHalaman.forEach(halaman => halaman.style.display = 'none');
@@ -278,7 +281,10 @@
             semuaMenu.forEach(menu => menu.classList.remove('menu-aktif'));
 
             const halamanTujuan = document.getElementById(idHalaman);
-            if (halamanTujuan) halamanTujuan.style.display = 'block';
+            if (halamanTujuan) {
+                halamanTujuan.style.display = 'block';
+                window.location.hash = idHalaman; 
+            }
 
             const menuAktif = document.querySelector(`a[href="#${idHalaman}"]`);
             if (menuAktif) {
@@ -322,7 +328,12 @@
                 });
             });
 
-            bukaHalaman('beranda');
+            const halamanTujuanUrl = window.location.hash.replace('#', '');
+            if (halamanTujuanUrl && document.getElementById(halamanTujuanUrl)) {
+                bukaHalaman(halamanTujuanUrl);
+            } else {
+                bukaHalaman('beranda');
+            }
         });
     </script>
 
@@ -458,7 +469,7 @@
         }
         .svg-badge-link:hover { transform: scale(1.03); }
         
-        /* INTEGRASI BULATAN IKON SOSIAL MEDIA WARNA RIIL ASLI */
+        /* FIXED: STRUKTUR REAL SOSIAL MEDIA WARNA ASLI SESUAI FOTO */
         .social-media-container { display: flex; gap: 12px; margin-top: 10px; }
         .real-social-icon { 
             width: 32px; height: 34px; display: inline-flex; align-items: center; justify-content: center; 
@@ -945,42 +956,34 @@
                 </div>
 
                 <h4>Media Sosial</h4>
-                <!-- REVISI IKON MEDIA SOSIAL WARNA REAL MENYALA -->
+                <!-- FIXED: IKON SOSMED BERWARNA RIIL ASLI SVG -->
                 <div class="social-media-container">
-                    <!-- YouTube (Red Icon) -->
+                    <!-- YouTube (Red) -->
                     <a href="https://www.youtube.com/@UChn6H6fXp3SjU9K0LpSgGKg" class="real-social-icon" target="_blank" title="YouTube">
                         <svg viewBox="0 0 24 24"><path fill="#FF0000" d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.105A3.017 3.016 0 0 0 .502 5.786C.4 7.657 0 12 0 12s.4 4.343.502 6.214a3.016 3.016 0 0 0 2.122 2.136c1.871.105 9.376.105 9.376.105s7.505 0 9.377-.105a3.015 3.016 0 0 0 2.122-2.136C23.6 16.343 24 12 24 12s-.4-4.343-.502-6.214zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
                     </a>
-                    <!-- Facebook (Blue Icon) -->
+                    <!-- Facebook (Blue) -->
                     <a href="https://www.facebook.com/StasiunGeofisikaDeliSerdang" class="real-social-icon" target="_blank" title="Facebook">
                         <svg viewBox="0 0 24 24"><path fill="#1877F2" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.378-4.669 1.24 0 2.535.221 2.535.221v2.786h-1.43c-1.49 0-1.85.923-1.85 1.871v2.252h3.14l-.502 3.47h-2.638v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
                     </a>
-                    <!-- X / Twitter (White Icon) -->
+                    <!-- X / Twitter (Black/White) -->
                     <a href="https://x.com/bmkg_sumut" class="real-social-icon" target="_blank" title="X (Twitter)">
                         <svg viewBox="0 0 24 24"><rect width="24" height="24" rx="4" fill="#000000"/><path fill="#FFFFFF" d="M18.244 2.25h3.308l-7.227 3.778 8.502 11.24H16.17l-5.214-6.817L4.99 17.288H1.68l7.73-8.235L1.254 2.25H8.08l4.713 6.231zm-1.161 13.02h1.833L7.084 4.126H5.117z"/></svg>
                     </a>
-                    <!-- Instagram (Gradient Color Icon) -->
+                    <!-- Instagram (Gradient) -->
                     <a href="https://www.instagram.com/bmkg_deliserdang" class="real-social-icon" target="_blank" title="Instagram">
                         <svg viewBox="0 0 24 24">
                             <defs>
-                                <linearGradient id="ig-grad-final" x1="100%" y1="100%" x2="0%" y2="0%">
-                                    <stop offset="0%" stop-color="#f09433"/>
-                                    <stop offset="25%" stop-color="#e6683c"/>
-                                    <stop offset="50%" stop-color="#dc2743"/>
-                                    <stop offset="75%" stop-color="#cc2366"/>
-                                    <stop offset="100%" stop-color="#bc1888"/>
+                                <linearGradient id="ig-grad-final-v2" x1="100%" y1="100%" x2="0%" y2="0%">
+                                    <stop offset="0%" stop-color="#f09433"/><stop offset="25%" stop-color="#e6683c"/><stop offset="50%" stop-color="#dc2743"/><stop offset="75%" stop-color="#cc2366"/><stop offset="100%" stop-color="#bc1888"/>
                                 </linearGradient>
                             </defs>
-                            <rect width="24" height="24" rx="5" fill="url(#ig-grad-final)"/>
-                            <path fill="#FFFFFF" d="M12 6.865c1.67 0 1.86.006 2.52.036.61.028.94.13 1.16.216.29.112.5.246.71.464.22.21.35.42.46.71.08.22.19.55.22 1.16.03.66.036.85.036 2.52s-.006 1.86-.036 2.52c-.028.61-.13.94-.216 1.16-.112.29-.246.5-.464.71-.21.22-.42.35-.71.46-.22.08-.55.19-1.16.22-.66.03-.85.036-2.52.036s-1.86-.006-2.52-.036c-.61-.028-.94-.13-1.16-.216-.29-.112-.5-.246-.71-.464-.22-.21-.35-.42-.46-.71-.08-.22-.19-.55-.22-.16-.03-.66-.036-.85-.036-2.52s.006-1.86.036-2.52c.028-.61.13-.94.216-1.16.112-.29.246-.5.464-.71.21-.22.42-.35.71-.46.22-.08.55-.19 1.16-.22.66-.03.85-.036 2.52-.036zm0-1.027c-1.71 0-1.92.007-2.592.038-.67.03-1.13.137-1.53.293a3.185 3.162 0 0 0-1.151.75 3.142 3.142 0 0 0-.749 1.152c-.156.4-.263.86-.293 1.53-.031.672-.038.882-.038 2.592s.007 1.92.038 2.592c.03.67.137 1.13.293 1.53.158.408.369.754.75 1.151.397.38.743.592 1.151.749.4.156.86.263 1.53.293.672.031.882.038 2.592.038s1.92-.007 2.592-.038c.67-.03 1.13-.137 1.53-.293.408-.157.754-.369 1.151-.75.38-.398.592-.743.749-1.151.156-.4.263-.86.293-1.53.031-.672.038-.882.038-2.592s-.007-1.92-.038-2.592c-.03-.67-.137-1.13-.293-1.53a3.187 3.187 0 0 0-.75-1.151 3.146 3.142 0 0 0-1.152-.749c-.4-.156-.86-.263-1.53-.293-.672-.031-.882-.038-2.592-.038zm0 3.931a3.23 3.23 0 1 0 0 6.462 3.23 3.23 0 0 0 0-6.462zm0 5.435a2.204 2.204 0 1 1 0-4.408 2.204 2.204 0 0 1 0 4.408zm3.364-5.693a.754.754 0 1 0 0 1.508.754.754 0 0 0 0-1.508z"/>
-                        </svg>
+                            <rect width="24" height="24" rx="5" fill="url(#ig-grad-final-v2)"/>
+                            <path fill="#FFFFFF" d="M12 6.865c1.67 0 1.86.006 2.52.036.61.028.94.13 1.16.216.29.112.5.246.71.464.22.21.35.42.46.71.08.22.19.55.22 1.16.03.66.036.85.036 2.52s-.006 1.86-.036 2.52c-.028.61-.13.94-.216 1.16-.112.29-.246.5-.464.71-.21.22-.42.35-.71.46-.22.08-.55.19-1.16.22-.66.03-.85.036-2.52.036s-1.86-.006-2.52-.036c-.61-.028-.94-.13-1.16-.216-.29-.112-.5-.246-.71-.464-.22-.21-.35-.42-.46-.71-.08-.22-.19-.55-.22-.16-.03-.66-.036-.85-.036-2.52s.006-1.86.036-2.52c.028-.61.13-.94.216-1.16.112-.29.246-.5.464-.71.21-.22.42-.35.71-.46.22-.08.55-.19 1.16-.22.66-.03.85-.036 2.52-.036zm0-1.027c-1.71 0-1.92.007-2.592.038-.67.03-1.13.137-1.53.293a3.185 3.162 0 0 0-1.151.75 3.142 3.142 0 0 0-.749 1.152c-.156.4-.263.86-.293 1.53-.031.672-.038.882-.038 2.592s.007 1.92.038 2.592c.03.67.137 1.13.293 1.53.158.408.369.754.75 1.151.397.38.743.592 1.151.749.4.156.86.263 1.53.293.672.031.882.038 2.592.038s1.92-.007 2.592-.038c.67-.03 1.13-.137 1.53-.293.408-.157.754-.369 1.151-.75.38-.398.592-.743.749-1.151.156-.4.263-.86.293-1.53$.031-.672.038-.882.038-2.592s-.007-1.92-.038-2.592c-.03-.67-.137-1.13-.293-1.53a3.187 3.187 0 0 0-.75-1.151 3.146 3.142 0 0 0-1.152-.749c-.4-.156-.86-.263-1.53-.293-.672-.031-.882-.038-2.592-.038zm0 3.931a3.23 3.23 0 1 0 0 6.462 3.23 3.23 0 0 0 0-6.462zm0 5.435a2.204 2.204 0 1 1 0-4.408 2.204 2.204 0 0 1 0 4.408zm3.364-5.693a.754.754 0 1 0 0 1.508.754.754 0 0 0 0-1.508z"/></svg>
                     </a>
-                    <!-- TikTok (Black Vector Circle) -->
+                    <!-- TikTok (Black/White) -->
                     <a href="https://www.tiktok.com/@bmkg_deliserdang" class="real-social-icon" target="_blank" title="TikTok">
-                        <svg viewBox="0 0 24 24">
-                            <rect width="24" height="24" rx="12" fill="#000000"/>
-                            <path fill="#FFFFFF" d="M11.525 4.02c1.31-.03 2.61-.01 3.91-.02.08 1.53.63 3.02 1.63 4.13a6.406 6.406 0 0 0 4.14 1.95v3.91c-1.34-.03-2.65-.41-3.79-1.12-.66-.42-1.24-.97-1.69-1.63v6.73a7.411 7.411 0 0 1-1.32 4.29 7.472 7.472 0 0 1-9.92 1.34A7.447 7.447 0 0 1 4.37 17.9a7.449 7.447 0 0 1 6.83-6.86c.39-.03.78-.02 1.17.02v3.95c-.32-.05-.65-.06-.97-.02a3.52 3.52 0 0 0-3.1 3.1 3.55 3.55 0 0 0 2.5 3.86 3.523 3.523 0 0 0 4.43-2.51c.07-.33.08-.67.07-1.01V4h-.78z"/>
-                        </svg>
+                        <svg viewBox="0 0 24 24"><rect width="24" height="24" rx="12" fill="#000000"/><path fill="#FFFFFF" d="M11.525 4.02c1.31-.03 2.61-.01 3.91-.02.08 1.53.63 3.02 1.63 4.13a6.406 6.406 0 0 0 4.14 1.95v3.91c-1.34-.03-2.65-.41-3.79-1.12-.66-.42-1.24-.97-1.69-1.63v6.73a7.411 7.411 0 0 1-1.32 4.29 7.472 7.472 0 0 1-9.92 1.34A7.447 7.447 0 0 1 4.37 17.9a7.449 7.447 0 0 1 6.83-6.86c.39-.03.78-.02 1.17.02v3.95c-.32-.05-.65-.06-.97-.02a3.52 3.52 0 0 0-3.1 3.1 3.55 3.55 0 0 0 2.5 3.86 3.523 3.523 0 0 0 4.43-2.51c.07-.33.08-.67.07-1.01V4h-.78z"/></svg>
                     </a>
                 </div>
             </div>
