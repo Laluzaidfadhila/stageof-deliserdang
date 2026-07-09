@@ -44,24 +44,25 @@
         async function ambilDataGempaBMKG() {
             try {
                 const urlAsli = "https://data.bmkg.go.id/DataMKG/TEWS/autogempa.json";
+                
                 const respon = await fetch(urlAsli);
                 if (!respon.ok) throw new Error(`HTTP Error! Status: ${respon.status}`);
                 
                 const data = await respon.json();
                 const gempa = data.Infogempa.gempa;
 
-                // Set Data halaman Gempabumi
+                // Bind ke halaman detail gempa
                 document.getElementById("gempa-waktu").innerText = gempa.Tanggal + " - " + gempa.Jam;
                 document.getElementById("gempa-mag").innerText = "M " + gempa.Magnitude;
                 document.getElementById("gempa-dalam").innerText = gempa.Kedalaman;
                 document.getElementById("gempa-lokasi").innerText = gempa.Wilayah;
                 document.getElementById("gempa-potensi").innerText = gempa.Potensi;
                 
-                // Set Data Ringkasan di Beranda
+                // Bind ke ringkasan beranda
                 document.getElementById("b-gempa-mag").innerText = "M " + gempa.Magnitude;
                 document.getElementById("b-gempa-wilayah").innerText = gempa.Wilayah;
                 document.getElementById("b-gempa-waktu").innerText = gempa.Tanggal + " | " + gempa.Jam;
-
+                
                 const elPeta = document.getElementById("gempa-peta");
                 if (gempa.Shakemap) {
                     elPeta.src = "https://data.bmkg.go.id/DataMKG/TEWS/" + gempa.Shakemap;
@@ -76,6 +77,7 @@
         async function ambilDaftarGempaDirasakan() {
             try {
                 const urlAsli = "https://data.bmkg.go.id/DataMKG/TEWS/gempadirasakan.json";
+                
                 const respon = await fetch(urlAsli);
                 if (!respon.ok) throw new Error(`HTTP Error! Status: ${respon.status}`);
                 
@@ -197,7 +199,7 @@
             document.getElementById("sholat-maghrib").innerText = formatMenitDesimal(tTerbenam, 2);
             document.getElementById("sholat-isya").innerText = formatMenitDesimal(tIsya, 2);
 
-            // Pasang jadwal sholat mini di Beranda
+            // Pasang jadwal sholat mini ke Beranda
             document.getElementById("b-subuh").innerText = formatMenitDesimal(tSubuh, 2);
             document.getElementById("b-dzuhur").innerText = formatMenitDesimal(transitDesimal, 2);
             document.getElementById("b-maghrib").innerText = formatMenitDesimal(tTerbenam, 2);
@@ -295,6 +297,7 @@
             }
 
             document.getElementById("hamburger-check").checked = false;
+
             if (idHalaman === 'petir') inisialisasiPeta();
             window.scrollTo({top: 0, behavior: 'smooth'});
         }
@@ -321,33 +324,134 @@
             tombol.classList.add('nested-ptsp-aktif');
         }
 
-        // 6c. POP-UP MODAL KONTEN PTSP
+        // 6c. SCRIPT UTAMA SISTEM DETAIL LAYANAN PTSP
         let hargaSatuanAktif = 0;
+
         const databaseProdukGeofisika = {
-            1: { judul: "Informasi Peta Kegempaan untuk Perencanaan Konstruksi", satuan: "Per Provinsi Per Tahun", harga: 250000, backoffice: "Geofisika (GB)", inputsHtml: `<label>Jumlah tahun dan provinsi</label><input type="number" id="modal-qty" value="1" min="1" oninput="hitungTotalModal()">`, imgSrc: "https://data.bmkg.go.id/include/assets/img/logo-bmkg.png" },
-            2: { judul: "Informasi Peta Percepatan Tanah untuk Perencanaan Konstruksi", satuan: "Per Provinsi Per Tahun", harga: 250000, backoffice: "Geofisika (Seismotek)", inputsHtml: `<label>Jumlah per provinsi per tahun</label><input type="number" id="modal-qty" value="1" min="1" oninput="hitungTotalModal()"><label style="margin-top:10px;">Tahun</label><input type="text" placeholder="Contoh: 2026"><label style="margin-top:10px;">Provinsi</label><input type="text" placeholder="Contoh: Sumatera Utara">`, imgSrc: "https://data.bmkg.go.id/include/assets/img/logo-bmkg.png" },
-            3: { judul: "Informasi Geofisika untuk Keperluan Klaim Asuransi (Gempa Bumi)", satuan: "Per Lokasi Per Hari", harga: 185000, backoffice: "Geofisika (GB)", inputsHtml: `<label>Jumlah Hari atau Jumlah Lokasi</label><input type="number" id="modal-qty" value="1" min="1" oninput="hitungTotalModal()"><label style="margin-top:10px;">Tanggal Kejadian Gempa Bumi</label><input type="date" value="2026-07-08">`, imgSrc: "https://data.bmkg.go.id/include/assets/img/logo-bmkg.png" },
-            4: { judul: "Buku dan Peta Variasi Magnet Bumi (Epoch)", satuan: "Per Buku Per Tahun", harga: 300000, backoffice: "Geofisika (GTW)", inputsHtml: `<label>Jumlah Buku/Atlas</label><input type="number" id="modal-qty" value="1" min="1" oninput="hitungTotalModal()"><label style="margin-top:10px;">Tahun</label><input type="text" placeholder="Contoh: 2025">`, imgSrc: "https://data.bmkg.go.id/include/assets/img/logo-bmkg.png" },
-            5: { judul: "Peta Tingkat Kerawanan Petir", satuan: "Per Lokasi Per Tahun", harga: 200000, backoffice: "Geofisika (GTW)", inputsHtml: `<label>Jumlah Lokasi</label><input type="number" id="modal-qty" value="1" min="1" oninput="hitungTotalModal()"><label style="margin-top:10px;">Tahun</label><input type="text" placeholder="Contoh: 2026">`, imgSrc: "https://data.bmkg.go.id/include/assets/img/logo-bmkg.png" },
-            6: { judul: "Waktu Terbit dan Terbenam Matahari atau Bulan", satuan: "Per Lokasi Per Tahun", harga: 50000, backoffice: "Geofisika (GTW)", inputsHtml: `<input type="hidden" id="modal-qty" value="1"><label>Tanggal Mulai</label><input type="date" value="2026-07-08"><label style="margin-top:10px;">Tanggal Selesai</label><input type="date" value="2026-07-08"><label style="margin-top:10px;">Provinsi</label><input type="text" placeholder="Masukkan Provinsi"><label style="margin-top:10px;">Kabupaten</label><input type="text" placeholder="Masukkan Kabupaten"><label style="margin-top:10px;">Kecamatan</label><input type="text" placeholder="Masukkan Kecamatan">`, imgSrc: "https://data.bmkg.go.id/include/assets/img/logo-bmkg.png" },
-            7: { judul: "Buku Almanak Badan Meteorologi Klimatologi dan Geofisika", satuan: "Per Lokasi", harga: 150000, backoffice: "Geofisika (GTW)", inputsHtml: `<label>Jumlah Lokasi</label><input type="number" id="modal-qty" value="1" min="1" oninput="hitungTotalModal()">`, imgSrc: "https://data.bmkg.go.id/include/assets/img/logo-bmkg.png" },
-            8: { judul: "Buku Peta Ketinggian Hilal", satuan: "Per Buku Per Tahun", harga: 150000, backoffice: "Geofisika (GTW)", inputsHtml: `<label>Jumlah Buku/Atlas</label><input type="number" id="modal-qty" value="1" min="1" oninput="hitungTotalModal()"><label style="margin-top:10px;">Tahun</label><input type="text" placeholder="Contoh: 2026">`, imgSrc: "https://data.bmkg.go.id/include/assets/img/logo-bmkg.png" },
-            9: { judul: "Titik Dasar Gaya Berat (Gravitasi)", satuan: "Per Titik Dasar Gaya Berat", harga: 150000, backoffice: "Geofisika (GTW)", inputsHtml: `<label>Jumlah Lokasi</label><input type="number" id="modal-qty" value="1" min="1" oninput="hitungTotalModal()">`, imgSrc: "https://data.bmkg.go.id/include/assets/img/logo-bmkg.png" },
-            10: { judul: "Kejadian Petir", satuan: "Per Lokasi Per Hari", harga: 75000, backoffice: "Geofisika (GTW)", inputsHtml: `<label>Jumlah Lokasi (titik koordinat) atau Jumlah Hari</label><input type="number" id="modal-qty" value="1" min="1" oninput="hitungTotalModal()">`, imgSrc: "https://data.bmkg.go.id/include/assets/img/logo-bmkg.png" },
-            11: { judul: "Informasi Geofisika untuk Keperluan Klaim Asuransi (Kejadian Petir)", satuan: "Per Lokasi Per Hari", harga: 185000, backoffice: "Geofisika (GTW)", inputsHtml: `<label>Jumlah Lokasi (titik koordinat) atau Jumlah Hari</label><input type="number" id="modal-qty" value="1" min="1" oninput="hitungTotalModal()">`, imgSrc: "https://data.bmkg.go.id/include/assets/img/logo-bmkg.png" }
+            1: {
+                judul: "Informasi Peta Kegempaan untuk Perencanaan Konstruksi",
+                satuan: "Per Provinsi Per Tahun",
+                harga: 250000,
+                backoffice: "Geofisika (GB)",
+                inputsHtml: `<label>Jumlah tahun dan provinsi</label><input type="number" id="modal-qty" value="1" min="1" oninput="hitungTotalModal()">`,
+                imgSrc: "https://data.bmkg.go.id/include/assets/img/logo-bmkg.png"
+            },
+            2: {
+                judul: "Informasi Peta Percepatan Tanah untuk Perencanaan Konstruksi",
+                satuan: "Per Provinsi Per Tahun",
+                harga: 250000,
+                backoffice: "Geofisika (Seismotek)",
+                inputsHtml: `
+                    <label>Jumlah per provinsi per tahun</label><input type="number" id="modal-qty" value="1" min="1" oninput="hitungTotalModal()">
+                    <label style="margin-top:10px;">Tahun</label><input type="text" placeholder="Contoh: 2026">
+                    <label style="margin-top:10px;">Provinsi</label><input type="text" placeholder="Contoh: Sumatera Utara">`,
+                imgSrc: "https://data.bmkg.go.id/include/assets/img/logo-bmkg.png"
+            },
+            3: {
+                judul: "Informasi Geofisika untuk Keperluan Klaim Asuransi (Gempa Bumi)",
+                satuan: "Per Lokasi Per Hari",
+                harga: 185000,
+                backoffice: "Geofisika (GB)",
+                inputsHtml: `
+                    <label>Jumlah Hari atau Jumlah Lokasi</label><input type="number" id="modal-qty" value="1" min="1" oninput="hitungTotalModal()">
+                    <label style="margin-top:10px;">Tanggal Kejadian Gempa Bumi</label><input type="date" value="2026-07-08">`,
+                imgSrc: "https://data.bmkg.go.id/include/assets/img/logo-bmkg.png"
+            },
+            4: {
+                judul: "Buku dan Peta Variasi Magnet Bumi (Epoch)",
+                satuan: "Per Buku Per Tahun",
+                harga: 300000,
+                backoffice: "Geofisika (GTW)",
+                inputsHtml: `
+                    <label>Jumlah Buku/Atlas</label><input type="number" id="modal-qty" value="1" min="1" oninput="hitungTotalModal()">
+                    <label style="margin-top:10px;">Tahun</label><input type="text" placeholder="Contoh: 2025">`,
+                imgSrc: "https://data.bmkg.go.id/include/assets/img/logo-bmkg.png"
+            },
+            5: {
+                judul: "Peta Tingkat Kerawanan Petir",
+                satuan: "Per Lokasi Per Tahun",
+                harga: 200000,
+                backoffice: "Geofisika (GTW)",
+                inputsHtml: `
+                    <label>Jumlah Lokasi</label><input type="number" id="modal-qty" value="1" min="1" oninput="hitungTotalModal()">
+                    <label style="margin-top:10px;">Tahun</label><input type="text" placeholder="Contoh: 2026">`,
+                imgSrc: "https://data.bmkg.go.id/include/assets/img/logo-bmkg.png"
+            },
+            6: {
+                judul: "Waktu Terbit dan Terbenam Matahari atau Bulan",
+                satuan: "Per Lokasi Per Tahun",
+                harga: 50000,
+                backoffice: "Geofisika (GTW)",
+                inputsHtml: `
+                    <input type="hidden" id="modal-qty" value="1">
+                    <label>Tanggal Mulai</label><input type="date" value="2026-07-08">
+                    <label style="margin-top:10px;">Tanggal Selesai</label><input type="date" value="2026-07-08">
+                    <label style="margin-top:10px;">Provinsi</label><input type="text" placeholder="Masukkan Provinsi">
+                    <label style="margin-top:10px;">Kabupaten</label><input type="text" placeholder="Masukkan Kabupaten">
+                    <label style="margin-top:10px;">Kecamatan</label><input type="text" placeholder="Masukkan Kecamatan">`,
+                imgSrc: "https://data.bmkg.go.id/include/assets/img/logo-bmkg.png"
+            },
+            7: {
+                judul: "Buku Almanak Badan Meteorologi Klimatologi dan Geofisika",
+                satuan: "Per Lokasi",
+                harga: 150000,
+                backoffice: "Geofisika (GTW)",
+                inputsHtml: `<label>Jumlah Lokasi</label><input type="number" id="modal-qty" value="1" min="1" oninput="hitungTotalModal()">`,
+                imgSrc: "https://data.bmkg.go.id/include/assets/img/logo-bmkg.png"
+            },
+            8: {
+                judul: "Buku Peta Ketinggian Hilal",
+                satuan: "Per Buku Per Tahun",
+                harga: 150000,
+                backoffice: "Geofisika (GTW)",
+                inputsHtml: `
+                    <label>Jumlah Buku/Atlas</label><input type="number" id="modal-qty" value="1" min="1" oninput="hitungTotalModal()">
+                    <label style="margin-top:10px;">Tahun</label><input type="text" placeholder="Contoh: 2026">`,
+                imgSrc: "https://data.bmkg.go.id/include/assets/img/logo-bmkg.png"
+            },
+            9: {
+                judul: "Titik Dasar Gaya Berat (Gravitasi)",
+                satuan: "Per Titik Dasar Gaya Berat",
+                harga: 150000,
+                backoffice: "Geofisika (GTW)",
+                inputsHtml: `<label>Jumlah Lokasi</label><input type="number" id="modal-qty" value="1" min="1" oninput="hitungTotalModal()">`,
+                imgSrc: "https://data.bmkg.go.id/include/assets/img/logo-bmkg.png"
+            },
+            10: {
+                judul: "Kejadian Petir",
+                satuan: "Per Lokasi Per Hari",
+                harga: 75000,
+                backoffice: "Geofisika (GTW)",
+                inputsHtml: `<label>Jumlah Lokasi (titik koordinat) atau Jumlah Hari</label><input type="number" id="modal-qty" value="1" min="1" oninput="hitungTotalModal()">`,
+                imgSrc: "https://data.bmkg.go.id/include/assets/img/logo-bmkg.png"
+            },
+            11: {
+                judul: "Informasi Geofisika untuk Keperluan Klaim Asuransi (Kejadian Petir)",
+                satuan: "Per Lokasi Per Hari",
+                harga: 185000,
+                backoffice: "Geofisika (GTW)",
+                inputsHtml: `
+                    <label>Jumlah Lokasi (titik koordinat) atau Jumlah Hari</label><input type="number" id="modal-qty" value="1" min="1" oninput="hitungTotalModal()">`,
+                imgSrc: "https://data.bmkg.go.id/include/assets/img/logo-bmkg.png"
+            }
         };
 
         function bukaModalLayananPtsp(idProduk) {
             const data = databaseProdukGeofisika[idProduk];
             if (!data) return;
+
             hargaSatuanAktif = data.harga;
+
             document.getElementById("m-title").innerText = data.judul;
             document.getElementById("m-satuan").innerText = data.satuan;
             document.getElementById("m-harga-satuan").innerText = "Rp. " + data.harga.toLocaleString('id-ID');
             document.getElementById("m-backoffice").innerText = data.backoffice;
             document.getElementById("m-inputs-container").innerHTML = data.inputsHtml;
+            
             const imgEl = document.getElementById("m-preview-img");
             imgEl.src = data.imgSrc;
+            imgEl.onerror = function() { this.src = 'https://data.bmkg.go.id/include/assets/img/logo-bmkg.png'; };
+
             hitungTotalModal();
             document.getElementById("ptsp-detail-modal").style.display = "flex";
         }
@@ -359,7 +463,8 @@
         function hitungTotalModal() {
             const qtyEl = document.getElementById("modal-qty");
             const qty = qtyEl ? parseInt(qtyEl.value) || 1 : 1;
-            document.getElementById("m-total-bayar").innerText = "Rp. " + (hargaSatuanAktif * qty).toLocaleString('id-ID');
+            const total = hargaSatuanAktif * qty;
+            document.getElementById("m-total-bayar").innerText = "Rp. " + total.toLocaleString('id-ID');
         }
 
         // 7. FITUR DARK MODE TOGGLE
@@ -374,10 +479,12 @@
         document.addEventListener("DOMContentLoaded", function() {
             perbaruiWaktuBMKG();
             setInterval(perbaruiWaktuBMKG, 1000);
+            
             ambilDataGempaBMKG();
             ambilDaftarGempaDirasakan();
             ambilDataMagnetBumi();
             hitungTandaWaktuSumut();
+
             setInterval(ambilDataMagnetBumi, 5000);
 
             const menuLinks = document.querySelectorAll('nav a, .dropdown-content a, .mobile-nav-links a');
@@ -390,6 +497,7 @@
                 });
             });
 
+            // MEMORI REFRESH HASH DETECTOR
             const halamanTujuanUrl = window.location.hash.replace('#', '');
             if (halamanTujuanUrl && document.getElementById(halamanTujuanUrl)) {
                 bukaHalaman(halamanTujuanUrl);
@@ -406,7 +514,7 @@
             background-color: #f4f7f6; color: #333333; transition: background-color 0.3s, color 0.3s;
         }
         
-        /* HEADER BAR ATAS */
+        /* HEADER WAKTU ATAS */
         .top-time-bar {
             background-color: #ffffff; border-bottom: 1px solid #e2e8f0; padding: 8px 40px;
             display: flex; justify-content: space-between; font-size: 11px; font-weight: 600; color: #555555; text-transform: uppercase; letter-spacing: 0.5px;
@@ -415,23 +523,33 @@
         .time-right-side { display: flex; align-items: center; gap: 15px; }
         .time-right-side span { color: #0c861b; font-weight: 700; }
 
-        /* HEADER & NAVIGATION */
+        /* HEADER UTAMA */
         header {
             display: flex; justify-content: space-between; align-items: center; padding: 15px 40px;
             border-bottom: 1px solid #cbd5e1; background-color: #ffffff; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 8px rgba(0,0,0,0.04);
         }
-        .brand-link { text-decoration: none; display: flex; align-items: center; gap: 15px; color: inherit; }
+        
+        /* LINK LOGO & BRANDING */
+        .brand-link {
+            text-decoration: none; display: flex; align-items: center; gap: 15px; color: inherit;
+        }
         .logo-section { display: flex; align-items: center; gap: 15px; }
-        .logo-section img { width: 50px; height: auto; background-color: #ffffff; border-radius: 6px; padding: 3px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .logo-text h1 { font-size: 13px; margin: 0; color: #0c3c60; font-weight: 700; letter-spacing: 0.5px; }
+        .logo-section img { 
+            width: 50px; height: auto; display: block; 
+            background-color: #ffffff; border-radius: 6px; padding: 3px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05); transition: all 0.3s ease; 
+        }
+        .logo-text h1 { font-size: 14px; margin: 0; color: #0c3c60; font-weight: 700; letter-spacing: 0.5px; transition: color 0.3s; }
         .logo-text p { font-size: 11px; margin: 2px 0 0 0; color: #666666; font-weight: 500; }
         
-        nav { display: flex; gap: 22px; align-items: center; }
+        /* NAVIGASI & DROPDOWN STYLE */
+        nav { display: flex; gap: 25px; align-items: center; }
         nav a { text-decoration: none; color: #555555; font-size: 13px; font-weight: 600; padding: 5px 0; border-bottom: 2px solid transparent; transition: all 0.3s ease; cursor: pointer; }
         nav a:hover, nav a.menu-aktif { color: #0c3c60; border-bottom: 2px solid #0c3c60; }
         
-        /* DROPDOWN */
         .dropdown { position: relative; display: inline-block; }
+        .dropdown .dropbtn { display: flex; align-items: center; gap: 4px; }
+        
         .dropdown-content {
             display: none; position: absolute; background-color: #ffffff; min-width: 240px; 
             box-shadow: 0px 8px 24px rgba(0,0,0,0.12); border-radius: 8px; border: 1px solid #e2e8f0;
@@ -441,17 +559,30 @@
             content: ""; position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%);
             border-width: 7px; border-style: solid; border-color: transparent transparent #ffffff transparent;
         }
-        .dropdown-content a { color: #475569; padding: 10px 16px; text-decoration: none; display: block; font-size: 12.5px; font-weight: 500; text-align: left; }
-        .dropdown-content a:hover { background-color: #f1f5f9; color: #0c3c60; }
+        .dropdown-content a {
+            color: #475569; padding: 10px 16px; text-decoration: none; display: block;
+            font-size: 12.5px; font-weight: 500; text-align: left; border-bottom: none; transition: background 0.2s;
+        }
+        .dropdown-content a:hover, .dropdown-content a.menu-aktif {
+            background-color: #f1f5f9; color: #0c3c60; border-bottom: none;
+        }
         .dropdown:hover .dropdown-content { display: block; }
 
         .btn-dark-mode { background-color: #e2e8f0; padding: 6px 12px; border-radius: 20px; font-size: 11px !important; border: none; font-weight: 700; cursor: pointer; }
 
-        /* HAMBURGER SYSTEM */
+        /* HAMBURGER SYSTEM DRAWER MOBILE */
         .hamburger-container { display: none; }
         #hamburger-check { display: none; }
 
-        /* HERO SECTION */
+        .dashboard-container { max-width: 1200px; margin: 30px auto; padding: 0 20px; min-height: 50vh; }
+        .section-block { display: none; margin-bottom: 40px; animation: efekMuncul 0.4s ease-in-out; }
+        @keyframes efekMuncul { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .geo-card { background-color: #ffffff; border-radius: 12px; padding: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); border: 1px solid #e2e8f0; margin-bottom: 25px; }
+        .geo-card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; border-bottom: 2px solid #0c3c60; padding-bottom: 12px; }
+        .geo-card-header h3 { margin: 0; font-size: 22px; color: #0c3c60; }
+        
+        /* OPTIMASI HERO SECTION BANNER */
         .banner-beranda { 
             position: relative;
             background: linear-gradient(rgba(12, 60, 96, 0.85), rgba(23, 109, 168, 0.85)), url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1000') no-repeat center center;
@@ -469,7 +600,7 @@
         .hero-btn-secondary { background-color: rgba(255, 255, 255, 0.15); color: white; border: 1px solid rgba(255, 255, 255, 0.3); }
         .hero-btn-secondary:hover { background-color: rgba(255, 255, 255, 0.3); }
 
-        /* CARDS OVERVIEW */
+        /* MULTI CARDS OVERVIEW GRAPHIC FILLER */
         .beranda-dashboard-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -490,7 +621,7 @@
         .ov-btn { background: #f1f5f9; color: #0c3c60; border: none; padding: 8px; border-radius: 5px; font-size: 12px; font-weight: 700; cursor: pointer; text-align: center; width: 100%; }
         .ov-btn:hover { background: #e2e8f0; }
 
-        /* BERITA & EDUKASI */
+        /* BERITA & EDUKASI COMPONENT */
         .section-title-container { border-left: 4px solid #0c3c60; padding-left: 12px; margin-bottom: 20px; }
         .section-title-container h3 { margin: 0; font-size: 18px; color: #0c3c60; }
         .news-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
@@ -501,17 +632,9 @@
         .news-content h4 { margin: 8px 0; font-size: 14px; color: #1e293b; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
         .news-content p { margin: 0; font-size: 12px; color: #64748b; line-height: 1.5; }
 
-        /* BASE LAYOUT */
-        .dashboard-container { max-width: 1200px; margin: 30px auto; padding: 0 20px; min-height: 50vh; }
-        .section-block { display: none; margin-bottom: 40px; animation: efekMuncul 0.4s ease-in-out; }
-        @keyframes efekMuncul { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .geo-card { background-color: #ffffff; border-radius: 12px; padding: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); border: 1px solid #e2e8f0; margin-bottom: 25px; }
-        .geo-card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; border-bottom: 2px solid #0c3c60; padding-bottom: 12px; }
-        .geo-card-header h3 { margin: 0; font-size: 22px; color: #0c3c60; }
-        
         .grid-beranda { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; background-color: #ffffff; color: #333333; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); border: 1px solid #e2e8f0; margin-bottom: 30px; }
         .info-box-beranda { background-color: #f8fafc; border-left: 5px solid #0c3c60; padding: 20px; border-radius: 4px; margin-top: 15px; }
+
         .list-tupoksi { padding-left: 20px; line-height: 1.8; }
         .list-tupoksi li { margin-bottom: 8px; }
 
@@ -549,21 +672,35 @@
         .card-sholat-box .sholat-name { font-size: 12px; font-weight: 700; color: #475569; text-transform: uppercase; margin-bottom: 8px; }
         .card-sholat-box .sholat-val { font-size: 20px; font-weight: 800; color: #10b981; }
 
-        /* PTSP STYLES (FIXED INCLUSION) */
-        .ptsp-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 5000; display: none; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; }
-        .ptsp-modal-box { background-color: #dbeafe; width: 100%; max-width: 950px; border-radius: 16px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); display: flex; flex-direction: column; position: relative; max-height: 90vh; overflow-y: auto; color: #1e293b; }
+        /* STRUKTUR ARSITEKTUR LAYOUT MODAL POPUP PTSP (FIXED RE-INCLUSION) */
+        .ptsp-modal-overlay { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background-color: rgba(0,0,0,0.5); z-index: 5000; 
+            display: none; align-items: center; justify-content: center; 
+            padding: 20px; box-sizing: border-box; 
+        }
+        .ptsp-modal-box { 
+            background-color: #dbeafe; width: 100%; max-width: 950px; 
+            border-radius: 16px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); 
+            display: flex; flex-direction: column; position: relative; 
+            max-height: 90vh; overflow-y: auto; color: #1e293b; 
+        }
         .ptsp-modal-close { position: absolute; top: 15px; right: 20px; font-size: 28px; font-weight: bold; color: #64748b; cursor: pointer; }
         .ptsp-modal-close:hover { color: #ef4444; }
+        
         .modal-grid-layout { display: grid; grid-template-columns: 1.3fr 1fr; gap: 25px; margin-top: 10px; }
         .modal-meta-rows { display: flex; flex-direction: column; gap: 12px; }
         .modal-row-item { display: flex; align-items: center; gap: 15px; }
         .modal-row-label { width: 140px; font-size: 13.5px; font-weight: 600; color: #475569; display: flex; align-items: center; gap: 6px; }
         .modal-row-value-box { flex: 1; background-color: #e2e8f0; padding: 10px 14px; border-radius: 6px; font-size: 14px; font-weight: 600; color: #1e293b; border: 1px solid #cbd5e1; }
+        
         .modal-inputs-white-card { background-color: #ffffff; padding: 20px; border-radius: 8px; border: 1px solid #cbd5e1; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
         .modal-inputs-white-card label { display: block; font-size: 13px; font-weight: 700; color: #475569; margin-bottom: 6px; }
         .modal-inputs-white-card input { width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; font-weight: 600; box-sizing: border-box; margin-bottom: 5px; }
+        
         .modal-preview-doc-card { display: flex; justify-content: center; align-items: center; background-color: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px; height: 100%; box-sizing: border-box; }
         .modal-preview-doc-card img { max-width: 100%; max-height: 280px; object-fit: contain; border-radius: 4px; }
+        
         .modal-bottom-pricing-bar { border-top: 1px solid #cbd5e1; margin-top: 25px; padding-top: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
         .modal-price-huge-text { font-size: 26px; font-weight: 800; color: #ef4444; }
         .modal-basket-btn { background-color: #0c3c60; color: white; border: none; padding: 12px 24px; font-size: 14px; font-weight: 700; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: background 0.2s; }
@@ -573,15 +710,15 @@
         .ptsp-tab-btn { background: none; border: none; padding: 10px 20px; font-size: 14px; font-weight: 700; color: #64748b; cursor: pointer; transition: all 0.2s ease; border-radius: 6px 6px 0 0; }
         .ptsp-tab-btn:hover { background-color: rgba(0,0,0,0.02); color: #0c3c60; }
         .tab-ptsp-aktif { color: #0c3c60; border-bottom: 3px solid #0c3c60; background-color: #f1f5f9; }
+
         .ptsp-nested-nav { display: flex; gap: 8px; margin-bottom: 20px; background: #f1f5f9; padding: 6px; border-radius: 8px; display: inline-flex; }
         .katalog-nested-btn { background: none; border: none; padding: 8px 16px; font-size: 12.5px; font-weight: 600; color: #475569; cursor: pointer; border-radius: 6px; transition: all 0.2s; }
         .nested-ptsp-aktif { background-color: #ffffff; color: #0c3c60; box-shadow: 0 2px 4px rgba(0,0,0,0.06); }
-        .ptsp-form-group { margin-bottom: 15px; text-align: left; }
-        .ptsp-form-group label { display: block; font-size: 13px; font-weight: 600; color: #475569; margin-bottom: 6px; }
-        .ptsp-form-group input, .ptsp-form-group textarea { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-family: inherit; font-size: 13.5px; box-sizing: border-box; }
-        .ptsp-btn-lihat { background-color: #f97316; color: white; border: none; padding: 6px 14px; font-size: 12px; font-weight: 600; border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; }
+        
+        .ptsp-btn-lihat { background-color: #f97316; color: white; border: none; padding: 6px 14px; font-size: 12px; font-weight: 600; border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; transition: opacity 0.2s; }
+        .ptsp-btn-lihat:hover { opacity: 0.9; }
 
-        /* FOOTER DESIGN */
+        /* OFFICIAL FOOTER DESIGN */
         .official-footer { background-color: #0b1a30; color: #ffffff; padding: 50px 40px 30px 40px; font-size: 13px; line-height: 1.8; border-top: 3px solid #176da8; }
         .official-footer img { width: 45px; height: auto; margin-bottom: 15px; background-color: #ffffff; border-radius: 4px; padding: 2px; }
         .footer-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1.2fr 1fr 1fr 1.2fr; gap: 40px; }
@@ -591,30 +728,45 @@
         .footer-links-list li { margin-bottom: 10px; }
         .footer-links-list a { color: #cbd5e1; text-decoration: none; transition: color 0.2s; display: inline-flex; align-items: center; gap: 5px; }
         .footer-links-list a:hover { color: #38bdf8; }
+
+        /* MODE GELAP SINKRONISASI TOTAL */
+        body.dark-mode { background-color: #0f172a; color: #e2e8f0; }
+        body.dark-mode header, 
+        body.dark-mode .top-time-bar, 
+        body.dark-mode .geo-card, 
+        body.dark-mode .grid-beranda, 
+        body.dark-mode .chart-container,
+        body.dark-mode .wa-pop-bubble,
+        body.dark-mode .card-sholat-box,
+        body.dark-mode .card-waktu-sol,
+        body.dark-mode .overview-card,
+        body.dark-mode .news-card { background-color: #1e293b; border-color: #334155; color: #e2e8f0; }
         
-        .app-download-badges { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; margin-bottom: 25px; }
-        .svg-badge-link { display: inline-block; width: 135px; height: 40px; transition: transform 0.2s ease; }
-        .svg-badge-link:hover { transform: scale(1.03); }
-        
-        .social-media-container { display: flex; gap: 12px; margin-top: 10px; }
-        .real-social-icon { width: 32px; height: 34px; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; transition: transform 0.2s ease; }
-        .real-social-icon:hover { transform: translateY(-3px); }
-        .real-social-icon svg { width: 100%; height: 100%; object-fit: contain; }
+        body.dark-mode .overview-title { color: #94a3b8; }
+        body.dark-mode .overview-value { color: #38bdf8; }
+        body.dark-mode .overview-desc { color: #cbd5e1; }
+        body.dark-mode .ov-btn { background: #334155; color: #38bdf8; }
+        body.dark-mode .ov-btn:hover { background: #475569; }
+        body.dark-mode .news-content h4 { color: #ffffff; }
+        body.dark-mode .section-title-container h3 { color: #38bdf8; }
+        body.dark-mode .section-title-container { border-left-color: #38bdf8; }
+        body.dark-mode .logo-text h1 { color: #38bdf8; }
+        body.dark-mode .btn-dark-mode { background-color: #334155; color: #ffffff; }
+        body.dark-mode table th { background-color: #334155; }
+        body.dark-mode table td { border-bottom-color: #334155; }
+        body.dark-mode .ptsp-form-group input, body.dark-mode .ptsp-form-group textarea { background-color: #334155; border-color: #475569; color: white; }
+        body.dark-mode .ptsp-modal-box { background-color: #1e293b; border: 1px solid #334155; color: #e2e8f0; }
+        body.dark-mode .modal-row-value-box { background-color: #334155; border-color: #475569; color: white; }
+        body.dark-mode .modal-inputs-white-card { background-color: #1e293b; border-color: #334155; }
+        body.dark-mode .modal-inputs-white-card input { background-color: #334155; border-color: #475569; color: white; }
+        body.dark-mode .modal-preview-doc-card { background-color: #334155; border-color: #475569; }
+        body.dark-mode .ptsp-nested-nav { background: #334155; }
+        body.dark-mode .katalog-nested-btn { color: #cbd5e1; }
+        body.dark-mode .nested-ptsp-aktif { background-color: #1e293b; color: #38bdf8; }
+        body.dark-mode .tab-ptsp-aktif { color: #38bdf8; border-bottom-color: #38bdf8; background-color: #334155; }
+        body.dark-mode .leaflet-tile-container { filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%); }
 
-        .footer-bottom-bar { max-width: 1200px; margin: 40px auto 0 auto; padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.1); text-align: center; color: #94a3b8; font-size: 12px; }
-
-        table { width: 100%; border-collapse: collapse; text-align: left; margin-top: 10px; }
-        table th { background-color: #0c3c60; color: white; padding: 12px 10px; font-size: 13px; }
-        table td { padding: 12px 10px; border-bottom: 1px solid #e2e8f0; font-size: 13.5px; line-height: 1.4; }
-        .badge-mmi { background-color: #e0f2fe; color: #0369a1; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; display: inline-block; }
-        .badge-danger { background-color: #ef4444; color: white; padding: 4px 12px; border-radius: 4px; font-size: 13px; }
-
-        .whatsapp-widget-container { position: fixed; bottom: 25px; right: 25px; display: flex; flex-direction: column; align-items: flex-end; z-index: 9999; font-family: sans-serif; }
-        .wa-pop-bubble { background: #ffffff; color: #333333; padding: 7px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; margin-bottom: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: 1px solid #e2e8f0; display: flex; align-items: center; gap: 8px; }
-        .whatsapp-circle-btn { width: 50px; height: 50px; background-color: #25D366; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.2); transition: transform 0.2s; }
-        .whatsapp-circle-btn svg { width: 26px; height: 26px; fill: #ffffff; }
-
-        /* RESPONSIVITAS HEADER & NAVIGATION MOBILE */
+        /* COCOK RESPONSIVITAS MOBILE & HAMBURGER SYSTEM DRAWER */
         @media (max-width: 992px) {
             header { padding: 15px 20px; }
             nav { display: none; }
@@ -643,6 +795,7 @@
             .footer-grid { grid-template-columns: repeat(2, 1fr); gap: 30px; }
             .fungsional-grid { grid-template-columns: repeat(3, 1fr); }
             .news-grid { grid-template-columns: 1fr; gap: 15px; }
+            .modal-grid-layout { grid-template-columns: 1fr; }
         }
         
         @media (max-width: 768px) {
@@ -655,7 +808,6 @@
             .footer-grid { grid-template-columns: 1fr; }
             .ptsp-nav-tabs { flex-direction: column; gap: 5px; border-bottom: none; }
             .ptsp-tab-btn { border-radius: 6px; border: 1px solid #cbd5e1; }
-            .modal-grid-layout { grid-template-columns: 1fr; }
             .banner-beranda h2 { font-size: 20px; }
         }
         @media (max-width: 480px) { .fungsional-grid { grid-template-columns: 1fr; } }
@@ -683,7 +835,6 @@
             </div>
         </a>
         
-        <!-- NAV DESKTOP -->
         <nav>
             <a href="#beranda">Beranda</a>
             <div class="dropdown">
@@ -703,7 +854,6 @@
             <a id="dark-mode-btn" class="btn-dark-mode" onclick="toggleDarkMode()"><span class="dark-mode-txt">🌙 Mode Gelap</span></a>
         </nav>
 
-        <!-- HAMBURGER MENU RESPONSIVE -->
         <div class="hamburger-container">
             <input type="checkbox" id="hamburger-check">
             <label for="hamburger-check" class="hamburger-icon">
@@ -728,9 +878,7 @@
 
     <div class="dashboard-container">
 
-        <!-- SEKSI BERANDA -->
         <div id="beranda" class="section-block">
-            <!-- 1. HERO BANNER -->
             <div class="banner-beranda" style="text-align: center;">
                 <h2>Selamat Datang di Portal Monitoring Geofisika</h2>
                 <p style="font-size: 15px; margin-bottom: 5px; opacity: 0.95;">Stasiun Geofisika Kelas I Deli Serdang - BMKG Sumatera Utara</p>
@@ -741,9 +889,7 @@
                 </div>
             </div>
 
-            <!-- 2. LIVE RINGKASAN OVERVIEW CARDS -->
             <div class="beranda-dashboard-grid">
-                <!-- Card Gempa -->
                 <div class="overview-card ov-card-blue">
                     <div>
                         <div class="overview-title"><span>🚨</span> Gempa Terkini (BMKG)</div>
@@ -756,7 +902,6 @@
                     </div>
                 </div>
 
-                <!-- Card Petir -->
                 <div class="overview-card ov-card-orange">
                     <div>
                         <div class="overview-title"><span>⚡</span> Listrik Udara / Petir</div>
@@ -769,7 +914,6 @@
                     </div>
                 </div>
 
-                <!-- Card Tanda Waktu -->
                 <div class="overview-card ov-card-green">
                     <div>
                         <div class="overview-title"><span>🕌</span> Jadwal Sholat Hari Ini</div>
@@ -786,7 +930,6 @@
                 </div>
             </div>
 
-            <!-- 3. SEKSI MITIGASI & EDUKASI -->
             <div class="section-title-container">
                 <h3>Edukasi Mitigasi Kebencanaan</h3>
             </div>
@@ -818,7 +961,6 @@
             </div>
         </div>
 
-        <!-- SEKSI PROFIL: SEJARAH -->
         <div id="profil-sejarah" class="section-block">
             <div class="grid-beranda">
                 <div>
@@ -842,7 +984,6 @@
             </div>
         </div>
 
-        <!-- SEKSI PROFIL: TUPOKSI -->
         <div id="profil-tupoksi" class="section-block">
             <div class="geo-card">
                 <div class="geo-card-header">
@@ -860,7 +1001,6 @@
             </div>
         </div>
 
-        <!-- SEKSI PROFIL: KRONOLOGI ALAT -->
         <div id="profil-kronologi" class="section-block">
             <div class="geo-card">
                 <div class="geo-card-header">
@@ -892,7 +1032,6 @@
             </div>
         </div>
 
-        <!-- SEKSI PROFIL: STRUKTUR ORGANISASI -->
         <div id="profil-struktur" class="section-block">
             <div class="chart-container">
                 <div class="chart-title">STRUKTUR ORGANISASI KANTOR</div>
@@ -918,7 +1057,6 @@
             </div>
         </div>
 
-        <!-- SEKSI GEMPABUMI -->
         <div id="gempabumi" class="section-block">
             <div class="geo-card">
                 <div class="geo-card-header">
@@ -965,7 +1103,6 @@
             </div>
         </div>
 
-        <!-- SEKSI MAGNET BUMI -->
         <div id="magnet" class="section-block">
             <div class="geo-card">
                 <div class="geo-card-header">
@@ -985,7 +1122,6 @@
             </div>
         </div>
 
-        <!-- SEKSI TANDA WAKTU -->
         <div id="tandawaktu" class="section-block">
             <div class="geo-card">
                 <div class="geo-card-header">
@@ -1021,7 +1157,6 @@
             </div>
         </div>
 
-        <!-- SEKSI RADAR PETIR -->
         <div id="petir" class="section-block">
             <div class="geo-card">
                 <div class="geo-card-header">
@@ -1035,7 +1170,6 @@
             </div>
         </div>
 
-        <!-- SEKSI LAYANAN PTSP BMKG -->
         <div id="ptsp" class="section-block">
             <div class="geo-card">
                 <div class="geo-card-header">
@@ -1082,7 +1216,6 @@
 
     </div> 
 
-    <!-- DETAIL DETAIL LAYANAN DYNAMIC MODAL -->
     <div id="ptsp-detail-modal" class="ptsp-modal-overlay" onclick="if(event.target === this) tutupModalLayananPtsp()">
         <div class="ptsp-modal-box">
             <span class="ptsp-modal-close" onclick="tutupModalLayananPtsp()">&times;</span>
@@ -1103,7 +1236,6 @@
         </div>
     </div>
 
-    <!-- FOOTER -->
     <footer class="official-footer">
         <div class="footer-grid">
             <div class="footer-col footer-logo-area">
@@ -1125,7 +1257,7 @@
                 <h4>Aplikasi & Media</h4>
                 <div class="social-media-container">
                     <a href="https://www.instagram.com/infogempa.sumbagut/" class="real-social-icon" target="_blank">
-                        <svg viewBox="0 0 24 24"><rect width="24" height="24" rx="5.5" fill="#D62976"/><path fill="#FFFFFF" d="M12 7.635a4.365 4.365 0 1 0 0 8.73 4.365 4.365 0 0 0 0-8.73zm0 7.305a2.94 2.94 0 1 1 0-5.88 2.94 2.94 0 0 1 0 5.88z"/></svg>
+                        <svg viewBox="0 0 24 24"><rect width="24" height="24" rx="5.5" fill="#D62976"/><path fill="#FFFFFF" d="M12 7.635a4.365 4.365 0 1 0 0 8.73 4.365 4.365 0 0 0 0-8.73zm0 7.305a2.94 2.294 0 1 1 0-5.88 2.94 2.94 0 0 1 0 5.88z"/></svg>
                     </a>
                 </div>
             </div>
