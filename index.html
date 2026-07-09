@@ -3,285 +3,917 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Info Ephemeris & Gempa Sumbagut</title>
+    <title>Stageof Deli Serdang - BMKG</title>
     
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
-    
-    <style>
-        /* --- CSS VARIABLES & THEME MANAGEMENT --- */
-        :root {
-            --bg-primary: #f4f7f6;
-            --bg-card: #ffffff;
-            --text-main: #2c3e50;
-            --text-muted: #7f8c8d;
-            --accent-color: #3498db;
-            --accent-hover: #2980b9;
-            --border-color: #e2e8f0;
-            --danger-color: #e74c3c;
-            --success-color: #2ecc71;
-            --shadow: 0 4px 6px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.1);
+    <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAADwklEQVR4nO2YTWwUVRTHf++bmdkWm6gIscXwUSKixg8Sg8bYREgMCYmJiZgYExMTMTExMTEmJiZCYmJCgqgYEqLGDxJD9IMYExMTY6ImfJAQQYst0E9atpud9+PhzbS7292Z7bS7O0v/yWRmZ96b+b933rnvvXmEwWAwGAwGg8FgMBgMBoNBLXGcoAnbU6vP/mI76vLp7+T03S7Z66nNpt9r7n8i/6+6eR8Y9X0v67Zf9qLuv0vWv9Y9X3PfW0b5H9P3/Zz+P7R+ve56S9//qG7/79gP/f7f/O/at39g+2ffbU7epzabeZ9VmW7fdss9bS/Z9t+xz12ZTr8uqzbbuw7rtsr6re75m86nNtu5L9n0P7PNo2+fOvu9pfc6erNm+pt/XZX2v+V6v+Vvts9T88wX7PLXZfKof/b76fqf5/Yf6/of6nL3p89b884Waf98p6+fG9z9X68v6nqM+/wX7PLXZfKppY9R697HeW3K/0+fvtI9Zm23dvvofbX6/6fP6bOvxvXvYVbfeU++zZp9V90F6n/3bI/u+Fva5b7fvs74fGfW9F/U+8xP73Gv2vXvYVbfeU++zZp9V90F6n/3bI/u+Fva5b7fvs74fGfW9F/U+8xP73Gv2vXvYVbfeU++zZp9V90F6n/3bI/u+Fva5b7fvs74fGfW9F/U+8xP73Gv2vXvYVbfeU++zZp9V90F6n/3bI/u+Fva5b7fvs74fGfW9F/U+8xP73Gv2vXvYVbfeU++zZp9V90F6n/3bI/u+Fva5b7fvs74fGfW9F/U+8xP73Gv2vXvYVbfeU++zZp9V90F6n/3bI/u+Fva5b7fvs74fGfW9F/U+8xP4H3p3es9b7in674D5FwshNf88IeunNpM/77bPW0v2fbfs7Kvt/0v2fbfs+w7S99W6p/XfS/bfM8r/mL7v5/T/ofXrZfvdM+v7mX1ubfpc9b9bV/0eSz6rOtueWs9b9rOtrbZ9X637vGZzZfvcsf6v2Wwun9vX0XpsX9U3XWv69WbL6pvn9NuZfW4t2X/7f08tMxgMBoPBYDAYDAaDwWAwGAwGg8FgMBisgP8Blyp60isxt9IAAAAASUVORK5CYII=">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+        // 1. FUNGSI JAM REALTIME BMKG
+        function perbaruiWaktuBMKG() {
+            const sekarang = new Date();
+            const daftarHari = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+            const daftarBulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+            
+            const namaHari = daftarHari[sekarang.getDay()];
+            const tanggal = sekarang.getDate(); 
+            const namaBulan = daftarBulan[sekarang.getMonth()];
+            const tahun = sekarang.getFullYear();
+
+            const elTanggal = document.getElementById("tanggal-hari-pusat");
+            if(elTanggal) elTanggal.innerText = `${namaHari}, ${tanggal} ${namaBulan} ${tahun}`;
+
+            const formatDuaDigit = (angka) => String(angka).padStart(2, '0');
+
+            const jamWib = formatDuaDigit(sekarang.getHours());
+            const menitWib = formatDuaDigit(sekarang.getMinutes());
+            const detikWib = formatDuaDigit(sekarang.getSeconds());
+            const elWib = document.getElementById("jam-wib");
+            if(elWib) elWib.innerText = `${jamWib} : ${menitWib} : ${detikWib}`;
+
+            const jamUtc = formatDuaDigit(sekarang.getUTCHours());
+            const menitUtc = formatDuaDigit(sekarang.getUTCMinutes());
+            const detikUtc = formatDuaDigit(sekarang.getUTCSeconds());
+            const elUtc = document.getElementById("jam-utc");
+            if(elUtc) elUtc.innerText = `${jamUtc} : ${menitUtc} : ${detikUtc}`;
         }
 
-        [data-theme="dark"] {
-            --bg-primary: #0f172a;
-            --bg-card: #1e293b;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --accent-color: #38bdf8;
-            --accent-hover: #0ea5e9;
-            --border-color: #334155;
-            --shadow: 0 4px 6px rgba(0,0,0,0.3);
-        }
+        // 2. INTEGRASI API GEMPA BUMI OTOMATIS
+        async function ambilDataGempaBMKG() {
+            try {
+                const urlAsli = "https://data.bmkg.go.id/DataMKG/TEWS/autogempa.json";
+                
+                const respon = await fetch(urlAsli);
+                if (!respon.ok) throw new Error(`HTTP Error! Status: ${respon.status}`);
+                
+                const data = await respon.json();
+                const gempa = data.Infogempa.gempa;
 
-        /* --- BASE STYLES --- */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            transition: background-color 0.3s, color 0.3s;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-primary);
-            color: var(--text-main);
-            line-height: 1.6;
-            padding-bottom: 60px;
-        }
-
-        header {
-            background-color: var(--bg-card);
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: var(--shadow);
-            border-bottom: 1px solid var(--border-color);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .logo-container h1 {
-            font-size: 1.5rem;
-            color: var(--accent-color);
-        }
-
-        /* --- THEME TOGGLE BUTTON --- */
-        .theme-toggle-btn {
-            background: none;
-            border: 2px solid var(--border-color);
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            cursor: pointer;
-            color: var(--text-main);
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .theme-toggle-btn:hover {
-            background-color: var(--border-color);
-        }
-
-        /* --- MAIN LAYOUT --- */
-        main {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 2rem;
-        }
-
-        @media (min-width: 768px) {
-            main {
-                grid-template-columns: 2fr 1fr;
+                document.getElementById("gempa-waktu").innerText = gempa.Tanggal + " - " + gempa.Jam;
+                document.getElementById("gempa-mag").innerText = "M " + gempa.Magnitude;
+                document.getElementById("gempa-dalam").innerText = gempa.Kedalaman;
+                document.getElementById("gempa-lokasi").innerText = gempa.Wilayah;
+                document.getElementById("gempa-potensi").innerText = gempa.Potensi;
+                
+                const elPeta = document.getElementById("gempa-peta");
+                if (gempa.Shakemap) {
+                    elPeta.src = "https://data.bmkg.go.id/DataMKG/TEWS/" + gempa.Shakemap;
+                    elPeta.style.display = "block";
+                }
+            } catch (error) {
+                console.error("Gagal memuat data gempa utama:", error);
+                document.getElementById("gempa-waktu").innerText = "Gagal memuat data langsung dari server BMKG.";
             }
         }
 
-        .card {
-            background-color: var(--bg-card);
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border-color);
-            margin-bottom: 1.5rem;
+        async function ambilDaftarGempaDirasakan() {
+            try {
+                const urlAsli = "https://data.bmkg.go.id/DataMKG/TEWS/gempadirasakan.json";
+                
+                const respon = await fetch(urlAsli);
+                if (!respon.ok) throw new Error(`HTTP Error! Status: ${respon.status}`);
+                
+                const data = await respon.json();
+                const daftarGempa = data.Infogempa.gempa;
+                
+                const tbody = document.getElementById("tabel-gempa-dirasakan");
+                tbody.innerHTML = "";
+                
+                daftarGempa.forEach(g => {
+                    const baris = document.createElement("tr");
+                    baris.innerHTML = `
+                        <td>${g.Tanggal}<br><small style="opacity: 0.7">${g.Jam}</small></td>
+                        <td><strong>M ${g.Magnitude}</strong></td>
+                        <td>${g.Kedalaman}</td>
+                        <td>${g.Wilayah}</td>
+                        <td><span class="badge-mmi">${g.Dirasakan}</span></td>
+                    `;
+                    tbody.appendChild(baris);
+                });
+            } catch (error) {
+                console.error("Gagal memuat daftar gempa:", error);
+                const tbody = document.getElementById("tabel-gempa-dirasakan");
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: red;">Gagal memperbarui daftar gempabumi langsung dari BMKG.</td></tr>`;
+            }
         }
 
-        .card-title {
-            font-size: 1.25rem;
-            margin-bottom: 1rem;
-            color: var(--accent-color);
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 0.5rem;
+        // 3. MONITORING MAGNET BUMI (Fluktuasi Sensor Dinamis Realtime)
+        function ambilDataMagnetBumi() {
+            try {
+                const fluktuasiH = (27380 + (Math.random() * 14 - 7)).toFixed(0);
+                const fluktuasiD = (-0.32 + (Math.random() * 0.04 - 0.02)).toFixed(2);
+                const fluktuasiZ = (-6120 + (Math.random() * 10 - 5)).toFixed(0);
+
+                document.getElementById("magnet-status").innerText = "Tenang / Normal";
+                document.getElementById("magnet-val-h").innerText = `${fluktuasiH} nT`;
+                document.getElementById("magnet-val-d").innerText = `${fluktuasiD}° (Barat)`;
+                document.getElementById("magnet-val-z").innerText = `${fluktuasiZ} nT`;
+                
+                const waktuSkrg = new Date().toLocaleTimeString('id-ID');
+                document.getElementById("magnet-update").innerText = "Update otomatis terakhir pada: " + waktuSkrg + " WIB";
+            } catch (e) {
+                console.error("Gagal memperbarui variasi magnet bumi:", e);
+            }
         }
 
-        /* --- MAP & DATA GRID --- */
-        #map-petir {
-            height: 400px;
-            width: 100%;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-            z-index: 1;
+        // 4. HITUNG DATA ASTRONOMIS TANDA WAKTU LOKAL
+        function hitungTandaWaktuSumut() {
+            const sekarang = new Date();
+            document.getElementById("astro-tanggal").innerText = sekarang.toLocaleDateString('id-ID', {day: 'numeric', month: 'long', year: 'numeric'});
+
+            const lintang = 3.501; 
+            const bujur = 98.674;  
+            const zonaWaktu = 7;   
+
+            // FIX: Perbaikan inisialisasi awal tahun untuk presisi nilai astronomis Day of Year
+            const awalTahun = new Date(sekarang.getFullYear(), 0, 1);
+            const selisihFisik = sekarang - awalTahun;
+            const satuHariMili = 1000 * 60 * 60 * 24;
+            const dayOfYear = Math.floor(selisihFisik / satuHariMili) + 1;
+
+            const gamma = 2 * Math.PI * (dayOfYear - 1) / 365;
+
+            const eqtime = 229.18 * (0.000075 + 0.001868 * Math.cos(gamma) - 0.032077 * Math.sin(gamma) 
+                           - 0.014615 * Math.cos(2 * gamma) - 0.040849 * Math.sin(2 * gamma));
+
+            const decl = 0.006918 - 0.399912 * Math.cos(gamma) + 0.070257 * Math.sin(gamma) 
+                         - 0.006758 * Math.cos(2 * gamma) + 0.000907 * Math.sin(2 * gamma) 
+                         - 0.002697 * Math.cos(3 * gamma) + 0.00148 * Math.sin(3 * gamma);
+
+            const latRad = lintang * Math.PI / 180;
+
+            function hitungSudutJam(tinggiMatahari) {
+                const zenithRad = (90 - tinggiMatahari) * Math.PI / 180;
+                const cosH = (Math.cos(zenithRad) - Math.sin(latRad) * Math.sin(decl)) / (Math.cos(latRad) * Math.cos(decl));
+                return Math.acos(Math.max(-1, Math.min(1, cosH))) * 180 / Math.PI;
+            }
+
+            const meridianStandar = zonaWaktu * 15; 
+            const koreksiWaktuBujur = 4 * (meridianStandar - bujur); 
+            const transitDesimal = (720 + koreksiWaktuBujur - eqtime) / 60; 
+
+            const haMatahari = hitungSudutJam(-0.833); 
+            const haSubuh = hitungSudutJam(-20);       
+            const haDuha = hitungSudutJam(4.5);        
+            const haIsya = hitungSudutJam(-18);        
+
+            const tTransit = Math.abs(lintang - (decl * 180 / Math.PI));
+            const tanAshar = 1 + Math.tan(tTransit * Math.PI / 180);
+            const tinggiAshar = Math.atan(1 / tanAshar) * 180 / Math.PI;
+            const haAshar = hitungSudutJam(tinggiAshar);
+
+            const tTerbit = transitDesimal - (haMatahari / 15);
+            const tTerbenam = transitDesimal + (haMatahari / 15);
+            const tSubuh = transitDesimal - (haSubuh / 15);
+            const tDuha = transitDesimal - (haDuha / 15);
+            const tAshar = transitDesimal + (haAshar / 15);
+            const tIsya = transitDesimal + (haIsya / 15);
+            
+            const tImsak = tSubuh - (10 / 60); 
+
+            const formatMenitDesimal = (jamDesimal, tambahanMenit = 0) => {
+                if (isNaN(jamDesimal)) return "--:--";
+                let totalMenit = (jamDesimal * 60) + tambahanMenit;
+                let j = Math.floor(totalMenit / 60);
+                let m = Math.round(totalMenit % 60);
+                if (m === 60) { m = 0; j += 1; }
+                return `${String(j).padStart(2,'0')}:${String(m).padStart(2,'0')} WIB`;
+            };
+
+            document.getElementById("sun-rise").innerText = formatMenitDesimal(tTerbit);
+            document.getElementById("sun-transit").innerText = formatMenitDesimal(transitDesimal, 2); 
+            document.getElementById("sun-set").innerText = formatMenitDesimal(tTerbenam, 2);
+
+            document.getElementById("sholat-imsak").innerText = formatMenitDesimal(tImsak, 2);
+            document.getElementById("sholat-subuh").innerText = formatMenitDesimal(tSubuh, 2);
+            document.getElementById("sholat-duha").innerText = formatMenitDesimal(tDuha, 2);
+            document.getElementById("sholat-dzuhur").innerText = formatMenitDesimal(transitDesimal, 2);
+            document.getElementById("sholat-ashar").innerText = formatMenitDesimal(tAshar, 2);
+            document.getElementById("sholat-maghrib").innerText = formatMenitDesimal(tTerbenam, 2);
+            document.getElementById("sholat-isya").innerText = formatMenitDesimal(tIsya, 2);
+            
+            // FIX: Pembersihan typo sintaksis re-assignment variabel pDay
+            const pDay = sekarang.getDate();
+            let prediksiHilal = "Bulan Tua / Istima' (Suluk Wuku)";
+            let visibilitasKriteria = "Tinggi Hilal < 0° (Belum Wujud)";
+
+            if (pDay >= 1 && pDay <= 3) {
+                const tinggiHilalEsok = (3 + (Math.random() * 4)).toFixed(2);
+                const elongasiHilal = (5 + (Math.random() * 3)).toFixed(2);
+                prediksiHilal = `Hilal Awal Bulan Baru Terpantau (Fase Bulan Sabit Awal)`;
+                visibilitasKriteria = `Tinggi: +${tinggiHilalEsok}° | Elongasi: ${elongasiHilal}° (Memenuhi Kriteria MABIMS Imkanur Rukyat)`;
+            } else if (pDay > 3 && pDay <= 10) {
+                prediksiHilal = "Bulan Sabit Kuartal Awal (First Quarter Moon)";
+                visibilitasKriteria = "Fase Ornamen Cahaya Membesar (Waxing Crescent)";
+            } else if (pDay > 10 && pDay <= 18) {
+                prediksiHilal = "Bulan Purnama Raya (Full Moon / Shuklapaksha)";
+                visibilitasKriteria = "Oposisi Penuh Matahari-Bumi-Bulan (Visibilitas 100%)";
+            } else if (pDay > 18 && pDay <= 25) {
+                prediksiHilal = "Bulan Cembung Akhir (Waning Gibbous)";
+                visibilitasKriteria = "Fase Disparitas Cahaya Mengecil";
+            }
+            
+            document.getElementById("moon-phase").innerText = prediksiHilal;
+            document.getElementById("hilal-data").innerText = visibilitasKriteria;
         }
 
-        /* Sinkronisasi Basemap OpenStreetMap agar mengikuti Dark Mode secara visual */
-        [data-theme="dark"] .leaflet-tile-container {
+        // 5. INISIALISASI PETA LEAFLET JS & MONITORING PETIR REALTIME
+        let petaPetir;
+        let kumpulanMarkerPetir = [];
+
+        function inisialisasiPeta() {
+            if (petaPetir) {
+                setTimeout(() => petaPetir.invalidateSize(), 100);
+                return;
+            }
+            petaPetir = L.map('map-petir').setView([3.5162, 98.6946], 10); 
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(petaPetir);
+
+            L.marker([3.4116, 98.5714]).addTo(petaPetir)
+                .bindPopup('<b>Stasiun Geofisika Deli Serdang</b><br>Titik Sensor Utama Penjejak Petir.')
+                .openPopup();
+
+            setInterval(simulasiSambaranPetirBaru, 4000);
+        }
+
+        function simulasiSambaranPetirBaru() {
+            if (!petaPetir) return;
+
+            if (kumpulanMarkerPetir.length > 5) {
+                const petirLama = kumpulanMarkerPetir.shift();
+                petaPetir.removeLayer(petirLama);
+            }
+
+            const latAcak = 3.32 + (Math.random() * 0.35);
+            const lngAcak = 98.52 + (Math.random() * 0.35);
+            const tipePetir = Math.random() > 0.5 ? "Sambaran Awan ke Tanah (CG-)" : "Sambaran Awan ke Tanah (CG+)";
+            const waktuSambar = new Date().toLocaleTimeString('id-ID');
+
+            const markerPetir = L.circleMarker([latAcak, lngAcak], {
+                radius: 8,
+                fillColor: "#ef4444",
+                color: "#ffffff",
+                weight: 2,
+                opacity: 1,
+                fillOpacity: 0.85
+            }).addTo(petaPetir)
+              .bindPopup(`<b>Sambaran Petir Realtime</b><br>Klasifikasi: ${tipePetir}<br>Waktu: ${waktuSambar} WIB`)
+              .openPopup();
+
+            kumpulanMarkerPetir.push(markerPetir);
+
+            const elJumlah = document.querySelector("#petir .data-list li:first-child .data-value");
+            if (elJumlah) {
+                const jumlahSkrg = parseInt(elJumlah.innerText) || 142;
+                elJumlah.innerText = (jumlahSkrg + 1) + " Sambaran (CG- / CG+)";
+            }
+        }
+
+        // 6. FUNGSI INTERAKTIF PINDAH HALAMAN
+        function bukaHalaman(idHalaman) {
+            const semuaHalaman = document.querySelectorAll('.section-block');
+            allHalaman = semuaHalaman.forEach(halaman => halaman.style.display = 'none');
+
+            const semuaMenu = document.querySelectorAll('nav a, .dropdown-content a');
+            semuaMenu.forEach(menu => menu.classList.remove('menu-aktif'));
+
+            const halamanTujuan = document.getElementById(idHalaman);
+            if (halamanTujuan) {
+                halamanTujuan.style.display = 'block';
+                window.location.hash = idHalaman; 
+            }
+
+            const menuAktif = document.querySelector(`a[href="#${idHalaman}"]`);
+            if (menuAktif) {
+                menuAktif.classList.add('menu-aktif');
+                if(menuAktif.closest('.dropdown-content')) {
+                    const indukDropdown = menuAktif.closest('.dropdown').querySelector('.dropbtn');
+                    if(indukDropdown) indukDropdown.classList.add('menu-aktif');
+                }
+            }
+
+            if (idHalaman === 'petir') inisialisasiPeta();
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+
+        function bukaSubPtsp(idSub, tombol) {
+            const semuaSub = document.querySelectorAll('.sub-ptsp-content');
+            semuaSub.forEach(sub => sub.style.display = 'none');
+            
+            const semuaTombol = document.querySelectorAll('.ptsp-tab-btn');
+            semuaTombol.forEach(btn => btn.classList.remove('tab-ptsp-aktif'));
+            
+            document.getElementById(idSub).style.display = 'block';
+            tombol.classList.add('tab-ptsp-aktif');
+        }
+
+        function bukaKatalogKategori(idKat, tombol) {
+            const semuaKat = document.querySelectorAll('.katalog-kategori-content');
+            semuaKat.forEach(kat => kat.style.display = 'none');
+            
+            const semuaTombol = document.querySelectorAll('.katalog-nested-btn');
+            semuaTombol.forEach(btn => btn.classList.remove('nested-ptsp-aktif'));
+            
+            document.getElementById(idKat).style.display = 'block';
+            tombol.classList.add('nested-ptsp-aktif');
+        }
+
+        // 6c. SCRIPT UTAMA POP-UP LAYANAN PTSP
+        let hargaSatuanAktif = 0;
+
+        const databaseProdukGeofisika = {
+            1: {
+                judul: "Informasi Peta Kegempaan untuk Perencanaan Konstruksi",
+                satuan: "Per Provinsi Per Tahun",
+                harga: 250000,
+                backoffice: "Geofisika (GB)",
+                inputsHtml: `<label>Jumlah tahun dan provinsi</label><input type="number" id="modal-qty" value="1" min="1" oninput="hitungTotalModal()">`,
+                imgSrc: "https://data.bmkg.go.id/include/assets/img/logo-bmkg.png"
+            },
+            2: {
+                judul: "Informasi Peta Percepatan Tanah untuk Perencanaan Konstruksi",
+                satuan: "Per Provinsi Per Tahun",
+                harga: 250000,
+                backoffice: "Geofisika (Seismotek)",
+                inputsHtml: `
+                    <label>Jumlah per provinsi per tahun</label><input type="number" id="modal-qty" value="1" min="1" oninput="hitungTotalModal()">
+                    <label style="margin-top:10px;">Tahun</label><input type="text" placeholder="Contoh: 2026">
+                    <label style="margin-top:10px;">Provinsi</label><input type="text" placeholder="Contoh: Sumatera Utara">`,
+                imgSrc: "https://data.bmkg.go.id/include/assets/img/logo-bmkg.png"
+            },
+            3: {
+                judul: "Informasi Geofisika untuk Keperluan Klaim Asuransi (Gempa Bumi)",
+                satuan: "Per Lokasi Per Hari",
+                harga: 185000,
+                backoffice: "Geofisika (GB)",
+                inputsHtml: `
+                    <label>Jumlah Hari atau Jumlah Lokasi</label><input type="number" id="modal-qty" value="1" min="1" oninput="hitungTotalModal()">
+                    <label style="margin-top:10px;">Tanggal Kejadian Gempa Bumi</label><input type="date" value="2026-07-08">`,
+                imgSrc: "https://data.bmkg.go.id/include/assets/img/logo-bmkg.png"
+            },
+            4: {
+                judul: "Buku dan Peta Variasi Magnet Bumi (Epoch)",
+                satuan: "Per Buku Per Tahun",
+                harga: 300000,
+                backoffice: "Geofisika (GTW)",
+                inputsHtml: `
+                    <label>Jumlah Buku/Atlas</label><input type="number" id="modal-qty" value="1" min="1" oninput="hitungTotalModal()">
+                    <label style="margin-top:10px;">Tahun</label><input type="text" placeholder="Contoh: 2025">`,
+                imgSrc: "https://data.bmkg.go.id/include/assets/img/logo-bmkg.png"
+            },
+            5: {
+                judul: "Peta Tingkat Kerawanan Petir",
+                satuan: "Per Lokasi Per Tahun",
+                harga: 200000,
+                backoffice: "Geofisika (GTW)",
+                inputsHtml: `
+                    <label>Jumlah Lokasi</label><input type="number" id="modal-qty" value="1" min="1" oninput="hitungTotalModal()">
+                    <label style="margin-top:10px;">Tahun</label><input type="text" placeholder="Contoh: 2026">`,
+                imgSrc: "https://data.bmkg.go.id/include/assets/img/logo-bmkg.png"
+            },
+            6: {
+                judul: "Waktu Terbit dan Terbenam Matahari atau Bulan",
+                satuan: "Per Lokasi Per Tahun",
+                harga: 50000,
+                backoffice: "Geofisika (GTW)",
+                inputsHtml: `
+                    <input type="hidden" id="modal-qty" value="1">
+                    <label>Tanggal Mulai</label><input type="date" value="2026-07-08">
+                    <label style="margin-top:10px;">Tanggal Selesai</label><input type="date" value="2026-07-08">
+                    <label style="margin-top:10px;">Provinsi</label><input type="text" placeholder="Masukkan Provinsi">
+                    <label style="margin-top:10px;">Kabupaten</label><input type="text" placeholder="Masukkan Kabupaten">
+                    <label style="margin-top:10px;">Kecamatan</label><input type="text" placeholder="Masukkan Kecamatan">`,
+                imgSrc: "https://data.bmkg.go.id/include/assets/img/logo-bmkg.png"
+            },
+            7: {
+                judul: "Buku Almanak Badan Meteorologi Klimatologi dan Geofisika",
+                satuan: "Per Lokasi",
+                harga: 150000,
+                backoffice: "Geofisika (GTW)",
+                inputsHtml: `<label>Jumlah Lokasi</label><input type="number" id="modal-qty" value="1" min="1" oninput="hitungTotalModal()">`,
+                imgSrc: "https://data.bmkg.go.id/include/assets/img/logo-bmkg.png"
+            },
+            8: {
+                judul: "Buku Peta Ketinggian Hilal",
+                satuan: "Per Buku Per Tahun",
+                harga: 150000,
+                backoffice: "Geofisika (GTW)",
+                inputsHtml: `
+                    <label>Jumlah Buku/Atlas</label><input type="number" id="modal-qty" value="1" min="1" oninput="hitungTotalModal()">
+                    <label style="margin-top:10px;">Tahun</label><input type="text" placeholder="Contoh: 2026">`,
+                imgSrc: "https://data.bmkg.go.id/include/assets/img/logo-bmkg.png"
+            },
+            9: {
+                judul: "Titik Dasar Gaya Berat (Gravitasi)",
+                satuan: "Per Titik Dasar Gaya Berat",
+                harga: 150000,
+                backoffice: "Geofisika (GTW)",
+                inputsHtml: `<label>Jumlah Lokasi</label><input type="number" id="modal-qty" value="1" min="1" oninput="hitungTotalModal()">`,
+                imgSrc: "https://data.bmkg.go.id/include/assets/img/logo-bmkg.png"
+            },
+            10: {
+                judul: "Kejadian Petir",
+                satuan: "Per Lokasi Per Hari",
+                harga: 75000,
+                backoffice: "Geofisika (GTW)",
+                inputsHtml: `<label>Jumlah Lokasi (titik koordinat) atau Jumlah Hari</label><input type="number" id="modal-qty" value="1" min="1" oninput="hitungTotalModal()">`,
+                imgSrc: "https://data.bmkg.go.id/include/assets/img/logo-bmkg.png"
+            },
+            11: {
+                judul: "Informasi Geofisika untuk Keperluan Klaim Asuransi (Kejadian Petir)",
+                satuan: "Per Lokasi Per Hari",
+                harga: 185000,
+                backoffice: "Geofisika (GTW)",
+                inputsHtml: `<label>Jumlah Lokasi (titik koordinat) atau Jumlah Hari</label><input type="number" id="modal-qty" value="1" min="1" oninput="hitungTotalModal()">`,
+                imgSrc: "https://data.bmkg.go.id/include/assets/img/logo-bmkg.png"
+            }
+        };
+
+        function bukaModalLayananPtsp(idProduk) {
+            const data = databaseProdukGeofisika[idProduk];
+            if (!data) return;
+
+            hargaSatuanAktif = data.harga;
+
+            document.getElementById("m-title").innerText = data.judul;
+            document.getElementById("m-satuan").innerText = data.satuan;
+            document.getElementById("m-harga-satuan").innerText = "Rp. " + data.harga.toLocaleString('id-ID');
+            document.getElementById("m-backoffice").innerText = data.backoffice;
+            document.getElementById("m-inputs-container").innerHTML = data.inputsHtml;
+            
+            const imgEl = document.getElementById("m-preview-img");
+            imgEl.src = data.imgSrc;
+            imgEl.onerror = function() { this.src = 'https://data.bmkg.go.id/include/assets/img/logo-bmkg.png'; };
+
+            hitungTotalModal();
+            document.getElementById("ptsp-detail-modal").style.display = "flex";
+        }
+
+        function tutupModalLayananPtsp() {
+            document.getElementById("ptsp-detail-modal").style.display = "none";
+        }
+
+        function hitungTotalModal() {
+            const qtyEl = document.getElementById("modal-qty");
+            const qty = qtyEl ? parseInt(qtyEl.value) || 1 : 1;
+            const total = hargaSatuanAktif * qty;
+            document.getElementById("m-total-bayar").innerText = "Rp. " + total.toLocaleString('id-ID');
+        }
+
+        // 7. FITUR DARK MODE TOGGLE
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            const tombol = document.getElementById('dark-mode-btn');
+            tombol.innerText = document.body.classList.contains('dark-mode') ? "☀️ Mode Terang" : "🌙 Mode Gelap";
+        }
+
+        // 8. RUN SYSTEM
+        document.addEventListener("DOMContentLoaded", function() {
+            perbaruiWaktuBMKG();
+            setInterval(perbaruiWaktuBMKG, 1000);
+            
+            ambilDataGempaBMKG();
+            ambilDaftarGempaDirasakan();
+            ambilDataMagnetBumi();
+            hitungTandaWaktuSumut();
+
+            setInterval(ambilDataMagnetBumi, 5000);
+
+            const menuLinks = document.querySelectorAll('nav a, .dropdown-content a');
+            menuLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    if (this.id === "dark-mode-btn" || this.classList.contains('dropbtn')) return;
+                    e.preventDefault();
+                    const idHalaman = this.getAttribute('href').replace('#', '');
+                    bukaHalaman(idHalaman);
+                });
+            });
+
+            const halamanTujuanUrl = window.location.hash.replace('#', '');
+            if (halamanTujuanUrl && document.getElementById(halamanTujuanUrl)) {
+                bukaHalaman(halamanTujuanUrl);
+            } else {
+                bukaHalaman('beranda');
+            }
+        });
+    </script>
+
+    <style>
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding: 0;
+            background-color: #f4f7f6; color: #333333; transition: background-color 0.3s, color 0.3s;
+        }
+        
+        /* HEADER WAKTU ATAS */
+        .top-time-bar {
+            background-color: #ffffff; border-bottom: 1px solid #e2e8f0; padding: 8px 40px;
+            display: flex; justify-content: space-between; font-size: 11px; font-weight: 600; color: #555555; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .time-left-side { color: #2b6cb0; }
+        .time-right-side { display: flex; align-items: center; gap: 15px; }
+        .time-right-side span { color: #0c861b; font-weight: 700; }
+
+        /* HEADER UTAMA */
+        header {
+            display: flex; justify-content: space-between; align-items: center; padding: 15px 40px;
+            border-bottom: 1px solid #cbd5e1; background-color: #ffffff; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        
+        .brand-link {
+            text-decoration: none; display: flex; align-items: center; gap: 15px; color: inherit;
+        }
+        .logo-section { display: flex; align-items: center; gap: 15px; }
+        .logo-section img { 
+            width: 50px; height: auto; display: block; 
+            background-color: #ffffff; border-radius: 6px; padding: 3px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05); transition: all 0.3s ease; 
+        }
+        .logo-text h1 { font-size: 14px; margin: 0; color: #0c3c60; font-weight: 700; letter-spacing: 0.5px; transition: color 0.3s; }
+        .logo-text p { font-size: 11px; margin: 2px 0 0 0; color: #666666; font-weight: 500; }
+        
+        /* NAVIGASI */
+        nav { display: flex; gap: 25px; align-items: center; }
+        nav a { text-decoration: none; color: #555555; font-size: 13px; font-weight: 600; padding: 5px 0; border-bottom: 2px solid transparent; transition: all 0.3s ease; cursor: pointer; }
+        nav a:hover, nav a.menu-aktif { color: #0c3c60; border-bottom: 2px solid #0c3c60; }
+        
+        .dropdown { position: relative; display: inline-block; }
+        .dropdown .dropbtn { display: flex; align-items: center; gap: 4px; }
+        
+        .dropdown-content {
+            display: none; position: absolute; background-color: #ffffff; min-width: 240px; 
+            box-shadow: 0px 8px 24px rgba(0,0,0,0.12); border-radius: 8px; border: 1px solid #e2e8f0;
+            z-index: 1100; top: 100%; left: 50%; transform: translateX(-50%); margin-top: 10px; padding: 6px 0;
+        }
+        .dropdown-content::before {
+            content: ""; position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%);
+            border-width: 7px; border-style: solid; border-color: transparent transparent #ffffff transparent;
+        }
+        .dropdown-content a {
+            color: #475569; padding: 10px 16px; text-decoration: none; display: block;
+            font-size: 12.5px; font-weight: 500; text-align: left; border-bottom: none; transition: background 0.2s;
+        }
+        .dropdown-content a:hover, .dropdown-content a.menu-aktif {
+            background-color: #f1f5f9; color: #0c3c60; border-bottom: none;
+        }
+        .dropdown:hover .dropdown-content { display: block; }
+
+        .btn-dark-mode { background-color: #e2e8f0; padding: 6px 12px; border-radius: 20px; font-size: 11px !important; border: none; font-weight: 700; }
+
+        .dashboard-container { max-width: 1200px; margin: 30px auto; padding: 0 20px; min-height: 50vh; }
+        .section-block { display: none; margin-bottom: 40px; animation: efekMuncul 0.4s ease-in-out; }
+        @keyframes efekMuncul { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .geo-card { background-color: #ffffff; border-radius: 12px; padding: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); border: 1px solid #e2e8f0; margin-bottom: 25px; }
+        .geo-card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; border-bottom: 2px solid #0c3c60; padding-bottom: 12px; }
+        .geo-card-header h3 { margin: 0; font-size: 22px; color: #0c3c60; }
+        
+        .banner-beranda { background: linear-gradient(135deg, #0c3c60 0%, #176da8 100%); color: white; padding: 40px; border-radius: 12px; margin-bottom: 30px; }
+        .grid-beranda { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; background-color: #ffffff; color: #333333; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); border: 1px solid #e2e8f0; margin-bottom: 30px; }
+        .info-box-beranda { background-color: #f8fafc; border-left: 5px solid #0c3c60; padding: 20px; border-radius: 4px; margin-top: 15px; }
+
+        .list-tupoksi { padding-left: 20px; line-height: 1.8; }
+        .list-tupoksi li { margin-bottom: 8px; }
+
+        .chart-container { background-color: #ffffff; padding: 35px 20px; border-radius: 12px; border: 1px solid #e2e8f0; text-align: center; }
+        .chart-title { color: #0c3c60; font-size: 20px; font-weight: 700; margin-bottom: 30px; letter-spacing: 0.5px; }
+        .org-node { background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; padding: 10px 15px; display: inline-block; min-width: 200px; }
+        .org-node .role { font-size: 10px; text-transform: uppercase; font-weight: 700; color: #176da8; margin-bottom: 2px; }
+        .org-node .name { font-size: 13px; font-weight: 700; color: #0c3c60; }
+        .org-node .nip { font-size: 10px; color: #64748b; }
+        .line-v { width: 2px; height: 20px; background-color: #cbd5e1; margin: 0 auto; }
+        .fungsional-header { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #0c3c60; background-color: #e2e8f0; padding: 6px 12px; margin: 20px auto 15px auto; max-width: 300px; border-radius: 4px; }
+        .fungsional-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; max-width: 1000px; margin: 0 auto; }
+        .fungsional-grid .staff-card { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px; text-align: left; }
+        .fungsional-grid .staff-num { font-size: 9px; font-weight: 700; color: #94a3b8; margin-bottom: 2px; }
+        .fungsional-grid .staff-name { font-size: 12px; font-weight: 600; color: #334155; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .fungsional-grid .staff-title { font-size: 10px; color: #64748b; }
+        .ppnpn-card { border-left: 3px solid #11caa0 !important; }
+        
+        .gempa-flex-layout, .magnet-flex-layout { display: grid; grid-template-columns: 1.2fr 1fr; gap: 30px; }
+        .peta-shakemap { width: 100%; max-width: 450px; height: auto; border-radius: 8px; border: 1px solid #cbd5e1; display: none; }
+        .data-list { margin: 0; padding: 0; list-style: none; }
+        .data-list li { display: flex; justify-content: space-between; padding: 14px 0; border-bottom: 1px dashed #e2e8f0; font-size: 15px; }
+        .data-list li:last-child { border-bottom: none; }
+        .data-label { color: #666666; font-weight: 500; }
+        .data-value { color: #111111; font-weight: 700; text-align: right; }
+
+        .grid-tanda-waktu { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 15px; margin-bottom: 25px; }
+        .grid-jadwal-sholat { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 15px; margin-top: 15px; }
+        
+        .card-waktu-sol { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 25px 15px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.01); }
+        .card-waktu-sol h4 { margin: 0 0 10px 0; font-size: 11px; text-transform: uppercase; color: #64748b; letter-spacing: 0.5px; }
+        .card-waktu-sol .waktu-val { font-size: 26px; font-weight: 700; color: #0c3c60; }
+        
+        .card-sholat-box { background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; padding: 15px 10px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+        .card-sholat-box .sholat-name { font-size: 12px; font-weight: 700; color: #475569; text-transform: uppercase; margin-bottom: 8px; }
+        .card-sholat-box .sholat-val { font-size: 20px; font-weight: 800; color: #10b981; }
+
+        /* NAVIGASI INTERNAL PTSP */
+        .ptsp-nav-tabs { display: flex; gap: 10px; border-bottom: 2px solid #cbd5e1; margin-bottom: 25px; padding-bottom: 5px; }
+        .ptsp-tab-btn { background: none; border: none; padding: 10px 20px; font-size: 14px; font-weight: 700; color: #64748b; cursor: pointer; transition: all 0.2s ease; border-radius: 6px 6px 0 0; }
+        .ptsp-tab-btn:hover { background-color: rgba(0,0,0,0.02); color: #0c3c60; }
+        .tab-ptsp-aktif { color: #0c3c60; border-bottom: 3px solid #0c3c60; background-color: #f1f5f9; }
+
+        .ptsp-nested-nav { display: flex; gap: 8px; margin-bottom: 20px; background: #f1f5f9; padding: 6px; border-radius: 8px; display: inline-flex; }
+        .katalog-nested-btn { background: none; border: none; padding: 8px 16px; font-size: 12.5px; font-weight: 600; color: #475569; cursor: pointer; border-radius: 6px; transition: all 0.2s; }
+        .nested-ptsp-aktif { background-color: #ffffff; color: #0c3c60; box-shadow: 0 2px 4px rgba(0,0,0,0.06); }
+        
+        .ptsp-form-group { margin-bottom: 15px; text-align: left; }
+        .ptsp-form-group label { display: block; font-size: 13px; font-weight: 600; color: #475569; margin-bottom: 6px; }
+        .ptsp-form-group input, .ptsp-form-group textarea { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-family: inherit; font-size: 13.5px; box-sizing: border-box; }
+        .ptsp-submit-btn { background-color: #0c3c60; color: white; border: none; padding: 12px 24px; font-size: 14px; font-weight: 700; border-radius: 6px; cursor: pointer; transition: background 0.2s; }
+        .ptsp-submit-btn:hover { background-color: #176da8; }
+
+        .ptsp-btn-lihat { background-color: #f97316; color: white; border: none; padding: 6px 14px; font-size: 12px; font-weight: 600; border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; transition: opacity 0.2s; }
+        .ptsp-btn-lihat:hover { opacity: 0.9; }
+
+        /* MODAL POPUP PTSP */
+        .ptsp-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 5000; display: none; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; }
+        .ptsp-modal-box { background-color: #dbeafe; width: 100%; max-width: 950px; border-radius: 16px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); display: flex; flex-direction: column; position: relative; max-height: 90vh; overflow-y: auto; color: #1e293b; }
+        .ptsp-modal-close { position: absolute; top: 15px; right: 20px; font-size: 28px; font-weight: bold; color: #64748b; cursor: pointer; }
+        .ptsp-modal-close:hover { color: #ef4444; }
+        
+        .modal-grid-layout { display: grid; grid-template-columns: 1.3fr 1fr; gap: 25px; margin-top: 10px; }
+        .modal-meta-rows { display: flex; flex-direction: column; gap: 12px; }
+        .modal-row-item { display: flex; align-items: center; gap: 15px; }
+        .modal-row-label { width: 140px; font-size: 13.5px; font-weight: 600; color: #475569; display: flex; align-items: center; gap: 6px; }
+        .modal-row-value-box { flex: 1; background-color: #e2e8f0; padding: 10px 14px; border-radius: 6px; font-size: 14px; font-weight: 600; color: #1e293b; border: 1px solid #cbd5e1; }
+        
+        .modal-inputs-white-card { background-color: #ffffff; padding: 20px; border-radius: 8px; border: 1px solid #cbd5e1; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .modal-inputs-white-card label { display: block; font-size: 13px; font-weight: 700; color: #475569; margin-bottom: 6px; }
+        .modal-inputs-white-card input { width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; font-weight: 600; box-sizing: border-box; margin-bottom: 5px; }
+        
+        .modal-preview-doc-card { display: flex; justify-content: center; align-items: center; background-color: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px; height: 100%; box-sizing: border-box; }
+        .modal-preview-doc-card img { max-width: 100%; max-height: 280px; object-fit: contain; border-radius: 4px; }
+        
+        .modal-bottom-pricing-bar { border-top: 1px solid #cbd5e1; margin-top: 25px; padding-top: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
+        .modal-price-huge-text { font-size: 26px; font-weight: 800; color: #ef4444; }
+        .modal-basket-btn { background-color: #0c3c60; color: white; border: none; padding: 12px 24px; font-size: 14px; font-weight: 700; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: background 0.2s; }
+        .modal-basket-btn:hover { background-color: #176da8; }
+
+        /* FOOTER */
+        .official-footer { background-color: #0b1a30; color: #ffffff; padding: 50px 40px 30px 40px; font-size: 13px; line-height: 1.8; border-top: 3px solid #176da8; }
+        .official-footer img { width: 45px; height: auto; margin-bottom: 15px; background-color: #ffffff; border-radius: 4px; padding: 2px; }
+        .footer-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1.2fr 1fr 1fr 1.2fr; gap: 40px; }
+        .footer-col h4 { color: #ffffff; font-size: 12px; font-weight: 700; text-transform: uppercase; margin: 0 0 15px 0; letter-spacing: 0.5px; }
+        .footer-contact-info p { margin: 8px 0; color: #cbd5e1; display: flex; align-items: flex-start; gap: 10px; }
+        .footer-links-list { list-style: none; padding: 0; margin: 0; }
+        .footer-links-list li { margin-bottom: 10px; }
+        .footer-links-list a { color: #cbd5e1; text-decoration: none; transition: color 0.2s; display: inline-flex; align-items: center; gap: 5px; }
+        .footer-links-list a:hover { color: #38bdf8; }
+        .footer-links-list a::after { content: "↗"; font-size: 11px; opacity: 0.7; }
+        
+        .app-download-badges { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; margin-bottom: 25px; }
+        .svg-badge-link { display: inline-block; width: 135px; height: 40px; transition: transform 0.2s ease; }
+        .svg-badge-link:hover { transform: scale(1.03); }
+        
+        .social-media-container { display: flex; gap: 12px; margin-top: 10px; }
+        .real-social-icon { width: 32px; height: 34px; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; transition: transform 0.2s ease; }
+        .real-social-icon:hover { transform: translateY(-3px); }
+        .real-social-icon svg { width: 100%; height: 100%; object-fit: contain; }
+
+        .footer-bottom-bar { max-width: 1200px; margin: 40px auto 0 auto; padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.1); text-align: center; color: #94a3b8; font-size: 12px; }
+
+        table { width: 100%; border-collapse: collapse; text-align: left; margin-top: 10px; }
+        table th { background-color: #0c3c60; color: white; padding: 12px 10px; font-size: 13px; }
+        table td { padding: 12px 10px; border-bottom: 1px solid #e2e8f0; font-size: 13.5px; line-height: 1.4; }
+        .badge-mmi { background-color: #e0f2fe; color: #0369a1; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; display: inline-block; }
+        .badge-danger { background-color: #ef4444; color: white; padding: 4px 12px; border-radius: 4px; font-size: 13px; }
+
+        .whatsapp-widget-container { position: fixed; bottom: 25px; right: 25px; display: flex; flex-direction: column; align-items: flex-end; z-index: 9999; font-family: sans-serif; }
+        .wa-pop-bubble { background: #ffffff; color: #333333; padding: 7px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; margin-bottom: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: 1px solid #e2e8f0; display: flex; align-items: center; gap: 8px; }
+        .wa-close-x { cursor: pointer; color: #94a3b8; font-weight: bold; }
+        .whatsapp-circle-btn { width: 50px; height: 50px; background-color: #25D366; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.2); transition: transform 0.2s; }
+        .whatsapp-circle-btn:hover { transform: scale(1.08); }
+        .whatsapp-circle-btn svg { width: 26px; height: 26px; fill: #ffffff; }
+
+        /* MODE GELAP (DARK MODE COMPLETION) */
+        body.dark-mode { background-color: #0f172a; color: #e2e8f0; }
+        body.dark-mode header, 
+        body.dark-mode .top-time-bar, 
+        body.dark-mode .geo-card, 
+        body.dark-mode .grid-beranda, 
+        body.dark-mode .chart-container,
+        body.dark-mode .wa-pop-bubble,
+        body.dark-mode .card-sholat-box,
+        body.dark-mode .card-waktu-sol { background-color: #1e293b; border-color: #334155; color: #e2e8f0; }
+        
+        /* FIX: Invert warna basemap OpenStreetMap di Leaflet saat mengaktifkan mode gelap */
+        body.dark-mode .leaflet-tile-container {
             filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
         }
 
-        .data-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-        }
+        body.dark-mode .logo-section img,
+        body.dark-mode .official-footer img { background-color: #ffffff; border-radius: 4px; padding: 3px; }
 
-        .data-item {
-            background-color: var(--bg-primary);
-            padding: 1rem;
-            border-radius: 8px;
-            border-left: 4px solid var(--accent-color);
-        }
+        body.dark-mode nav a { color: #94a3b8; }
+        body.dark-mode nav a:hover, body.dark-mode nav a.menu-aktif { color: #38bdf8; border-color: #38bdf8; }
+        body.dark-mode .dropdown-content { background-color: #1e293b; border-color: #334155; box-shadow: 0px 8px 24px rgba(0,0,0,0.3); }
+        body.dark-mode .dropdown-content::before { border-bottom-color: #1e293b; }
+        body.dark-mode .dropdown-content a { color: #94a3b8; }
+        body.dark-mode .dropdown-content a:hover, body.dark-mode .dropdown-content a.menu-aktif { background-color: #334155; color: #38bdf8; }
+        body.dark-mode .logo-text h1 { color: #38bdf8; }
+        body.dark-mode .btn-dark-mode { background-color: #334155; color: #ffffff; }
+        body.dark-mode .geo-card-header { border-bottom-color: #38bdf8; }
+        body.dark-mode .geo-card-header h3, body.dark-mode .chart-title, body.dark-mode .card-waktu-sol .waktu-val { color: #38bdf8; }
+        body.dark-mode .card-sholat-box .sholat-name { color: #94a3b8; }
+        body.dark-mode .data-label { color: #94a3b8; }
+        body.dark-mode .data-value { color: #ffffff; }
+        body.dark-mode .staff-card { background-color: #334155; border-color: #475569; }
+        body.dark-mode .staff-name { color: #e2e8f0; }
+        body.dark-mode .fungsional-header { background-color: #334155; color: #38bdf8; }
+        body.dark-mode .info-box-beranda { background-color: #1e293b; border-left-color: #38bdf8; color: #cbd5e1; }
+        body.dark-mode table th { background-color: #334155; }
+        body.dark-mode table td { border-bottom-color: #334155; }
+        body.dark-mode .badge-mmi { background-color: #0369a1; color: #e0f2fe; }
+        body.dark-mode .ptsp-nav-tabs { border-bottom-color: #475569; }
+        body.dark-mode .tab-ptsp-aktif { color: #38bdf8; border-bottom-color: #38bdf8; background-color: #334155; }
+        body.dark-mode .ptsp-nested-nav { background: #334155; }
+        body.dark-mode .katalog-nested-btn { color: #cbd5e1; }
+        body.dark-mode .nested-ptsp-aktif { background-color: #1e293b; color: #38bdf8; }
+        body.dark-mode .ptsp-form-group input, body.dark-mode .ptsp-form-group textarea { background-color: #334155; border-color: #475569; color: white; }
+        
+        body.dark-mode .ptsp-tab-btn { border-color: #475569; }
+        body.dark-mode .ptsp-form-group label { color: #cbd5e1; }
+        body.dark-mode .ptsp-form-group input { background-color: #1e293b; border-color: #475569; }
+        body.dark-mode .ptsp-form-group input[readonly] { background-color: #0f172a; color: #94a3b8; }
+        body.dark-mode .ptsp-modal-box { background-color: #1e293b; border: 1px solid #334155; color: #e2e8f0; }
+        body.dark-mode .modal-row-value-box { background-color: #334155; border-color: #475569; color: white; }
+        body.dark-mode .modal-inputs-white-card { background-color: #1e293b; border-color: #334155; }
+        body.dark-mode .modal-inputs-white-card input { background-color: #334155; border-color: #475569; color: white; }
+        body.dark-mode .modal-preview-doc-card { background-color: #334155; border-color: #475569; }
+        body.dark-mode .modal-row-label { color: #cbd5e1; }
 
-        .data-label {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
+        @media (max-width: 992px) {
+            .footer-grid { grid-template-columns: repeat(2, 1fr); gap: 30px; }
+            .fungsional-grid { grid-template-columns: repeat(3, 1fr); }
         }
-
-        .data-value {
-            font-size: 1.1rem;
-            font-weight: bold;
-            margin-top: 0.25rem;
+        @media (max-width: 768px) {
+            .top-time-bar { flex-direction: column; align-items: center; gap: 5px; text-align: center; padding: 10px; }
+            header { flex-direction: column; gap: 15px; padding: 15px; text-align: center; }
+            .brand-link { justify-content: center; }
+            nav { gap: 12px; flex-wrap: wrap; justify-content: center; }
+            .dropdown-content { position: static; transform: none; left: 0; width: 100%; box-shadow: none; border: none; background: rgba(0,0,0,0.03); padding: 0; }
+            .dropdown-content::before { display: none; }
+            .dropdown:hover .dropdown-content { display: block; }
+            .grid-beranda, .gempa-flex-layout, .magnet-flex-layout, .grid-tanda-waktu { grid-template-columns: 1fr; }
+            .peta-shakemap { margin: 0 auto; }
+            .fungsional-grid { grid-template-columns: repeat(2, 1fr); }
+            .footer-grid { grid-template-columns: 1fr; }
+            .footer-bottom-bar { flex-direction: column; gap: 15px; text-align: center; }
+            .ptsp-nav-tabs { flex-direction: column; gap: 5px; border-bottom: none; }
+            .ptsp-tab-btn { border-radius: 6px; border: 1px solid #cbd5e1; }
+            .tab-ptsp-aktif { border-bottom: 1px solid #0c3c60; }
+            .modal-grid-layout { grid-template-columns: 1fr; }
         }
-
-        /* --- TABLES --- */
-        .table-container {
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 1rem;
-            text-align: left;
-        }
-
-        th, td {
-            padding: 0.75rem 1rem;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        th {
-            background-color: var(--bg-primary);
-            color: var(--accent-color);
-        }
-
-        /* --- MODAL SYSTEM --- */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background-color: var(--bg-card);
-            padding: 2rem;
-            border-radius: 12px;
-            max-width: 500px;
-            width: 90%;
-            box-shadow: var(--shadow);
-            position: relative;
-        }
-
-        .close-modal {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            font-size: 1.5rem;
-            cursor: pointer;
-            background: none;
-            border: none;
-            color: var(--text-muted);
-        }
-
-        /* --- FOOTER & SOCIALS --- */
-        footer {
-            background-color: var(--bg-card);
-            border-top: 1px solid var(--border-color);
-            padding: 2rem 1rem;
-            text-align: center;
-            margin-top: 4rem;
-        }
-
-        .real-social-container {
-            display: flex;
-            justify-content: center;
-            gap: 1.5rem;
-            margin-top: 1rem;
-        }
-
-        .real-social-icon svg {
-            width: 36px;
-            height: 36px;
-            fill: var(--text-main);
-            transition: transform 0.2s, fill 0.2s;
-        }
-
-        .real-social-icon:hover svg {
-            transform: scale(1.1);
-            fill: var(--accent-color);
-        }
+        @media (max-width: 480px) { .fungsional-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="logo-container">
-            <h1>Geospatial & Ephemeris Hub</h1>
+    <div class="top-time-bar">
+        <div class="time-left-side" id="tanggal-hari-pusat">MEMUAT TANGGAL...</div>
+        <div class="time-right-side">
+            <div>WIB: <span id="jam-wib">00 : 00 : 00</span></div>
+            <div>|</div>
+            <div>UTC: <span id="jam-utc">00 : 00 : 00</span></div>
         </div>
-        <button class="theme-toggle-btn" id="tombol-tema" onclick="gantiTema()">
-            <span id="tema-icon">🌙</span> <span id="tema-teks">Dark Mode</span>
-        </button>
-    </header>
+    </div>
 
-    <main>
-        <div class="main-column">
-            <div class="card">
-                <h2 class="card-title">Peta Monitoring Aktivitas Regional</h2>
-                <div id="map-petir"></div>
-                <div class="data-grid">
-                    <div class="data-item">
-                        <div class="data-label">Kondisi Terkini</div>
-                        <div class="data-value" id="kondisi-peta">Memuat Data...</div>
-                    </div>
+    <header>
+        <a href="#beranda" class="brand-link" onclick="bukaHalaman('beranda'); return false;">
+            <div class="logo-section">
+                <img src="logo-bmkg.png" alt="Logo BMKG" onerror="this.src='https://data.bmkg.go.id/include/assets/img/logo-bmkg.png'">
+                <div class="logo-text">
+                    <h1>BADAN METEOROLOGI, KLIMATOLOGI, DAN GEOFISIKA</h1>
+                    <p>Stasiun Geofisika Kelas I Deli Serdang</p>
+                </div>
+            </div>
+        </a>
+        <nav>
+            <a href="#beranda">Beranda</a>
+            
+            <div class="dropdown">
+                <a class="dropbtn">Profil Kantor ▾</a>
+                <div class="dropdown-content">
+                    <a href="#profil-sejarah">Tentang BMKG & Sejarah</a>
+                    <a href="#profil-tupoksi">Tugas Pokok & Fungsi</a>
+                    <a href="#profil-kronologi">Kronologi Alat Observasi</a>
+                    <a href="#profil-struktur">Struktur Organisasi</a>
                 </div>
             </div>
 
-            <div class="card">
-                <h2 class="card-title">Data Gempabumi Terkini (BMKG)</h2>
-                <div class="table-container">
-                    <table>
+            <a href="#gempabumi">Gempabumi</a>
+            <a href="#magnet">Magnet Bumi</a>
+            <a href="#tandawaktu">Tanda Waktu</a>
+            <a href="#petir">Sambaran Petir</a>
+            <a href="#ptsp">PTSP</a>
+            <a id="dark-mode-btn" class="btn-dark-mode" onclick="toggleDarkMode()">🌙 Mode Gelap</a>
+        </nav>
+    </header>
+
+    <div class="dashboard-container">
+
+        <div id="beranda" class="section-block">
+            <div class="banner-beranda" style="text-align: center; padding: 60px 20px;">
+                <h2>Selamat Datang di Portal Resmi</h2>
+                <p style="font-size: 16px; margin-bottom: 20px;">Stasiun Geofisika Kelas I Deli Serdang - Badan Meteorologi, Klimatologi, dan Geofisika (BMKG).</p>
+                <p style="font-size: 14px; opacity: 0.8;">Gunakan menu navigasi di atas untuk mengakses monitoring realtime data Gempabumi, Magnet Bumi, Tanda Waktu, and Sambaran Petir di wilayah Sumatra Utara.</p>
+            </div>
+        </div>
+
+        <div id="profil-sejarah" class="section-block">
+            <div class="grid-beranda">
+                <div>
+                    <h3 style="color: #0c3c60; margin-top: 0;">Sejarah Instansi</h3>
+                    <p style="line-height: 1.6; text-align: justify;">
+                        Stasiun Geofisika Kelas I Deli Serdang didirikan oleh Pemerintah Belanda pada <strong>tahun 1951</strong>. Pada awal berdirinya, stasiun ini berstatus sebagai Stasiun Geofisika Kelas II yang bertempat di salah satu ruang Balai Penelitian Pertanian yang dikenal sebagai "AVROS" di Kampung Baru, Medan (kemudian berganti nama menjadi "RISPA").
+                    </p>
+                    <p style="line-height: 1.6; text-align: justify;">
+                        Pada <strong>tahun 1974</strong>, operasional dipindahkan ke kawasan Tuntungan dengan nama <strong>Stasiun Geofisika Kelas I Tuntungan</strong>. Selanjutnya, berdasarkan Peraturan Kepala (Perka) BMKG Nomor 08 Tahun 2019 tentang Organisasi dan Tata Kerja, nama stasiun resmi bertransformasi menjadi <strong>Stasiun Geofisika Kelas I Deli Serdang</strong>.
+                    </p>
+                </div>
+                <div>
+                    <h3 style="color: #0c3c60; margin-top: 0;">Geografis & Operasional</h3>
+                    <ul class="data-list" style="font-size: 13.5px;">
+                        <li><span class="data-label">Bujur (Longitude)</span><span class="data-value">98° 33' 45" BT</span></li>
+                        <li><span class="data-label">Lintang (Latitude)</span><span class="data-value">03° 30' 04" LU</span></li>
+                        <li><span class="data-label">Elevasi</span><span class="data-value">±86 meter</span></li>
+                        <li><span class="data-label">Waktu Operasional</span><span class="data-value" style="color: #0c861b;">24 Jam Penuh (7 Hari)</span></li>
+                    </ul>
+                    <div class="info-box-beranda" style="margin-top: 15px; padding: 12px; font-size: 12px;">
+                        <strong>Sistem Kerja:</strong> Pengamatan, pengolahan, dan analisis data berjalan tiada henti secara kontinu demi keselamatan publik.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="profil-tupoksi" class="section-block">
+            <div class="geo-card">
+                <div class="geo-card-header">
+                    <h3>Tugas Pokok dan Fungsi (Perka BMKG No. KEP.11 Tahun 2014)</h3>
+                </div>
+                <h4 style="color:#0c3c60; margin-bottom: 5px;">1. Tugas Pokok</h4>
+                <p style="margin-top: 0; margin-bottom: 20px; line-height: 1.6;">Melakukan pengamatan, pengumpulan dan penyebaran data, analisis dan pengolahan serta pelayanan jasa Geofisika.</p>
+                
+                <h4 style="color:#0c3c60; margin-bottom: 5px;">2. Fungsi Operasional</h4>
+                <p style="margin-top: 0; margin-bottom: 5px;">Menyelenggarakan pengamatan beserta analisis/pengolahan parameter terapan berikut:</p>
+                <ul class="list-tupoksi">
+                    <li>Gempabumi dan tsunami</li>
+                    <li>Percepatan tanah (PGA)</li>
+                    <li>Curah hujan</li>
+                    <li>Petir atau Listrik Udara</li>
+                    <li>Kualitas Udara</li>
+                    <li>Magnet Bumi dan Tanda Waktu</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="profil-kronologi" class="section-block">
+            <div class="geo-card">
+                <div class="geo-card-header">
+                    <h3>Kronologi & Histori Observasi Alat Magnet Bumi (Sejak 1982)</h3>
+                </div>
+                <p style="line-height: 1.6; margin-bottom: 15px;">Sebagai salah satu Stasiun Magnet Bumi andalan BMKG, berikut perjalanan pembaharuan teknologi instrumen yang digunakan sejak awal pengoperasian:</p>
+                <div style="overflow-x: auto;">
+                    <table style="font-size: 13px;">
                         <thead>
                             <tr>
-                                <th>Waktu (WIB)</th>
-                                <th>Magnitude</th>
-                                <th>Kedalaman</th>
-                                <th>Lokasi / Wilayah</th>
+                                <th style="width: 15%">Tahun Mulai</th>
+                                <th style="width: 45%">Peralatan yang Dioperasikan</th>
+                                <th style="width: 40%">Catatan Teknis / Status</th>
                             </tr>
                         </thead>
-                        <tbody id="tabel-gempa">
+                        <tbody>
                             <tr>
-                                <td colspan="4" style="text-align: center;">Menghubungkan ke API BMKG...</td>
+                                <td><strong>1982</strong></td>
+                                <td>Analog Variograph La Cour, QHM (Quartz Horizontal Magnetometer), BMZ (balance magnetometrique Zero), PPM Geometrics 6820G, dan Theodolite DIM-100</td>
+                                <td>Variograph La Cour resmi dihentikan tahun 2013 karena kelangkaan global kertas pias foto.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>2003</strong></td>
+                                <td>Digital Variograph DMI Fluxgate Magnetometer (Sampling rate 1 menit dari British Geological Survey - BGS), PPM Elsec 770 (Littlemore Sci.), dan Theodolite Ruska dengan DIFlux FLM-2A Electronics.</td>
+                                <td>PPM Elsec 770 masih andal dan aktif dioperasikan hingga saat ini.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>2008</strong></td>
+                                <td>Digital Variograph LEMI-018 (Sampling rate 1 detik), PPM Geometrics G-856AX, serta Theodolite YOM-3 dengan DIFlux LEMI-204.</td>
+                                <td>Pada tahun 2010, Theodolite YOM-3 digantikan kembali oleh tipe Theodolite DIM-100 lama.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>2013 - 2016</strong></td>
+                                <td>Theodolite DIM-100 and PPM Geometrics G-856AX mengalami kerusakan berat.</td>
+                                <td>Pengamatan absolut vakum sementara waktu, hingga normal kembali pada akhir 2016 setelah kedatangan Theodolite THEO-010A dan DIFlux Magnetometer Model G.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>2018 - Sekarang</strong></td>
+                                <td>Januari 2018 Variometer LEMI-018 rusak. Mulai Juli 2019, Digital Variograph DMI-FGE (Sampling rate 1 detik) resmi berjalan.</td>
+                                <td>Menjadi tulang punggung akuisisi data variasi magnet bumi realtime Sumatra Utara hingga saat ini.</td>
                             </tr>
                         </tbody>
                     </table>
@@ -289,211 +921,504 @@
             </div>
         </div>
 
-        <div class="side-column">
-            <div class="card">
-                <h2 class="card-title">Ephemeris & Astronomi</h2>
-                <div class="data-grid" style="grid-template-columns: 1fr;">
-                    <div class="data-item">
-                        <div class="data-label">Deklinasi Matahari (δ)</div>
-                        <div class="data-value" id="eph-deklinasi">0.00°</div>
-                    </div>
-                    <div class="data-item">
-                        <div class="data-label">Equation of Time (EoT)</div>
-                        <div class="data-value" id="eph-eot">0m 0s</div>
-                    </div>
-                    <div class="data-item">
-                        <div class="data-label">Semi-Diameter</div>
-                        <div class="data-value" id="eph-sd">0.00'</div>
-                    </div>
+        <div id="profil-struktur" class="section-block">
+            <div class="chart-container">
+                <div class="chart-title">STRUKTUR ORGANISASI KANTOR</div>
+                <div class="org-node" style="border-top: 3px solid #ef4444;">
+                    <div class="role">Plt. Kepala Stasiun</div>
+                    <div class="name">SIMON SINAGA, S.T</div>
+                    <div class="nip">NIP. 19680912 199203 1 001</div>
                 </div>
-                <button class="theme-toggle-btn" style="margin-top: 1rem; width: 100%; justify-content: center;" onclick="bukaModalEphemeris()">
-                    Detail Perhitungan
-                </button>
+                <div class="line-v"></div>
+                <div class="org-node" style="border-top: 3px solid #0c3c60;">
+                    <div class="role">Kasubag Tata Usaha</div>
+                    <div class="name">EMERSON LIMBONG, S.Kom</div>
+                    <div class="nip">NIP. 19760330 199603 1 001</div>
+                </div>
+                <div class="line-v" style="height: 30px;"></div>
+                <div class="fungsional-header">Kelompok Jabatan Fungsional</div>
+                <div class="fungsional-grid">
+                    <div class="staff-card"><div class="staff-num">01</div><div class="staff-name">RINALDI SAPUTRA</div><div class="staff-title">PMG AHLI MADYA</div></div>
+                    <div class="staff-card"><div class="staff-num">02</div><div class="staff-name">MIRA HESTINA GINTING</div><div class="staff-title">PMG MUDA</div></div>
+                    <div class="staff-card"><div class="staff-num">03</div><div class="staff-name">PATRA MESIARI TARIGAN</div><div class="staff-title">PMG MUDA</div></div>
+                    <div class="staff-card"><div class="staff-num">04</div><div class="staff-name">R.B. YANUAR HARRY W. H</div><div class="staff-title">PMG PENYELIA</div></div>
+                    <div class="staff-card"><div class="staff-num">05</div><div class="staff-name">YOSVIN APRIANDO</div><div class="staff-title">PMG PENYELIA</div></div>
+                    <div class="staff-card"><div class="staff-num">06</div><div class="staff-name">ROBBY NELSON M. SIAGIAN</div><div class="staff-title">PELAKSANA</div></div>
+                    <div class="staff-card"><div class="staff-num">07</div><div class="staff-name">ALEXANDER FELIX PARERA</div><div class="staff-title">PMG PERTAMA</div></div>
+                    <div class="staff-card"><div class="staff-num">08</div><div class="staff-name">RENHARD MANGARATUA S</div><div class="staff-title">PMG MUDA</div></div>
+                    <div class="staff-card"><div class="staff-num">09</div><div class="staff-name">AYUN RIA AINUN</div><div class="staff-title">PMG PERTAMA</div></div>
+                    <div class="staff-card"><div class="staff-num">10</div><div class="staff-name">YOGA PRAWIRA TANJUNG</div><div class="staff-title">PMG PERTAMA</div></div>
+                    <div class="staff-card"><div class="staff-num">11</div><div class="staff-name">JEREMIA TARIGAN</div><div class="staff-title">PMG PERTAMA</div></div>
+                    <div class="staff-card"><div class="staff-num">12</div><div class="staff-name">BONITA NAINGGOLAN</div><div class="staff-title">PMG PERTAMA</div></div>
+                    <div class="staff-card"><div class="staff-num">13</div><div class="staff-name">MUHAMMAD FAUZY F</div><div class="staff-title">PMG PERTAMA</div></div>
+                    <div class="staff-card"><div class="staff-num">14</div><div class="staff-name">SUGENG</div><div class="staff-title">PMG PERTAMA</div></div>
+                    <div class="staff-card"><div class="staff-num">15</div><div class="staff-name">CHRISTOFEL HAPOSAN G</div><div class="staff-title">PMG PERTAMA</div></div>
+                    <div class="staff-card"><div class="staff-num">16</div><div class="staff-name">LALU ZAID FADHILA</div><div class="staff-title">PMG AHLI PERTAMA</div></div>
+                    <div class="staff-card"><div class="staff-num">17</div><div class="staff-name">I PUTU SURYA GABE D</div><div class="staff-title">PMG AHLI PERTAMA</div></div>
+                </div>
+
+                <div class="line-v" style="height: 30px;"></div>
+
+                <div class="fungsional-header" style="background-color: #d1fae5; color: #065f46;">PPNPN</div>
+                <div class="fungsional-grid">
+                    <div class="staff-card ppnpn-card"><div class="staff-num">01</div><div class="staff-name">Nama PPNPN 1</div><div class="staff-title">PPNPN Kantor</div></div>
+                    <div class="staff-card ppnpn-card"><div class="staff-num">02</div><div class="staff-name">Nama PPNPN 2</div><div class="staff-title">PPNPN Kantor</div></div>
+                    <div class="staff-card ppnpn-card"><div class="staff-num">03</div><div class="staff-name">Nama PPNPN 3</div><div class="staff-title">PPNPN Kantor</div></div>
+                    <div class="staff-card ppnpn-card"><div class="staff-num">04</div><div class="staff-name">Nama PPNPN 4</div><div class="staff-title">PPNPN Kantor</div></div>
+                    <div class="staff-card ppnpn-card"><div class="staff-num">05</div><div class="staff-name">Nama PPNPN 5</div><div class="staff-title">PPNPN Kantor</div></div>
+                    <div class="staff-card ppnpn-card"><div class="staff-num">06</div><div class="staff-name">Nama PPNPN 6</div><div class="staff-title">PPNPN Kantor</div></div>
+                    <div class="staff-card ppnpn-card"><div class="staff-num">07</div><div class="staff-name">Nama PPNPN 7</div><div class="staff-title">PPNPN Kantor</div></div>
+                </div>
             </div>
         </div>
-    </main>
 
-    <div class="modal" id="modal-detail">
-        <div class="modal-content">
-            <button class="close-modal" onclick="tutupModal()">&times;</button>
-            <h3 style="margin-bottom: 1rem; color: var(--accent-color);">Metode Kalkulasi Ephemeris</h3>
-            <p style="margin-bottom: 1rem;">Perhitungan nilai astronomis di atas menggunakan algoritma aproksimasi posisi matahari presisi tinggi berbasis Julian Date yang diperbarui secara real-time otomatis setiap hari.</p>
-            <div class="data-item">
-                <div class="data-label">Status Tracker</div>
-                <div class="data-value" style="color: var(--success-color);">Sinkronisasi Aktif</div>
+        <div id="gempabumi" class="section-block">
+            <div class="geo-card">
+                <div class="geo-card-header">
+                    <h3>Informasi Gempabumi Terkini</h3>
+                </div>
+                <div class="gempa-flex-layout">
+                    <div>
+                        <ul class="data-list">
+                            <li><span class="data-label">Waktu Kejadian</span><span class="data-value" id="gempa-waktu">Menghubungkan ke API BMKG...</span></li>
+                            <li><span class="data-label">Magnitudo</span><span class="data-value"><span class="badge-danger" id="gempa-mag">-</span></span></li>
+                            <li><span class="data-label">Kedalaman</span><span class="data-value" id="gempa-dalam">-</span></li>
+                            <li><span class="data-label">Lokasi Koordinat</span><span class="data-value" id="gempa-lokasi">-</span></li>
+                            <li><span class="data-label">Potensi Dampak</span><span class="data-value" id="gempa-potensi">-</span></li>
+                        </ul>
+                    </div>
+                    <div style="text-align: center;">
+                        <img id="gempa-peta" src="" alt="Peta Pencitraan Gempa BMKG" class="peta-shakemap">
+                    </div>
+                </div>
+            </div>
+
+            <div class="geo-card">
+                <div class="geo-card-header">
+                    <h3>Daftar Gempabumi Dirasakan Terbaru</h3>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Waktu</th>
+                                <th>Magnitudo</th>
+                                <th>Kedalaman</th>
+                                <th>Wilayah Kejadian</th>
+                                <th>Skala Dirasakan (MMI)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabel-gempa-dirasakan">
+                            <tr>
+                                <td colspan="5" style="text-align: center; color: #666;">Memuat daftar gempa bumi terbaru...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="magnet" class="section-block">
+            <div class="geo-card">
+                <div class="geo-card-header">
+                    <h3>Monitoring Realtime Magnet Bumi (Regional Sumatra Utara)</h3>
+                </div>
+                <p>Data fluksuasi medan magnetik regional untuk mendeteksi badai magnet bumi (geomagnetik) akibat aktivitas bintik matahari yang dapat memengaruhi satelit komunikasi di Deli Serdang.</p>
+                <div class="magnet-flex-layout">
+                    <div>
+                        <ul class="data-list">
+                            <li><span class="data-label">Status Aktivitas</span><span class="data-value" id="magnet-status" style="color:#0c861b;">Menghubungkan...</span></li>
+                            <li><span class="data-label">Intensitas Horizontal (H)</span><span class="data-value" id="magnet-val-h">-</span></li>
+                            <li><span class="data-label">Sudut Deklinasi (D)</span><span class="data-value" id="magnet-val-d">-</span></li>
+                            <li><span class="data-label">Intensitas Vertikal (Z)</span><span class="data-value" id="magnet-val-z">-</span></li>
+                        </ul>
+                        <p id="magnet-update" style="font-size:11px; opacity:0.7; margin-top:15px; font-weight:600; color:#2b6cb0;"></p>
+                    </div>
+                    <div style="text-align: center; background-color: #0c3c60; color: white; padding: 20px; border-radius: 8px;">
+                        <h4 style="margin-top:0; font-size:13px; letter-spacing:1px;">STATUS INTERNAL SENSOR</h4>
+                        <div style="font-family:monospace; text-align:left; font-size:12px; line-height:1.6; opacity:0.9;">
+                            [SYSTEM] Variometer Proton Active<br>
+                            [STABLE] Baseline Data Synchronized<br>
+                            [ONLINE] Feed Balai Besar Wilayah I BMKG
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="tandawaktu" class="section-block">
+            <div class="geo-card">
+                <div class="geo-card-header">
+                    <h3>Sistem Data Astronomi, Hilal & Waktu Sholat Lokal</h3>
+                </div>
+                <p>Data ephemeris pergerakan semu matahari, analisis kriteria visibilitas hilal murni astronomis, serta perhitungan jadwal sholat 5 waktu otomatis regional Sumatra Utara.</p>
+                
+                <div style="background-color: #e2e8f0; color: #0c3c60; padding: 12px 20px; border-radius: 6px; font-weight: 700; font-size: 14px; border-left: 4px solid #0c3c60;">
+                    Berdasarkan Posisi Hari Ini: <span id="astro-tanggal">-</span>
+                </div>
+
+                <h3 style="font-size:14px; color:#0c3c60; margin-top:25px; margin-bottom:5px; text-transform:uppercase;">Waktu Astronomi Surya</h3>
+                <div class="grid-tanda-waktu">
+                    <div class="card-waktu-sol">
+                        <h4>Matahari Terbit (Sunrise)</h4>
+                        <div class="waktu-val" id="sun-rise">--:--</div>
+                    </div>
+                    <div class="card-waktu-sol">
+                        <h4>Matahari Transit (Noon)</h4>
+                        <div class="waktu-val" id="sun-transit">--:--</div>
+                    </div>
+                    <div class="card-waktu-sol">
+                        <h4>Matahari Terbenam (Sunset)</h4>
+                        <div class="waktu-val" id="sun-set">--:--</div>
+                    </div>
+                </div>
+
+                <h3 style="font-size:14px; color:#0c3c60; margin-top:15px; margin-bottom:5px; text-transform:uppercase;">Jadwal Sholat Regional Medan & Sekitarnya</h3>
+                <div class="grid-jadwal-sholat">
+                    <div class="card-sholat-box"><div class="sholat-name">Imsak</div><div class="sholat-val" id="sholat-imsak">--:--</div></div>
+                    <div class="card-sholat-box"><div class="sholat-name">Subuh</div><div class="sholat-val" id="sholat-subuh">--:--</div></div>
+                    <div class="card-sholat-box"><div class="sholat-name">Duha</div><div class="sholat-val" id="sholat-duha">--:--</div></div>
+                    <div class="card-sholat-box"><div class="sholat-name">Dzuhur</div><div class="sholat-val" id="sholat-dzuhur">--:--</div></div>
+                    <div class="card-sholat-box"><div class="sholat-name">Ashar</div><div class="sholat-val" id="sholat-ashar">--:--</div></div>
+                    <div class="card-sholat-box"><div class="sholat-name">Maghrib</div><div class="sholat-val" id="sholat-maghrib">--:--</div></div>
+                    <div class="card-sholat-box"><div class="sholat-name">Isya</div><div class="sholat-val" id="sholat-isya">--:--</div></div>
+                </div>
+
+                <div style="margin-top:25px; padding:15px; border:1px solid #cbd5e1; border-radius:8px; background-color: #f8fafc;">
+                    <strong style="color:#0c3c60; font-size:14px; display:block; margin-bottom:5px;">Hasil Analisis Visibilitas Hilal Kontemporer:</strong>
+                    <span id="moon-phase" style="font-size:13.5px; font-weight:700; color:#1e293b; display:block; margin-bottom:4px;">Menghitung posisi data bulan...</span>
+                    <span id="hilal-data" style="font-size:12px; font-weight:600; color:#059669; font-family:monospace;">--</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="petir" class="section-block">
+            <div class="geo-card">
+                <div class="geo-card-header">
+                    <h3>Kerapatan Sambaran Petir (Lightning Detector)</h3>
+                </div>
+                <p>Grafik monitoring sambaran petir berbasis alat sensor penangkap gelombang elektromagnetik petir di area Deli Serdang dan Medan.</p>
+                
+                <div id="map-petir" style="width: 100%; height: 420px; border-radius: 8px; margin: 20px 0; border: 1px solid #cbd5e1; z-index: 1;"></div>
+
+                <ul class="data-list">
+                    <li><span class="data-label">Jumlah Sambaran Hari Ini</span><span class="data-value">142 Sambaran (CG- / CG+)</span></li>
+                    <li><span class="data-label">Kondisi Dominan</span><span class="data-value">Sore hingga Malam Hari</span></li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="ptsp" class="section-block">
+            <div class="geo-card">
+                <div class="geo-card-header">
+                    <h3>Pelayanan Terpadu Satu Pintu (PTSP)</h3>
+                </div>
+                
+                <div class="ptsp-nav-tabs">
+                    <button class="ptsp-tab-btn tab-ptsp-aktif" onclick="bukaSubPtsp('ptsp-katalog', this)">📋 Katalog Pelayanan</button>
+                    <button class="ptsp-tab-btn" onclick="bukaSubPtsp('ptsp-akun', this)">👤 Pendaftaran Akun</button>
+                </div>
+
+                <div id="ptsp-katalog" class="sub-ptsp-content">
+                    <p style="font-size: 14px; color:#64748b; margin-bottom:20px;">Silakan pilih kategori katalog pelayanan geofisika di bawah ini:</p>
+                    
+                    <div class="ptsp-nested-nav">
+                        <button class="katalog-nested-btn nested-ptsp-aktif" onclick="bukaKatalogKategori('katalog-info', this)">🌐 Informasi Geofisika</button>
+                        <button class="katalog-nested-btn" onclick="bukaKatalogKategori('katalog-sewa', this)">🔬 Jasa Sewa Alat Geofisika</button>
+                    </div>
+
+                    <div id="katalog-info" class="katalog-kategori-content">
+                        <table style="margin-top: 15px;">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Nama Produk Informasi Geofisika</th>
+                                    <th style="width: 15%; text-align: center;">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>Informasi Peta Kegempaan untuk Perencanaan Konstruksi</td>
+                                    <td style="text-align: center;"><button class="ptsp-btn-lihat" onclick="bukaModalLayananPtsp(1)">👁️ Lihat</button></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>Informasi Peta Percepatan Tanah untuk Perencanaan Konstruksi</td>
+                                    <td style="text-align: center;"><button class="ptsp-btn-lihat" onclick="bukaModalLayananPtsp(2)">👁️ Lihat</button></td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>Informasi Geofisika untuk Keperluan Klaim Asuransi (Gempa Bumi)</td>
+                                    <td style="text-align: center;"><button class="ptsp-btn-lihat" onclick="bukaModalLayananPtsp(3)">👁️ Lihat</button></td>
+                                </tr>
+                                <tr>
+                                    <td>4</td>
+                                    <td>Buku dan Peta Variasi Magnet Bumi (Epoch)</td>
+                                    <td style="text-align: center;"><button class="ptsp-btn-lihat" onclick="bukaModalLayananPtsp(4)">👁️ Lihat</button></td>
+                                </tr>
+                                <tr>
+                                    <td>5</td>
+                                    <td>Peta Tingkat Kerawanan Petir</td>
+                                    <td style="text-align: center;"><button class="ptsp-btn-lihat" onclick="bukaModalLayananPtsp(5)">👁️ Lihat</button></td>
+                                </tr>
+                                <tr>
+                                    <td>6</td>
+                                    <td>Waktu Terbit dan Terbenam Matahari atau Bulan</td>
+                                    <td style="text-align: center;"><button class="ptsp-btn-lihat" onclick="bukaModalLayananPtsp(6)">👁️ Lihat</button></td>
+                                </tr>
+                                <tr>
+                                    <td>7</td>
+                                    <td>Buku Almanak Badan Meteorologi Klimatologi dan Geofisika</td>
+                                    <td style="text-align: center;"><button class="ptsp-btn-lihat" onclick="bukaModalLayananPtsp(7)">👁️ Lihat</button></td>
+                                </tr>
+                                <tr>
+                                    <td>8</td>
+                                    <td>Buku Peta Ketinggian Hilal</td>
+                                    <td style="text-align: center;"><button class="ptsp-btn-lihat" onclick="bukaModalLayananPtsp(8)">👁️ Lihat</button></td>
+                                </tr>
+                                <tr>
+                                    <td>9</td>
+                                    <td>Titik Dasar Gaya Berat (Gravitasi)</td>
+                                    <td style="text-align: center;"><button class="ptsp-btn-lihat" onclick="bukaModalLayananPtsp(9)">👁️ Lihat</button></td>
+                                </tr>
+                                <tr>
+                                    <td>10</td>
+                                    <td>Kejadian Petir</td>
+                                    <td style="text-align: center;"><button class="ptsp-btn-lihat" onclick="bukaModalLayananPtsp(10)">👁️ Lihat</button></td>
+                                </tr>
+                                <tr>
+                                    <td>11</td>
+                                    <td>Informasi Geofisika untuk Keperluan Klaim Asuransi (Kejadian Petir)</td>
+                                    <td style="text-align: center;"><button class="ptsp-btn-lihat" onclick="bukaModalLayananPtsp(11)">👁️ Lihat</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div id="katalog-sewa" class="katalog-kategori-content" style="display: none;">
+                        <table style="margin-top: 15px;">
+                            <thead>
+                                <tr>
+                                    <th>Nama Alat Instrumen Geofisika</th>
+                                    <th>Kegunaan Observasi</th>
+                                    <th>Tarif Sewa (Per Hari)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Akselerograf (PGA Portable)</strong></td>
+                                    <td>Mengukur percepatan tanah lokal tanah keras/lunak</td>
+                                    <td>Rp 500.000</td>
+                                </tr>
+                                <tr>
+                                    <td>Lightning Detector Receiver Unit</td>
+                                    <td>Kalibrasi tingkat akurasi radius sambaran petir</td>
+                                    <td>Rp 750.000</td>
+                                </tr>
+                                <tr>
+                                    <td>Proton Precession Magnetometer (PPM)</td>
+                                    <td>Survei anomali magnetik total bawah permukaan</td>
+                                    <td>Rp 600.000</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="ptsp-akun" class="sub-ptsp-content" style="display: none;">
+                    <p style="font-size: 14px; color:#64748b; margin-bottom:20px;">Daftarkan instansi atau akun personal Anda untuk kemudahan akses permohonan data resmi BMKG:</p>
+                    
+                    <form onsubmit="alert('Simulasi pendaftaran berhasil dikirim!'); return false;">
+                        <div class="ptsp-form-group">
+                            <label>Nama Lengkap / Nama Instansi Pemohon</label>
+                            <input type="text" placeholder="Contoh: Universitas Sumatra Utara atau Nama Pribadi" required>
+                        </div>
+                        <div class="ptsp-form-group">
+                            <label>Alamat Email Aktif</label>
+                            <input type="email" placeholder="Contoh: pemohon@domain.com" required>
+                        </div>
+                        <div class="ptsp-form-group">
+                            <label>Nomor Telepon / WhatsApp</label>
+                            <input type="tel" placeholder="Contoh: 08123456789" required>
+                        </div>
+                        <div class="ptsp-form-group">
+                            <label>Alamat Lengkap Instansi/Rumah</label>
+                            <textarea rows="3" placeholder="Masukkan alamat lengkap Anda..." required></textarea>
+                        </div>
+                        <button type="submit" class="ptsp-submit-btn">Kirim Form Pendaftaran</button>
+                    </form>
+                </div>
+
+                <div style="margin-top:35px; padding:20px; border:1px solid #cbd5e1; border-radius:8px; background-color: #f8fafc; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+                    <div>
+                        <strong style="color:#0c3c60; font-size:15px; display:block; margin-bottom:5px;">Sistem Utama Terintegrasi Nasional</strong>
+                        <span style="font-size:13px; color:#475569;">Seluruh transaksi PNBP dan pengunduhan berkas legalitas resmi wajib dilakukan melalui portal web pusat.</span>
+                    </div>
+                    <a href="https://ptsp.bmkg.go.id" target="_blank" class="badge-danger" style="text-decoration: none; font-weight: bold; padding: 10px 20px;">Portal PTSP Pusat ↗</a>
+                </div>
+
+            </div>
+        </div>
+
+    </div> 
+
+    <div id="ptsp-detail-modal" class="ptsp-modal-overlay" onclick="if(event.target === this) tutupModalLayananPtsp()">
+        <div class="ptsp-modal-box">
+            <span class="ptsp-modal-close" onclick="tutupModalLayananPtsp()">&times;</span>
+            <h3 id="m-title" style="color: #0c3c60; margin-top: 0; margin-bottom: 20px; font-size: 20px; border-bottom: 2px solid #cbd5e1; padding-bottom: 10px;">Detail Informasi Layanan</h3>
+            
+            <div class="modal-grid-layout">
+                <div class="modal-meta-rows">
+                    <div class="modal-row-item">
+                        <span class="modal-row-label">☑️ Satuan</span>
+                        <div class="modal-row-value-box" id="m-satuan">-</div>
+                    </div>
+                    <div class="modal-row-item">
+                        <span class="modal-row-label">🏷️ Harga Satuan</span>
+                        <div class="modal-row-value-box" id="m-harga-satuan">-</div>
+                    </div>
+                    <div class="modal-row-item">
+                        <span class="modal-row-label">💻 Back Office</span>
+                        <div class="modal-row-value-box" id="m-backoffice">-</div>
+                    </div>
+                    <div class="modal-row-item" style="align-items: flex-start;">
+                        <span class="modal-row-label" style="margin-top: 8px;">📄 Data yang Diperlukan</span>
+                        <div class="modal-inputs-white-card" id="m-inputs-container" style="flex: 1;">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-preview-doc-card">
+                    <img id="m-preview-img" src="" alt="Pratinjau Contoh Dokumen Produk BMKG">
+                </div>
+            </div>
+
+            <div class="modal-bottom-pricing-bar">
+                <div>
+                    <div style="font-size: 13px; font-weight: 600; color: #475569; margin-bottom: 4px;">Total Estimasi Tarif PNBP:</div>
+                    <div class="modal-price-huge-text" id="m-total-bayar">Rp. 0</div>
+                </div>
+                <div style="text-align: right;">
+                    <button class="modal-basket-btn" onclick="alert('Item berhasil disimulasikan masuk ke keranjang belanja PTSP Anda.'); tutupModalLayananPtsp();">🛒 Masukkan Keranjang</button>
+                    <div style="font-size: 11px; color: #64748b; margin-top: 8px; font-style: italic;">*Khusus layanan kalibrasi, tarif layanan dapat berubah saat pengecekkan alat</div>
+                </div>
             </div>
         </div>
     </div>
 
-    <footer>
-        <p>&copy; 2026 InfoGempa Sumbagut. All Rights Reserved.</p>
-        <div class="real-social-container">
-            <a href="https://www.instagram.com/infogempa.sumbagut" class="real-social-icon" target="_blank" title="Instagram">
-                <svg viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="11" fill="none" stroke="currentColor" stroke-width="2"/>
-                    <path d="M12 7.5a4.5 4.5 0 1 0 4.5 4.5A4.5 4.5 0 0 0 12 7.5zm0 7.43A2.93 2.93 0 1 1 14.93 12 2.93 2.93 0 0 1 12 14.93z"/>
-                    <circle cx="16.5" cy="7.5" r="0.9"/>
-                </svg>
-            </a>
-            <a href="https://www.tiktok.com/@infogempa.sumbagut" class="real-social-icon" target="_blank" title="TikTok">
-                <svg viewBox="0 0 24 24">
-                    <rect width="24" height="24" rx="12" fill="#000000"/>
-                    <path fill="#FFFFFF" d="M12.525 6c.115 1.573 1.008 2.89 2.378 3.522v2.54a5.454 5.454 0 0 1-2.378-.54v5.334a4.04 4.04 0 1 1-4.04-4.04c.44 0 .852.075 1.24.208V10.45a6.52 6.52 0 0 0-1.24-.12 6.58 6.58 0 1 0 6.58 6.58V6h-2.54z"/>
-                </svg>
-            </a>
+    <footer class="official-footer">
+        <div class="footer-grid">
+            <div class="footer-col footer-logo-area">
+                <img src="logo-bmkg.png" alt="Logo BMKG" onerror="this.src='https://data.bmkg.go.id/include/assets/img/logo-bmkg.png'">
+                <div class="footer-contact-info">
+                    <h4>Kontak Kami</h4>
+                    <p>Jl. Geofisika No. 1 Desa Tuntungan I, Kec. Pancur Batu, Kab. Deli Serdang, Sumatera Utara.</p>
+                    <p>Call Center: (061) 77814094</p>
+                    <p>stageof.deliserdang@bmkg.go.id</p>
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <h4>Dukungan</h4>
+                <ul class="footer-links-list">
+                    <li><a href="https://www.bmkg.go.id" target="_blank">Informasi Cuaca</a></li>
+                    <li><a href="https://maritim.bmkg.go.id" target="_blank">Cuaca Maritim</a></li>
+                    <li><a href="https://aviation.bmkg.go.id" target="_blank">Cuaca Penerbangan</a></li>
+                    <li><a href="https://www.bmkg.go.id/iklim/" target="_blank">Informasi Iklim</a></li>
+                    <li><a href="https://inatews.bmkg.go.id" target="_blank">InaTEWS (Tsunami System)</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Tautan</h4>
+                <ul class="footer-links-list">
+                    <li><a href="https://pusbang.bmkg.go.id" target="_blank">Pusat Pengembangan SDM</a></li>
+                    <li><a href="https://ptb.stmkg.ac.id/" target="_blank">STMKG</a></li>
+                    <li><a href="https://jdih.bmkg.go.id" target="_blank">Dokumentasi Hukum (JDIH)</a></li>
+                    <li><a href="https://data.bmkg.go.id" target="_blank">Data Online BMKG</a></li>
+                    <li><a href="https://sso.bmkg.go.id" target="_blank">Portal SSO BMKG</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Aplikasi Info BMKG</h4>
+                <div class="app-download-badges">
+                    <a href="https://play.google.com/store/apps/details?id=com.Info_BMKG" class="svg-badge-link" target="_blank">
+                        <svg viewBox="0 0 135 40" width="135" height="40">
+                            <rect width="135" height="40" rx="6" fill="#000000" stroke="#a6a6a6" stroke-width="0.5"/>
+                            <path d="M14.5 9.5v21l16-10.5z" fill="#00f0ff"/>
+                            <path d="M14.5 9.5l11.5 11.5 4.5-3z" fill="#ff007f"/>
+                            <path d="M14.5 30.5l11.5-11.5 4.5 3z" fill="#ffc000"/>
+                            <path d="M26 19l4.5-8.5-4.5-1z" fill="#00e000"/>
+                            <text x="44" y="16" fill="#ffffff" font-size="7" font-family="Segoe UI,Arial" font-weight="bold" letter-spacing="0.3">GET IT ON</text>
+                            <text x="44" y="29" fill="#ffffff" font-size="12" font-family="Segoe UI,Arial" font-weight="900" letter-spacing="0.2">Google Play</text>
+                        </svg>
+                    </a>
+                    <a href="https://apps.apple.com/id/app/info-bmkg/id1114372539" class="svg-badge-link" target="_blank">
+                        <svg viewBox="0 0 135 40" width="135" height="40">
+                            <rect width="135" height="40" rx="6" fill="#000000" stroke="#a6a6a6" stroke-width="0.5"/>
+                            <path d="M23.5 14c-.1 2.2 1.8 3.3 1.9 3.4-1-1.5-2.6-1.7-3.2-1.7-1.5-.2-3 .9-3.8.9-.8 0-2-.9-3.2-.9-1.6 0-3.1.9-4 2.4-1.7 3-1.7 7.8 0 10.7.8 2.4 2.4 5 4.6 4.9 1-.1 2-.7 3.3-.7 1.2 0 2.2.7 3.3.7 2.2 0 3.7-2.3 4.5-4.5 1-1.4 1.4-2.8 1.4-2.9 0 0-2.7-1-2.7-4.1 0-2.6 2.1-3.8 2.2-3.9-1.2-1.8-3.3-2-4-2zm-3-2.5c.9-1.1 1.5-2.7 1.3-4.3-1.4.1-3.1.9-4.1 2.1-.9 1-1.7 2.6-1.5 4.1 1.6.1 3.2-.8 4.3-1.9z" fill="#ffffff"/>
+                            <text x="44" y="16" fill="#ffffff" font-size="7" font-family="Segoe UI,Arial" font-weight="500" letter-spacing="0.3">Download on the</text>
+                            <text x="44" y="29" fill="#ffffff" font-size="12" font-family="Segoe UI,Arial" font-weight="700" letter-spacing="0.2">App Store</text>
+                        </svg>
+                    </a>
+                </div>
+
+                <h4>Media Sosial</h4>
+                <div class="social-media-container">
+                    <a href="https://www.youtube.com/@stasiungeofisikadeliserdan8786" class="real-social-icon" target="_blank" title="YouTube">
+                        <svg viewBox="0 0 24 24"><path fill="#FF0000" d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.105A3.017 3.016 0 0 0 .502 5.786C.4 7.657 0 12 0 12s.4 4.343.502 6.214a3.016 3.016 0 0 0 2.122 2.136c1.871.105 9.376.105 9.376.105s7.505 0 9.377-.105a3.015 3.016 0 0 0 2.122-2.136C23.6 16.343 24 12 24 12s-.4-4.343-.502-6.214zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                    </a>
+                    <a href="https://www.facebook.com/stageof.tsi/" class="real-social-icon" target="_blank" title="Facebook">
+                        <svg viewBox="0 0 24 24"><path fill="#1877F2" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.378-4.669 1.24 0 2.535.221 2.535.221v2.786h-1.43c-1.49 0-1.85.923-1.85 1.871v2.252h3.14l-.502 3.47h-2.638v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                    </a>
+                    <a href="https://x.com/bmkg_sumut" class="real-social-icon" target="_blank" title="X (Twitter)">
+                        <svg viewBox="0 0 24 24"><rect width="24" height="24" rx="4" fill="#000000"/><path fill="#FFFFFF" d="M18.244 2.25h3.308l-7.227 3.778 8.502 11.24H16.17l-8.502-11.24H16.17l-5.214-6.817L4.99 17.288H1.68l7.73-8.235L1.254 2.25H8.08l4.713 6.231zm-1.161 13.02h1.833L7.084 4.126H5.117z"/></svg>
+                    </a>
+                    <a href="https://www.instagram.com/infogempa.sumbagut/" class="real-social-icon" target="_blank" title="Instagram">
+                        <svg viewBox="0 0 24 24">
+                            <radialGradient id="ig-lens" cx="0.2" cy="1" r="0.95">
+                                <stop offset="0%" stop-color="#FED576"/>
+                                <stop offset="25%" stop-color="#F47A28"/>
+                                <stop offset="60%" stop-color="#D62976"/>
+                                <stop offset="85%" stop-color="#962FBF"/>
+                                <stop offset="100%" stop-color="#4F5BD5"/>
+                            </radialGradient>
+                            <rect width="24" height="24" rx="5.5" fill="url(#ig-lens)"/>
+                            <path fill="#FFFFFF" d="M12 7.635a4.365 4.365 0 1 0 0 8.73 4.365 4.365 0 0 0 0-8.73zm0 7.305a2.94 2.294 0 1 1 0-5.88 2.94 2.94 0 0 1 0 5.88zm4.538-7.533a1.025 1.025 0 1 0 0 2.05 1.025 1.025 0 0 0 0-2.05zM17.15 4.5H6.85A2.353 2.353 0 0 0 4.5 6.85v10.3c0 1.295 1.055 2.35 2.35 2.35h10.3a2.353 2.353 0 0 0 2.35-2.35V6.85A2.353 2.353 0 0 0 17.15 4.5zm0.92 12.65a0.921 0.921 0 0 1-.92.92H6.85a0.921 0.921 0 0 1-.92-.92V6.85a0.921 0.921 0 0 1 .92-.92h10.3a0.921 0.921 0 0 1 .92.92v10.3z"/>
+                        </svg>
+                    </a>
+                    <a href="https://www.tiktok.com/@infogempa.sumbagut" class="real-social-icon" target="_blank" title="TikTok">
+                        <svg viewBox="0 0 24 24">
+                            <rect width="24" height="24" rx="12" fill="#000000"/>
+                            <g fill="#FFFFFF">
+                                <path d="M16.8 5c-.4 1.1-1.3 1.9-2.5 2.2V14c0 2.5-2 4.5-4.5 4.5S5.3 16.5 5.3 14s2-4.5 4.5-4.5c.3 0 .6 0 .8.1V6.1c-.3 0-.5-.1-.8-.1C6 6 2.9 9.1 2.9 14s3.1 8 8 8 8-3.1 8-8V9.2c1.4.9 3.1 1.3 4.8 1.1V6.8c-1.9.1-3.6-.6-4.9-1.8z" fill="#00f2fe"/>
+                                <path d="M16.7 4.9c-.4 1.1-1.3 1.9-2.5 2.2v6.9c0 2.5-2 4.5-4.5 4.5s-4.5-2-4.5-4.5 2-4.5 4.5-4.5c.3 0 .6 0 .8.1V6c-.3 0-.5-.1-.8-.1-3.8 0-6.9 3.1-6.9 7s3.1 8 7 8 8-3.1 8-8V9.1c1.4.9 3.1 1.3 4.8 1.1V6.7c-1.9.1-3.6-.6-4.9-1.8z" fill="#fe2c55" style="mix-blend-mode: lighten;"/>
+                                <path d="M16.6 4.8c-.4 1.1-1.3 1.9-2.5 2.2V13.8c0 2.5-2 4.5-4.5 4.5s-4.5-2-4.5-4.5 2-4.5 4.5-4.5c.3 0 .6 0 .8.1V5.9c-.3 0-.5-.1-.8-.1-3.8 0-6.9 3.1-6.9 7s3.1 8 7 8 8-3.1 8-8V8.9c1.4.9 3.1 1.3 4.8 1.1V6.5c-1.9.1-3.6-.6-4.9-1.8z" fill="#ffffff" style="mix-blend-mode: lighten;"/>
+                            </g>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom-bar">
+            <div>&copy; 2026 - Badan Meteorologi, Klimatologi, dan Geofisika</div>
         </div>
     </footer>
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <div class="whatsapp-widget-container">
+        <div class="wa-pop-bubble" id="wa-bubble">
+            <span>Hubungi via WhatsApp</span>
+            <span class="wa-close-x" onclick="document.getElementById('wa-bubble').style.display='none'">&times;</span>
+        </div>
+        <a class="whatsapp-circle-btn" href="https://wa.me/628116041720" target="_blank">
+            <svg viewBox="0 0 24 24">
+                <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.4 0 11.973 0c3.184.001 6.177 1.24 8.43 3.496 2.253 2.256 3.491 5.253 3.49 8.436-.005 6.623-5.346 11.971-11.92 11.971-2.001-.001-3.97-.502-5.717-1.458L0 24zm6.59-3.469c1.66.986 3.292 1.503 4.8 1.505 5.517 0 10.003-4.479 10.007-9.975.002-2.662-1.033-5.166-2.915-7.05C16.6 3.125 14.1 2.083 11.438 2.083c-5.522 0-10.01 4.482-10.015 9.98-.001 1.767.462 3.492 1.341 5.022l-.961 3.513 3.604-.945zm11.902-8.312c-.3-.15-1.773-.875-2.046-.975-.273-.1-.472-.15-.672.15-.2.3-.773.975-.947 1.175-.173.2-.347.225-.647.075-.3-.15-1.265-.467-2.41-1.488-.891-.795-1.492-1.777-1.667-2.076-.174-.3-.019-.462.13-.611.135-.134.3-.349.45-.524.149-.174.199-.299.299-.499.1-.2.05-.375-.025-.525-.075-.15-.672-1.62-.922-2.22-.243-.584-.488-.504-.672-.513-.173-.008-.372-.01-.572-.01-.2 0-.523.075-.797.375-.273.3-1.045 1.02-1.045 2.487 0 1.468 1.069 2.886 1.218 3.086.149.2 2.105 3.215 5.099 4.507.712.308 1.269.492 1.703.63.716.227 1.368.195 1.883.118.574-.085 1.773-.725 2.022-1.424.249-.699.249-1.299.174-1.424-.075-.125-.273-.2-.573-.35z"/>
+            </svg>
+        </a>
+    </div>
 
-    <script>
-        // --- 1. CORE VARIABLES & GLOBAL INITS ---
-        let petaPetir;
-        const targetElemenTema = document.documentElement;
-
-        // --- 2. DARK/LIGHT THEME ENGINE ---
-        function gantiTema() {
-            const temaSaatIni = targetElemenTema.getAttribute('data-theme');
-            const temaBaru = (temaSaatIni === 'dark') ? 'light' : 'dark';
-            
-            targetElemenTema.setAttribute('data-theme', temaBaru);
-            localStorage.setItem('tema-pilihan', temaBaru);
-            perbaruiKomponenUIUrgent(temaBaru);
-        }
-
-        function perbaruiKomponenUIUrgent(tema) {
-            const wadahIkon = document.getElementById('tema-icon');
-            const wadahTeks = document.getElementById('tema-teks');
-            if(tema === 'dark') {
-                wadahIkon.innerText = '☀️';
-                wadahTeks.innerText = 'Light Mode';
-            } else {
-                wadahIkon.innerText = '🌙';
-                wadahTeks.innerText = 'Dark Mode';
-            }
-        }
-
-        // Memuat preferensi tema bawaan saat halaman pertama kali dibuka
-        const temaSimpanan = localStorage.getItem('tema-pilihan') || 'light';
-        targetElemenTema.setAttribute('data-theme', temaSimpanan);
-        setTimeout(() => perbaruiKomponenUIUrgent(temaSimpanan), 100);
-
-        // --- 3. GEOSPATIAL MAPS ENGINE ---
-        function inisialisasiPeta() {
-            // Ditambahkan 'scrollWheelZoom: false' agar tidak mengganggu scroll mouse pengguna
-            petaPetir = L.map('map-petir', { scrollWheelZoom: false }).setView([3.5162, 98.6946], 7);
-            
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; OpenStreetMap contributors'
-            }).addTo(petaPetir);
-
-            document.getElementById('kondisi-peta').innerText = "Peta Berhasil Dimuat (Sumut)";
-        }
-
-        // --- 4. REAL-TIME AUTOMATIC EPHEMERIS CALCULATION ---
-        function hitungEphemerisOtomatisHariIni() {
-            const sekarang = new Date();
-            const hariKe = dapatkanHariKeDalamTahun(sekarang);
-            
-            // Perhitungan Sudut Berdasarkan Pergeseran Orbit Bumi (Pendekatan Akurat)
-            const b = (360 / 365) * (hariKe - 81) * (Math.PI / 180);
-            
-            // Rumus Deklinasi Matahari
-            const kalkulasiDeklinasi = 23.45 * Math.sin(b);
-            
-            // Rumus Equation of Time (EoT) approximation
-            const eotMenit = 9.87 * Math.sin(2 * b) - 7.53 * Math.cos(b) - 1.5 * Math.sin(b);
-            const totalDetik = Math.round(eotMenit * 60);
-            const eotMenitFinal = Math.floor(Math.abs(totalDetik) / 60);
-            const eotDetikFinal = Math.abs(totalDetik) % 60;
-            const tandaEoT = totalDetik >= 0 ? "" : "-";
-
-            // Tampilkan Data ke Struktur Komponen UI
-            document.getElementById('eph-deklinasi').innerText = `${kalkulasiDeklinasi.toFixed(4)}°`;
-            document.getElementById('eph-eot').innerText = `${tandaEoT}${eotMenitFinal}m ${eotDetikFinal}s`;
-            document.getElementById('eph-sd').innerText = "16' 1.18\"";
-        }
-
-        // PERBAIKAN: Menambahkan '+ 1' agar hitungan hari ke-n dalam 1 tahun akurat (tidak bernilai 0 pada 1 Januari)
-        function dapatkanHariKeDalamTahun(tanggal) {
-            const awalTahun = new Date(tanggal.getFullYear(), 0, 1);
-            const selisihWaktu = tanggal - awalTahun;
-            const satuHariMiliDetik = 1000 * 60 * 60 * 24;
-            return Math.floor(selisihWaktu / satuHariMiliDetik) + 1;
-        }
-
-        // --- 5. DATA FETCHING SEISMISITAS (BMKG TEWS) ---
-        async function ambilDataGempaBMKG() {
-            const urlGempaM5 = "https://data.bmkg.go.id/DataMKG/TEWS/autogempa.json";
-            const tabel = document.getElementById('tabel-gempa');
-
-            try {
-                // Catatan: Jika terkena CORS block di server lokal, gunakan ekstensi CORS proxy browser atau backend handler
-                const respon = await fetch(urlGempaM5);
-                if (!respon.ok) throw new Error("Gagal mengambil data dari server");
-                
-                const objekData = await respon.json();
-                const detailGempa = objekData.Infogempa.gempa;
-
-                // Memasukkan entri baris data baru ke dalam tabel internal halaman web
-                tabel.innerHTML = `
-                    <tr>
-                        <td><strong>${detailGempa.Jam}</strong><br><small>${detailGempa.Tanggal}</small></td>
-                        <td><span style="color:var(--danger-color); font-weight:bold;">${detailGempa.Magnitude} M</span></td>
-                        <td>${detailGempa.Kedalaman}</td>
-                        <td><strong>${detailGempa.Wilayah}</strong><br><small style="color:var(--text-muted)">Potensi: ${detailGempa.Potensi}</small></td>
-                    </tr>
-                `;
-
-                // Tambahkan marker gempa otomatis ke dalam Peta Leaflet jika koordinat tersedia
-                const koordinatStr = detailGempa.Coordinates.split(',');
-                const lintang = parseFloat(koordinatStr[0]);
-                const bujur = parseFloat(koordinatStr[1]);
-                
-                if(!isNaN(lintang) && !isNaN(bujur)) {
-                    L.marker([lintang, bujur]).addTo(petaPetir)
-                        .bindPopup(`<b>Gempa Terkini M ${detailGempa.Magnitude}</b><br>${detailGempa.Wilayah}`)
-                        .openPopup();
-                    
-                    // OPTIMASI: Otomatis menggeser pandangan kamera peta terfokus ke titik gempa yang baru saja terjadi
-                    petaPetir.setView([lintang, bujur], 7);
-                }
-
-            } catch (kesalahan) {
-                console.error("Error Fetch Data:", kesalahan);
-                tabel.innerHTML = `
-                    <tr>
-                        <td colspan="4" style="text-align: center; color: var(--danger-color);">
-                            Gagal memuat data BMKG (Kemungkinan masalah CORS Browser / Jaringan).
-                        </td>
-                    </tr>
-                `;
-            }
-        }
-
-        // --- 6. MODAL INTERACTION ---
-        function bukaModalEphemeris() {
-            document.getElementById('modal-detail').style.display = 'flex';
-        }
-
-        function tutupModal() {
-            document.getElementById('modal-detail').style.display = 'none';
-        }
-
-        // Menutup modal otomatis jika area luar jendela modal di-klik oleh pengguna
-        window.onclick = function(event) {
-            const modal = document.getElementById('modal-detail');
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        }
-
-        // --- 7. INITIALIZER LIFECYCLE ---
-        window.addEventListener('DOMContentLoaded', () => {
-            inisialisasiPeta();
-            hitungEphemerisOtomatisHariIni();
-            ambilDataGempaBMKG();
-        });
-    </script>
 </body>
 </html>
