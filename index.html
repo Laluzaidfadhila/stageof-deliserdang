@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stageof Deli Serdang - BMKG</title>
     
-    <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAADwklEQVR4nO2YTWwUVRTHf++bmdkWm6gIscXwUSKixg8Sg8bYREgMCYmJiZgYExMTMTExMTEmJiZCYmJCgqgYEqLGDxJD9IMYExMTY6ImfJAQQYst0E9atpud9+PhzbS7292Z7bS7O0v/yWRmZ96b+b933rnvvXmEwWAwGAwGg8FgMBgMBoNBLXGcoAnbU6vP/mI76vLp7+T03S7Z66nNpt9r7n8i/6+6eR8Y9X0v67Zf9qLuv0vWv9Y9X3PfW0b5H9P3/Zz+P7R+ve56S9//qG7/79gP/f7f/O/at39g+2ffbU7epzabeZ9VmW7fdss9bS/Z9t+xz12ZTr8uqzbbuw7rtsr6re75m86nNtu5L9n0P7PNo2+fOvu9pfc6erNm+pt/XZX2v+V6v+Vvts9T88wX7PLXZfKof/b76fqf5/Yf6/of6nL3p89b884Waf98p6+fG9z9X68v6nqM+/wX7PLXZfKppY9R697HeW3K/0+fvtI9Zm23dvvofbX6/6fP6bOvxvXvYVbfeU++zZp9V90F6n/3bI/u+Fva5b7fvs74fGfW9F/U+8xP73Gv2vXvYVbfeU++zZp9V90F6n/3bI/u+Fva5b7fvs74fGfW9F/U+8xP73Gv2vXvYVbfeU++zZp9V90F6n/3bI/u+Fva5b7fvs74fGfW9F/U+8xP73Gv2vXvYVbfeU++zZp9V90F6n/3bI/u+Fva5b7fvs74fGfW9F/U+8xP4H3p3es9b7in674D5FwshNf88IeunNpM/77bPW0v2fbfs7Kvt/0v2fbfs+w7S99W6p/XfS/bfM8r/mL7v5/T/ofXrZfvdM+v7mX1ubfpc9b9bV/0eSz6rOtueWs9b9rOtrbZ9X637vGZzZfvcsf6v2Wwun9vX0XpsX9U3XWv69WbL6pvn9NuZfW4t2X/7f08tMxgMBoPBYDAYDAaDwWAwGAwGg8FgMBisgP8Blyp60isxt9IAAAAASUVORK5CYII=">
+    <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAADwklEQVR4nO2YTWwUVRTHf++bmdkWm6gIscXwUSKixg8Sg8bYREgMCYmJiZgYExMTMTExMTEmJiZCYmJCgqgYEqLGDxJD9IMYExMTY6ImfJAQQYst0E9atpud9+PhzbS7292Z7bS7O0v/yWRmZ96b+b933rnvvXmEwWAwGAwGg8FgMBgMBoNBLXGcoAnbU6vP/mI76vLp7+T03S7Z66nNpt9r7n8i/6+6eR8Y9X0v67Zf9qLuv0vWv9Y9X3PfW0b5H9P3/Zz+P7R+ve56S9//qG7/79gP/f7f/O/at39g+2ffbU7epzabeZ9VmW7fdss9bS/Z9t+xz12ZTr8uqzbbuw7rtsr6re75m86nNtu5L9n0P7PNo2+fOvu9pfc6erNm+pt/XZX2v+V6v+Vvts9T88wX7PLXZfKof/b76fqf5/Yf6/of6nL3p89b884Waf98p6+fG9z9X68v6nqM+/wX7PLXZfKppY9R697HeW3K/0+fvtI9Zm23dvvofbX6/6fP6bOvxvXvYVbfeU++zZp9V90F6n/3bI/u+Fva5b7fvs74fGfW9F/U+8xP73Gv2vXvYVbfeU++zZp9V90F6n/3bI/u+Fva5b7fvs74fGfW9F/U+8xP73Gv2vXvYVbfeU++zZp9V90F6n/3bI/u+Fva5b7fvs74fGfW9F/U+8xP4H3p3es9b7in674D5FwshNf88IeunNpM/77bPW0v2fbfs7Kvt/0v2fbfs+w7S99W6p/XfS/bfM8r/mL7v5/T/ofXrZfvdM+v7mX1ubfpc9b9bV/0eSz6rOtueWs9b9rOtrbZ9X637vGZzZfvcsf6v2Wwun9vX0XpsX9U3XWv69WbL6pvn9NuZfW4t2X/7f08tMxgMBoPBYDAYDAaDwWAwGAwGg8FgMBisgP8Blyp60isxt9IAAAAASUVORK5CYII=">
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -20,7 +20,7 @@
             const namaHari = daftarHari[sekarang.getDay()];
             const tanggal = sekarang.getDate(); 
             const namaBulan = daftarBulan[sekarang.getMonth()];
-            const tahun = Bird = sekarang.getFullYear();
+            const tahun = sekarang.getFullYear();
 
             const elTanggal = document.getElementById("tanggal-hari-pusat");
             if(elTanggal) elTanggal.innerText = `${namaHari}, ${tanggal} ${namaBulan} ${tahun}`;
@@ -57,7 +57,7 @@
                 document.getElementById("gempa-lokasi").innerText = gempa.Wilayah;
                 document.getElementById("gempa-potensi").innerText = gempa.Potensi;
                 
-                // Set Data Ringkasan di Beranda (Saran Optimasi Poin 2)
+                // Set Data Ringkasan di Beranda
                 document.getElementById("b-gempa-mag").innerText = "M " + gempa.Magnitude;
                 document.getElementById("b-gempa-wilayah").innerText = gempa.Wilayah;
                 document.getElementById("b-gempa-waktu").innerText = gempa.Tanggal + " | " + gempa.Jam;
@@ -294,9 +294,7 @@
                 window.location.hash = idHalaman; 
             }
 
-            // Tutup menu mobile jika terbuka setelah klik menu
             document.getElementById("hamburger-check").checked = false;
-
             if (idHalaman === 'petir') inisialisasiPeta();
             window.scrollTo({top: 0, behavior: 'smooth'});
         }
@@ -449,11 +447,11 @@
 
         .btn-dark-mode { background-color: #e2e8f0; padding: 6px 12px; border-radius: 20px; font-size: 11px !important; border: none; font-weight: 700; cursor: pointer; }
 
-        /* HAMBURGER SYSTEM (POIN 4 - RESPONSIVITAS MOBILE) */
+        /* HAMBURGER SYSTEM */
         .hamburger-container { display: none; }
         #hamburger-check { display: none; }
 
-        /* HERO SECTION (POIN 1 - BANNER OPTIMIZATION) */
+        /* HERO SECTION */
         .banner-beranda { 
             position: relative;
             background: linear-gradient(rgba(12, 60, 96, 0.85), rgba(23, 109, 168, 0.85)), url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1000') no-repeat center center;
@@ -471,7 +469,7 @@
         .hero-btn-secondary { background-color: rgba(255, 255, 255, 0.15); color: white; border: 1px solid rgba(255, 255, 255, 0.3); }
         .hero-btn-secondary:hover { background-color: rgba(255, 255, 255, 0.3); }
 
-        /* CARDS OVERVIEW (POIN 2 - FILL WHITESPACE) */
+        /* CARDS OVERVIEW */
         .beranda-dashboard-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -492,7 +490,7 @@
         .ov-btn { background: #f1f5f9; color: #0c3c60; border: none; padding: 8px; border-radius: 5px; font-size: 12px; font-weight: 700; cursor: pointer; text-align: center; width: 100%; }
         .ov-btn:hover { background: #e2e8f0; }
 
-        /* BERITA & EDUKASI (POIN 3 - EDUCATION LAYOUT) */
+        /* BERITA & EDUKASI */
         .section-title-container { border-left: 4px solid #0c3c60; padding-left: 12px; margin-bottom: 20px; }
         .section-title-container h3 { margin: 0; font-size: 18px; color: #0c3c60; }
         .news-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
@@ -551,7 +549,26 @@
         .card-sholat-box .sholat-name { font-size: 12px; font-weight: 700; color: #475569; text-transform: uppercase; margin-bottom: 8px; }
         .card-sholat-box .sholat-val { font-size: 20px; font-weight: 800; color: #10b981; }
 
-        /* PTSP STYLES */
+        /* PTSP STYLES (FIXED INCLUSION) */
+        .ptsp-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 5000; display: none; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; }
+        .ptsp-modal-box { background-color: #dbeafe; width: 100%; max-width: 950px; border-radius: 16px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); display: flex; flex-direction: column; position: relative; max-height: 90vh; overflow-y: auto; color: #1e293b; }
+        .ptsp-modal-close { position: absolute; top: 15px; right: 20px; font-size: 28px; font-weight: bold; color: #64748b; cursor: pointer; }
+        .ptsp-modal-close:hover { color: #ef4444; }
+        .modal-grid-layout { display: grid; grid-template-columns: 1.3fr 1fr; gap: 25px; margin-top: 10px; }
+        .modal-meta-rows { display: flex; flex-direction: column; gap: 12px; }
+        .modal-row-item { display: flex; align-items: center; gap: 15px; }
+        .modal-row-label { width: 140px; font-size: 13.5px; font-weight: 600; color: #475569; display: flex; align-items: center; gap: 6px; }
+        .modal-row-value-box { flex: 1; background-color: #e2e8f0; padding: 10px 14px; border-radius: 6px; font-size: 14px; font-weight: 600; color: #1e293b; border: 1px solid #cbd5e1; }
+        .modal-inputs-white-card { background-color: #ffffff; padding: 20px; border-radius: 8px; border: 1px solid #cbd5e1; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .modal-inputs-white-card label { display: block; font-size: 13px; font-weight: 700; color: #475569; margin-bottom: 6px; }
+        .modal-inputs-white-card input { width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; font-weight: 600; box-sizing: border-box; margin-bottom: 5px; }
+        .modal-preview-doc-card { display: flex; justify-content: center; align-items: center; background-color: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px; height: 100%; box-sizing: border-box; }
+        .modal-preview-doc-card img { max-width: 100%; max-height: 280px; object-fit: contain; border-radius: 4px; }
+        .modal-bottom-pricing-bar { border-top: 1px solid #cbd5e1; margin-top: 25px; padding-top: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
+        .modal-price-huge-text { font-size: 26px; font-weight: 800; color: #ef4444; }
+        .modal-basket-btn { background-color: #0c3c60; color: white; border: none; padding: 12px 24px; font-size: 14px; font-weight: 700; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: background 0.2s; }
+        .modal-basket-btn:hover { background-color: #176da8; }
+
         .ptsp-nav-tabs { display: flex; gap: 10px; border-bottom: 2px solid #cbd5e1; margin-bottom: 25px; padding-bottom: 5px; }
         .ptsp-tab-btn { background: none; border: none; padding: 10px 20px; font-size: 14px; font-weight: 700; color: #64748b; cursor: pointer; transition: all 0.2s ease; border-radius: 6px 6px 0 0; }
         .ptsp-tab-btn:hover { background-color: rgba(0,0,0,0.02); color: #0c3c60; }
@@ -562,8 +579,9 @@
         .ptsp-form-group { margin-bottom: 15px; text-align: left; }
         .ptsp-form-group label { display: block; font-size: 13px; font-weight: 600; color: #475569; margin-bottom: 6px; }
         .ptsp-form-group input, .ptsp-form-group textarea { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-family: inherit; font-size: 13.5px; box-sizing: border-box; }
-        
-        /* OFFICIAL FOOTER DESIGN */
+        .ptsp-btn-lihat { background-color: #f97316; color: white; border: none; padding: 6px 14px; font-size: 12px; font-weight: 600; border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; }
+
+        /* FOOTER DESIGN */
         .official-footer { background-color: #0b1a30; color: #ffffff; padding: 50px 40px 30px 40px; font-size: 13px; line-height: 1.8; border-top: 3px solid #176da8; }
         .official-footer img { width: 45px; height: auto; margin-bottom: 15px; background-color: #ffffff; border-radius: 4px; padding: 2px; }
         .footer-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1.2fr 1fr 1fr 1.2fr; gap: 40px; }
@@ -574,55 +592,38 @@
         .footer-links-list a { color: #cbd5e1; text-decoration: none; transition: color 0.2s; display: inline-flex; align-items: center; gap: 5px; }
         .footer-links-list a:hover { color: #38bdf8; }
         
-        /* GENERAL UI METRICS */
+        .app-download-badges { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; margin-bottom: 25px; }
+        .svg-badge-link { display: inline-block; width: 135px; height: 40px; transition: transform 0.2s ease; }
+        .svg-badge-link:hover { transform: scale(1.03); }
+        
+        .social-media-container { display: flex; gap: 12px; margin-top: 10px; }
+        .real-social-icon { width: 32px; height: 34px; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; transition: transform 0.2s ease; }
+        .real-social-icon:hover { transform: translateY(-3px); }
+        .real-social-icon svg { width: 100%; height: 100%; object-fit: contain; }
+
+        .footer-bottom-bar { max-width: 1200px; margin: 40px auto 0 auto; padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.1); text-align: center; color: #94a3b8; font-size: 12px; }
+
         table { width: 100%; border-collapse: collapse; text-align: left; margin-top: 10px; }
         table th { background-color: #0c3c60; color: white; padding: 12px 10px; font-size: 13px; }
         table td { padding: 12px 10px; border-bottom: 1px solid #e2e8f0; font-size: 13.5px; line-height: 1.4; }
         .badge-mmi { background-color: #e0f2fe; color: #0369a1; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; display: inline-block; }
+        .badge-danger { background-color: #ef4444; color: white; padding: 4px 12px; border-radius: 4px; font-size: 13px; }
+
         .whatsapp-widget-container { position: fixed; bottom: 25px; right: 25px; display: flex; flex-direction: column; align-items: flex-end; z-index: 9999; font-family: sans-serif; }
         .wa-pop-bubble { background: #ffffff; color: #333333; padding: 7px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; margin-bottom: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: 1px solid #e2e8f0; display: flex; align-items: center; gap: 8px; }
         .whatsapp-circle-btn { width: 50px; height: 50px; background-color: #25D366; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.2); transition: transform 0.2s; }
         .whatsapp-circle-btn svg { width: 26px; height: 26px; fill: #ffffff; }
 
-        /* MODE GELAP UTAMA */
-        body.dark-mode { background-color: #0f172a; color: #e2e8f0; }
-        body.dark-mode header, body.dark-mode .top-time-bar, body.dark-mode .geo-card, body.dark-mode .grid-beranda, body.dark-mode .chart-container, body.dark-mode .wa-pop-bubble, body.dark-mode .card-sholat-box, body.dark-mode .card-waktu-sol, body.dark-mode .overview-card, body.dark-mode .news-card { background-color: #1e293b; border-color: #334155; color: #e2e8f0; }
-        body.dark-mode .overview-title { color: #94a3b8; }
-        body.dark-mode .overview-value { color: #38bdf8; }
-        body.dark-mode .overview-desc { color: #cbd5e1; }
-        body.dark-mode .ov-btn { background: #334155; color: #38bdf8; }
-        body.dark-mode .ov-btn:hover { background: #475569; }
-        body.dark-mode .news-content h4 { color: #ffffff; }
-        body.dark-mode .section-title-container h3 { color: #38bdf8; }
-        body.dark-mode .section-title-container { border-left-color: #38bdf8; }
-        body.dark-mode .logo-text h1 { color: #38bdf8; }
-        body.dark-mode .btn-dark-mode { background-color: #334155; color: #ffffff; }
-        body.dark-mode table th { background-color: #334155; }
-        body.dark-mode table td { border-bottom-color: #334155; }
-        body.dark-mode .ptsp-form-group input, body.dark-mode .ptsp-form-group textarea { background-color: #334155; border-color: #475569; color: white; }
-        body.dark-mode .ptsp-modal-box { background-color: #1e293b; border: 1px solid #334155; color: #e2e8f0; }
-        body.dark-mode .modal-row-value-box { background-color: #334155; border-color: #475569; color: white; }
-        body.dark-mode .modal-inputs-white-card { background-color: #1e293b; border-color: #334155; }
-        body.dark-mode .modal-inputs-white-card input { background-color: #334155; border-color: #475569; color: white; }
-        body.dark-mode .modal-preview-doc-card { background-color: #334155; border-color: #475569; }
-        body.dark-mode .ptsp-nested-nav { background: #334155; }
-        body.dark-mode .katalog-nested-btn { color: #cbd5e1; }
-        body.dark-mode .nested-ptsp-aktif { background-color: #1e293b; color: #38bdf8; }
-        body.dark-mode .tab-ptsp-aktif { color: #38bdf8; border-bottom-color: #38bdf8; background-color: #334155; }
-        body.dark-mode .leaflet-tile-container { filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%); }
-
-        /* RESPONSIVITAS HEADER & NAVIGATION MOBILE (POIN 4) */
+        /* RESPONSIVITAS HEADER & NAVIGATION MOBILE */
         @media (max-width: 992px) {
             header { padding: 15px 20px; }
-            nav { display: none; } /* Sembunyikan Navigasi Desktop standar */
+            nav { display: none; }
             
-            /* Munculkan Hamburger */
             .hamburger-container { display: block; position: relative; z-index: 2000; }
             .hamburger-icon { display: flex; flex-direction: column; gap: 5px; cursor: pointer; padding: 10px; }
             .hamburger-icon span { display: block; width: 25px; height: 3px; background-color: #0c3c60; border-radius: 2px; transition: 0.3s; }
             body.dark-mode .hamburger-icon span { background-color: #ffffff; }
 
-            /* List Menu Mobile Sistem Drawer */
             .mobile-nav-links {
                 display: none; position: absolute; top: 100%; right: 0; background-color: #ffffff;
                 width: 260px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-radius: 8px; border: 1px solid #e2e8f0;
@@ -634,7 +635,6 @@
             .mobile-nav-links a:hover { background-color: #f1f5f9; color: #0c3c60; }
             body.dark-mode .mobile-nav-links a:hover { background-color: #334155; color: #38bdf8; }
 
-            /* Logic CSS saat checkbox dicentang */
             #hamburger-check:checked ~ .mobile-nav-links { display: flex; }
             #hamburger-check:checked + .hamburger-icon span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
             #hamburger-check:checked + .hamburger-icon span:nth-child(2) { opacity: 0; }
@@ -683,6 +683,7 @@
             </div>
         </a>
         
+        <!-- NAV DESKTOP -->
         <nav>
             <a href="#beranda">Beranda</a>
             <div class="dropdown">
@@ -702,6 +703,7 @@
             <a id="dark-mode-btn" class="btn-dark-mode" onclick="toggleDarkMode()"><span class="dark-mode-txt">🌙 Mode Gelap</span></a>
         </nav>
 
+        <!-- HAMBURGER MENU RESPONSIVE -->
         <div class="hamburger-container">
             <input type="checkbox" id="hamburger-check">
             <label for="hamburger-check" class="hamburger-icon">
@@ -726,7 +728,9 @@
 
     <div class="dashboard-container">
 
+        <!-- SEKSI BERANDA -->
         <div id="beranda" class="section-block">
+            <!-- 1. HERO BANNER -->
             <div class="banner-beranda" style="text-align: center;">
                 <h2>Selamat Datang di Portal Monitoring Geofisika</h2>
                 <p style="font-size: 15px; margin-bottom: 5px; opacity: 0.95;">Stasiun Geofisika Kelas I Deli Serdang - BMKG Sumatera Utara</p>
@@ -737,7 +741,9 @@
                 </div>
             </div>
 
+            <!-- 2. LIVE RINGKASAN OVERVIEW CARDS -->
             <div class="beranda-dashboard-grid">
+                <!-- Card Gempa -->
                 <div class="overview-card ov-card-blue">
                     <div>
                         <div class="overview-title"><span>🚨</span> Gempa Terkini (BMKG)</div>
@@ -750,6 +756,7 @@
                     </div>
                 </div>
 
+                <!-- Card Petir -->
                 <div class="overview-card ov-card-orange">
                     <div>
                         <div class="overview-title"><span>⚡</span> Listrik Udara / Petir</div>
@@ -762,6 +769,7 @@
                     </div>
                 </div>
 
+                <!-- Card Tanda Waktu -->
                 <div class="overview-card ov-card-green">
                     <div>
                         <div class="overview-title"><span>🕌</span> Jadwal Sholat Hari Ini</div>
@@ -778,6 +786,7 @@
                 </div>
             </div>
 
+            <!-- 3. SEKSI MITIGASI & EDUKASI -->
             <div class="section-title-container">
                 <h3>Edukasi Mitigasi Kebencanaan</h3>
             </div>
@@ -795,7 +804,7 @@
                     <div class="news-content">
                         <span class="news-tag">Informasi</span>
                         <h4>Mengenal Bahaya Sambaran Petir</h4>
-                        <p>Hindari tempat terbuka saat hujan lebat. Kenali bagaimana sistem Lightning Detector BMKG melacak kilat CG- and CG+ secara akurat.</p>
+                        <p>Hindari tempat terbuka saat hujan lebat. Kenali bagaimana sistem Lightning Detector BMKG melacak kilat CG- dan CG+ secara akurat.</p>
                     </div>
                 </div>
                 <div class="news-card">
@@ -809,6 +818,7 @@
             </div>
         </div>
 
+        <!-- SEKSI PROFIL: SEJARAH -->
         <div id="profil-sejarah" class="section-block">
             <div class="grid-beranda">
                 <div>
@@ -832,6 +842,7 @@
             </div>
         </div>
 
+        <!-- SEKSI PROFIL: TUPOKSI -->
         <div id="profil-tupoksi" class="section-block">
             <div class="geo-card">
                 <div class="geo-card-header">
@@ -849,6 +860,7 @@
             </div>
         </div>
 
+        <!-- SEKSI PROFIL: KRONOLOGI ALAT -->
         <div id="profil-kronologi" class="section-block">
             <div class="geo-card">
                 <div class="geo-card-header">
@@ -880,6 +892,7 @@
             </div>
         </div>
 
+        <!-- SEKSI PROFIL: STRUKTUR ORGANISASI -->
         <div id="profil-struktur" class="section-block">
             <div class="chart-container">
                 <div class="chart-title">STRUKTUR ORGANISASI KANTOR</div>
@@ -905,6 +918,7 @@
             </div>
         </div>
 
+        <!-- SEKSI GEMPABUMI -->
         <div id="gempabumi" class="section-block">
             <div class="geo-card">
                 <div class="geo-card-header">
@@ -951,6 +965,7 @@
             </div>
         </div>
 
+        <!-- SEKSI MAGNET BUMI -->
         <div id="magnet" class="section-block">
             <div class="geo-card">
                 <div class="geo-card-header">
@@ -970,6 +985,7 @@
             </div>
         </div>
 
+        <!-- SEKSI TANDA WAKTU -->
         <div id="tandawaktu" class="section-block">
             <div class="geo-card">
                 <div class="geo-card-header">
@@ -1005,6 +1021,7 @@
             </div>
         </div>
 
+        <!-- SEKSI RADAR PETIR -->
         <div id="petir" class="section-block">
             <div class="geo-card">
                 <div class="geo-card-header">
@@ -1018,6 +1035,7 @@
             </div>
         </div>
 
+        <!-- SEKSI LAYANAN PTSP BMKG -->
         <div id="ptsp" class="section-block">
             <div class="geo-card">
                 <div class="geo-card-header">
@@ -1064,6 +1082,7 @@
 
     </div> 
 
+    <!-- DETAIL DETAIL LAYANAN DYNAMIC MODAL -->
     <div id="ptsp-detail-modal" class="ptsp-modal-overlay" onclick="if(event.target === this) tutupModalLayananPtsp()">
         <div class="ptsp-modal-box">
             <span class="ptsp-modal-close" onclick="tutupModalLayananPtsp()">&times;</span>
@@ -1084,6 +1103,7 @@
         </div>
     </div>
 
+    <!-- FOOTER -->
     <footer class="official-footer">
         <div class="footer-grid">
             <div class="footer-col footer-logo-area">
