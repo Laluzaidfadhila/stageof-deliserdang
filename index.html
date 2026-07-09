@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Info Ephemeris & Gempa Sumbagut</title>
     
-    <!-- Leaflet CSS untuk Peta -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
     
     <style>
@@ -128,6 +127,11 @@
             z-index: 1;
         }
 
+        /* Sinkronisasi Basemap OpenStreetMap agar mengikuti Dark Mode secara visual */
+        [data-theme="dark"] .leaflet-tile-container {
+            filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+        }
+
         .data-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -241,7 +245,6 @@
 </head>
 <body>
 
-    <!-- HEADER & THEME TOGGLE -->
     <header>
         <div class="logo-container">
             <h1>Geospatial & Ephemeris Hub</h1>
@@ -251,11 +254,8 @@
         </button>
     </header>
 
-    <!-- MAIN CONTENT -->
     <main>
-        <!-- LEFT COLUMN: MAPS & SEISMIC DATA -->
         <div class="main-column">
-            <!-- Map Card -->
             <div class="card">
                 <h2 class="card-title">Peta Monitoring Aktivitas Regional</h2>
                 <div id="map-petir"></div>
@@ -267,7 +267,6 @@
                 </div>
             </div>
 
-            <!-- Seismic Data Card -->
             <div class="card">
                 <h2 class="card-title">Data Gempabumi Terkini (BMKG)</h2>
                 <div class="table-container">
@@ -290,7 +289,6 @@
             </div>
         </div>
 
-        <!-- RIGHT COLUMN: EPHEMERIS STATION -->
         <div class="side-column">
             <div class="card">
                 <h2 class="card-title">Ephemeris & Astronomi</h2>
@@ -315,7 +313,6 @@
         </div>
     </main>
 
-    <!-- MODAL SYSTEM -->
     <div class="modal" id="modal-detail">
         <div class="modal-content">
             <button class="close-modal" onclick="tutupModal()">&times;</button>
@@ -328,11 +325,9 @@
         </div>
     </div>
 
-    <!-- FOOTER & FIXED SOCIALS -->
     <footer>
         <p>&copy; 2026 InfoGempa Sumbagut. All Rights Reserved.</p>
         <div class="real-social-container">
-            <!-- Instagram -->
             <a href="https://www.instagram.com/infogempa.sumbagut" class="real-social-icon" target="_blank" title="Instagram">
                 <svg viewBox="0 0 24 24">
                     <circle cx="12" cy="12" r="11" fill="none" stroke="currentColor" stroke-width="2"/>
@@ -340,7 +335,6 @@
                     <circle cx="16.5" cy="7.5" r="0.9"/>
                 </svg>
             </a>
-            <!-- TikTok (Fixed & Restructured) -->
             <a href="https://www.tiktok.com/@infogempa.sumbagut" class="real-social-icon" target="_blank" title="TikTok">
                 <svg viewBox="0 0 24 24">
                     <rect width="24" height="24" rx="12" fill="#000000"/>
@@ -350,10 +344,8 @@
         </div>
     </footer>
 
-    <!-- Leaflet JS untuk Peta -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
-    <!-- CORE APPLICATION JAVASCRIPT -->
     <script>
         // --- 1. CORE VARIABLES & GLOBAL INITS ---
         let petaPetir;
@@ -398,7 +390,7 @@
             document.getElementById('kondisi-peta').innerText = "Peta Berhasil Dimuat (Sumut)";
         }
 
-        // --- 4. REAL-TIME REAL AUTOMATIC EPHEMERIS CALCULATION ---
+        // --- 4. REAL-TIME AUTOMATIC EPHEMERIS CALCULATION ---
         function hitungEphemerisOtomatisHariIni() {
             const sekarang = new Date();
             const hariKe = dapatkanHariKeDalamTahun(sekarang);
@@ -422,11 +414,12 @@
             document.getElementById('eph-sd').innerText = "16' 1.18\"";
         }
 
+        // PERBAIKAN: Menambahkan '+ 1' agar hitungan hari ke-n dalam 1 tahun akurat (tidak bernilai 0 pada 1 Januari)
         function dapatkanHariKeDalamTahun(tanggal) {
             const awalTahun = new Date(tanggal.getFullYear(), 0, 1);
             const selisihWaktu = tanggal - awalTahun;
             const satuHariMiliDetik = 1000 * 60 * 60 * 24;
-            return Math.floor(selisihWaktu / satuHariMiliDetik);
+            return Math.floor(selisihWaktu / satuHariMiliDetik) + 1;
         }
 
         // --- 5. DATA FETCHING SEISMISITAS (BMKG TEWS) ---
@@ -435,7 +428,7 @@
             const tabel = document.getElementById('tabel-gempa');
 
             try {
-                // Catatan: Jika terkena CORS block di server lokal, gunakan CORS proxy atau backend handler
+                // Catatan: Jika terkena CORS block di server lokal, gunakan ekstensi CORS proxy browser atau backend handler
                 const respon = await fetch(urlGempaM5);
                 if (!respon.ok) throw new Error("Gagal mengambil data dari server");
                 
@@ -461,6 +454,9 @@
                     L.marker([lintang, bujur]).addTo(petaPetir)
                         .bindPopup(`<b>Gempa Terkini M ${detailGempa.Magnitude}</b><br>${detailGempa.Wilayah}`)
                         .openPopup();
+                    
+                    // OPTIMASI: Otomatis menggeser pandangan kamera peta terfokus ke titik gempa yang baru saja terjadi
+                    petaPetir.setView([lintang, bujur], 7);
                 }
 
             } catch (kesalahan) {
